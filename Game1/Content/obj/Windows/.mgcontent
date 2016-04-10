@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/earth.png</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/shuttle.png</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/stars.jpg</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/Score.spritefont</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/SmileyWalk.png</File>
+  </SourceFiles>
+</SourceFileCollection>
