@@ -13,8 +13,7 @@ namespace Game1
         SpriteBatch spriteBatch;
         private SpriteFont font;
         private int score = 0;
-        private AnimatedSprite animatedSprite;
-        Vector2 position;
+        Player player;
 
         public Game1()
         {
@@ -31,8 +30,6 @@ namespace Game1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            position = new Vector2(graphics.GraphicsDevice.Viewport.Width / 2 - 64,
-                graphics.GraphicsDevice.Viewport.Height / 2 - 64);
             base.Initialize();
         }
 
@@ -46,8 +43,11 @@ namespace Game1
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Score");
             Texture2D texture = Content.Load<Texture2D>("SmileyWalk");
-            animatedSprite = new AnimatedSprite(texture, 4, 4);
+            Texture2D wallTexture = Content.Load<Texture2D>("wall");
+            Texture2D grassTexture = Content.Load<Texture2D>("grass");
+            player = new Player(texture);
             // TODO: use this.Content to load your game content here
+            var level = new Level(5, 5);
         }
 
         /// <summary>
@@ -66,18 +66,15 @@ namespace Game1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             KeyboardState state = Keyboard.GetState();
 
-            position = Player.Input(state, position);
+            player.Input(state);
 
             // TODO: Add your update logic here
 
             score++;
 
-            animatedSprite.Update();
+            player.animatedSprite.Update();
 
             base.Update(gameTime);
         }
@@ -92,11 +89,13 @@ namespace Game1
 
             // TODO: Add your drawing code here
 
+            float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "Score: " + score, new Vector2(100, 100), Color.Black);
+            spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
             spriteBatch.End();
 
-            animatedSprite.Draw(spriteBatch, position);
+            player.animatedSprite.Draw(spriteBatch, player.position);
 
             base.Draw(gameTime);
         }

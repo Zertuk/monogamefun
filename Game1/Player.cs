@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,32 @@ namespace Game1
 {
     class Player
     {
-        public static Vector2 Input(KeyboardState state, Vector2 position)
+        SpriteEffects spriteEffects = SpriteEffects.FlipHorizontally;
+
+        public AnimatedSprite animatedSprite;
+        public Vector2 position;
+        public string texture;
+        public int health;
+
+
+        public Player(Texture2D texture)
+        {
+            position = new Vector2(100, 100);
+            animatedSprite = new AnimatedSprite(texture, 4, 4);
+            
+        }
+
+        public Vector2 Input(KeyboardState state)
         {
             if (state.IsKeyDown(Keys.Right))
             {
                 position.X += 5;
+                spriteEffects = SpriteEffects.None;
             }
             if (state.IsKeyDown(Keys.Left))
             {
                 position.X -= 5;
+                spriteEffects = SpriteEffects.FlipHorizontally;
             }
             if (state.IsKeyDown(Keys.Up))
             {

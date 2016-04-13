@@ -28,3 +28,5 @@ C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\stars.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\obj\x86\Debug\Game1.csprojResolveAssemblyReference.cache
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\Score.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\SmileyWalk.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grass.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\wall.xnb
