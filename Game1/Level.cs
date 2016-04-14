@@ -18,6 +18,8 @@ namespace Game1
         private ContentManager _content;
         private string[] _levelArray;
         private SpriteBatch _spriteBatch;
+        private int a;
+        private int b;
 
         public Level(int x, int y, ContentManager content, SpriteBatch spriteBatch)
         {
@@ -26,23 +28,26 @@ namespace Game1
             _content = content;
             _spriteBatch = spriteBatch;
             GenerateLevel();
+            a = 1;
+            b = 1;
         }
 
-        private void Draw(Texture2D texture)
+        private void Draw(Texture2D texture, int i)
         {
-            var rnd = new Random();
-            var a = rnd.Next(1, 25);
-            var b = rnd.Next(1, 25);
-            var random = new Vector2(a, b);
+
+            var pos = new Vector2(i * 16, 0);
             _spriteBatch.Begin();
-            _spriteBatch.Draw(texture, random, Color.White);
+            _spriteBatch.Draw(texture, pos, Color.White);
             _spriteBatch.End();
+            Debug.WriteLine("this draws");
         }
 
         private void DisplayLevel()
         {
+            Debug.WriteLine(_levelArray.Length);
             for (var i = 0; i < _levelArray.Length; i++)
             {
+
                 Texture2D texture;
                 if (_levelArray[i] == "W")
                 {
@@ -55,7 +60,7 @@ namespace Game1
                     //floor texture
                     texture = _content.Load<Texture2D>("grass");
                 }
-                Draw(texture);
+                Draw(texture, i);
 
             }
         }

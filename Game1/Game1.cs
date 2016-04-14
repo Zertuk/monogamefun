@@ -83,21 +83,21 @@ namespace Game1
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+        //protected override void Draw(GameTime gameTime)
+        //{
+        //    GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+        //    // TODO: Add your drawing code here
 
-            float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
+        //    float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            spriteBatch.Begin();
-            spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
-            spriteBatch.End();
+        //    spriteBatch.Begin();
+        //    spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
+        //    spriteBatch.End();
 
-            player.animatedSprite.Draw(spriteBatch, player.position);
+        //    player.animatedSprite.Draw(spriteBatch, player.position);
 
-            base.Draw(gameTime);
-        }
+        //    base.Draw(gameTime);
+        //}
     }
 }
