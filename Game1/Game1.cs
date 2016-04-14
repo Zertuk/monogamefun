@@ -47,7 +47,7 @@ namespace Game1
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
             player = new Player(texture);
             // TODO: use this.Content to load your game content here
-            var level = new Level(5, 5);
+            var level = new Level(5, 5, Content, spriteBatch);
         }
 
         /// <summary>
