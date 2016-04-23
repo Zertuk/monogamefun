@@ -13,7 +13,8 @@ namespace Game1
         SpriteBatch spriteBatch;
         private SpriteFont font;
         private int score = 0;
-        Player player;
+        Player _player;
+        Level _level;
 
         public Game1()
         {
@@ -42,12 +43,12 @@ namespace Game1
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Score");
-            Texture2D texture = Content.Load<Texture2D>("SmileyWalk");
+            Texture2D texture = Content.Load<Texture2D>("leek");
             Texture2D wallTexture = Content.Load<Texture2D>("wall");
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
-            player = new Player(texture);
+            _player = new Player(texture);
             // TODO: use this.Content to load your game content here
-            var level = new Level(5, 5, Content, spriteBatch);
+            _level = new Level(5, 5, Content, spriteBatch);
         }
 
         /// <summary>
@@ -68,13 +69,13 @@ namespace Game1
         {
             KeyboardState state = Keyboard.GetState();
 
-            player.Input(state);
+            _player.Input(state);
 
             // TODO: Add your update logic here
 
             score++;
 
-            player.animatedSprite.Update();
+            _player.animatedSprite.Update();
 
             base.Update(gameTime);
         }
@@ -83,21 +84,20 @@ namespace Game1
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        //protected override void Draw(GameTime gameTime)
-        //{
-        //    GraphicsDevice.Clear(Color.CornflowerBlue);
+        protected override void Draw(GameTime gameTime)
+        {
+            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(Color.Transparent);
+            _level.DisplayLevel();
+            float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        //    // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
+            spriteBatch.End();
 
-        //    float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _player.animatedSprite.Draw(spriteBatch, _player.position);
 
-        //    spriteBatch.Begin();
-        //    spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
-        //    spriteBatch.End();
-
-        //    player.animatedSprite.Draw(spriteBatch, player.position);
-
-        //    base.Draw(gameTime);
-        //}
+            base.Draw(gameTime);
+        }
     }
 }

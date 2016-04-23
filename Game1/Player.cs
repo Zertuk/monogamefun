@@ -21,8 +21,8 @@ namespace Game1
 
         public Player(Texture2D texture)
         {
-            position = new Vector2(100, 100);
-            animatedSprite = new AnimatedSprite(texture, 4, 4);
+            position = new Vector2(20, 20);
+            animatedSprite = new AnimatedSprite(texture, 1, 1);
             
         }
 
@@ -30,21 +30,21 @@ namespace Game1
         {
             if (state.IsKeyDown(Keys.Right))
             {
-                position.X += 5;
+                position.X += 1;
                 spriteEffects = SpriteEffects.None;
             }
             if (state.IsKeyDown(Keys.Left))
             {
-                position.X -= 5;
+                position.X -= 1;
                 spriteEffects = SpriteEffects.FlipHorizontally;
             }
             if (state.IsKeyDown(Keys.Up))
             {
-                position.Y -= 5;
+                position.Y -= 1;
             }
             if (state.IsKeyDown(Keys.Down))
             {
-                position.Y += 5;
+                position.Y += 1;
             }
             return position;
         }
