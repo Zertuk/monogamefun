@@ -30,21 +30,21 @@ namespace Game1
         {
             if (state.IsKeyDown(Keys.Right))
             {
-                position.X += 1;
+                position.X += 3;
                 spriteEffects = SpriteEffects.None;
             }
             if (state.IsKeyDown(Keys.Left))
             {
-                position.X -= 1;
+                position.X -= 3;
                 spriteEffects = SpriteEffects.FlipHorizontally;
             }
             if (state.IsKeyDown(Keys.Up))
             {
-                position.Y -= 1;
+                position.Y -= 3;
             }
             if (state.IsKeyDown(Keys.Down))
             {
-                position.Y += 1;
+                position.Y += 3;
             }
             return position;
         }

@@ -59,7 +59,7 @@ namespace Game1
                 y = 4;
                 i = i - 20;
             }
-            var pos = new Vector2(i * 16, y*16);
+            var pos = new Vector2(i * 64, y*64);
             _spriteBatch.Begin();
             _spriteBatch.Draw(tile.Texture, pos, Color.White);
             _spriteBatch.End();
