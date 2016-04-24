@@ -35,7 +35,7 @@ namespace Game1
             _drawIndex = 0;
         }
 
-        private void Draw()
+        public void Draw()
         {
             for (var i = 0; i < _tileArray.Length ; i++)
             {
@@ -53,12 +53,11 @@ namespace Game1
             _drawIndex = 0;
         }
 
-        public void DisplayLevel()
+        private void DisplayLevel()
         {
-            Debug.WriteLine(_levelArray.Length);
             for (var i = 0; i < _levelArray.Length; i++)
             {
-                Tile tile = new Tile();
+                var tile = new Tile();
                 Texture2D texture;
                 if (_levelArray[i] == "W")
                 {

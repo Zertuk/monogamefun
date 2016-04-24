@@ -91,7 +91,7 @@ namespace Game1
         {
             // TODO: Add your drawing code here
             GraphicsDevice.Clear(Color.Transparent);
-            _level.DisplayLevel();
+            _level.Draw();
             float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             spriteBatch.Begin();
