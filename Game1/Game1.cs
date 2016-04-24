@@ -19,6 +19,9 @@ namespace Game1
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1366;
             Content.RootDirectory = "Content";
         }
 
@@ -48,7 +51,7 @@ namespace Game1
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
-            _level = new Level(5, 5, Content, spriteBatch);
+            _level = new Level(10, 10, Content, spriteBatch);
         }
 
         /// <summary>

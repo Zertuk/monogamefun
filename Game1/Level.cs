@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 
 namespace Game1
 {
@@ -17,9 +17,11 @@ namespace Game1
         private int _height;
         private ContentManager _content;
         private string[] _levelArray;
+        private Tile[] _tileArray;
         private SpriteBatch _spriteBatch;
         private int a;
         private int b;
+        private int _drawIndex;
 
         public Level(int x, int y, ContentManager content, SpriteBatch spriteBatch)
         {
@@ -30,40 +32,25 @@ namespace Game1
             GenerateLevel();
             a = 1;
             b = 1;
+            _drawIndex = 0;
         }
 
-        private void Draw(Tile tile, int i)
+        private void Draw()
         {
-            int y;
-            if (i < 5)
+            for (var i = 0; i < _tileArray.Length ; i++)
             {
-                y = 0;
+                if (i % 10 == 0 && i != 0)
+                {
+                    _drawIndex = _drawIndex + 1;
+                    Console.WriteLine(i + " indexx");
+                    Console.WriteLine(_drawIndex);
+                }
+                var pos = new Vector2((i % 10) * 64, _drawIndex * 64);
+                _spriteBatch.Begin();
+                _spriteBatch.Draw(_tileArray[i].Texture, pos, Color.White);
+                _spriteBatch.End();
             }
-            else if (i < 10)
-            {
-                y = 1;
-                i = i - 5;
-            }
-            else if (i < 15)
-            {
-                y = 2;
-                i = i - 10;
-            }
-            else if (i < 20)
-            {
-                y = 3;
-                i = i - 15;
-            }
-            else
-            {
-                y = 4;
-                i = i - 20;
-            }
-            var pos = new Vector2(i * 64, y*64);
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(tile.Texture, pos, Color.White);
-            _spriteBatch.End();
-            Debug.WriteLine("this draws");
+            _drawIndex = 0;
         }
 
         public void DisplayLevel()
@@ -87,14 +74,15 @@ namespace Game1
                     tile.IsPassable = true;
                     tile.Texture = texture;
                 }
-                Draw(tile, i);
-
+                _tileArray[i] = tile;
             }
+            Draw();
         }
 
         private void GenerateLevel()
         {
-            _levelArray = new string[25];
+            _levelArray = new string[100];
+            _tileArray = new Tile[100];
             for (var i = 0; i < _height*_height; i++)
             {
                 if (i <= _width)
