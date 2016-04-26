@@ -30,7 +30,7 @@ namespace Game1
                 {
                     if (_dungeonArray[i,k] == "_")
                     {
-                        var pos = new Vector2(500 + (i * 16), 500 + (k * 16));
+                        var pos = new Vector2(500 + (i * 17), 500 + (k * 17));
                         Texture2D texture = _content.Load<Texture2D>("room");
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(texture, pos, Color.White);
