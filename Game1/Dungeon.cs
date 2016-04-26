@@ -13,8 +13,6 @@ namespace Game1
             _width = width;
             _height = height;
             _deadRooms = deadRooms;
-            _dungeonArray = GenerateDungeon();
-            ConsoleWriteDungeon();
         }
         int _width;
         int _height;
@@ -33,7 +31,7 @@ namespace Game1
             }
         }
 
-        private string[,] GenerateDungeon()
+        public string[,] GenerateDungeon()
         {
             string[,] dungeonArray = new string[_width, _height];
             var deadRoomsAdded = 0;
