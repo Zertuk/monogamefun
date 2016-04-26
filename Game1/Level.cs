@@ -42,8 +42,6 @@ namespace Game1
                 if (i % 10 == 0 && i != 0)
                 {
                     _drawIndex = _drawIndex + 1;
-                    Console.WriteLine(i + " indexx");
-                    Console.WriteLine(_drawIndex);
                 }
                 var pos = new Vector2((i % 10) * 64, _drawIndex * 64);
                 _spriteBatch.Begin();

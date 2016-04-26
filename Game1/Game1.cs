@@ -52,6 +52,8 @@ namespace Game1
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
             _level = new Level(10, 10, Content, spriteBatch);
+            var dungeon = new Dungeon(5, 5 , 10);
+
         }
 
         /// <summary>
