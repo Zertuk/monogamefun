@@ -28,15 +28,22 @@ namespace Game1
             {
                 for (int k = 0; k < _dungeonArray.GetLength(1); k++)
                 {
+                    Texture2D texture;
+                    var pos = new Vector2(500 + (i * 17), 500 + (k * 17));
                     if (_dungeonArray[i,k] == "_")
                     {
-                        var pos = new Vector2(500 + (i * 17), 500 + (k * 17));
-                        Texture2D texture = _content.Load<Texture2D>("room");
+                        texture = _content.Load<Texture2D>("room");
                         _spriteBatch.Begin();
                         _spriteBatch.Draw(texture, pos, Color.White);
                         _spriteBatch.End();
                     }
-
+                    else if (_dungeonArray[i,k] == "S")
+                    {
+                        texture = _content.Load<Texture2D>("boss");
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(texture, pos, Color.White);
+                        _spriteBatch.End();
+                    }
                 }
             }
         }

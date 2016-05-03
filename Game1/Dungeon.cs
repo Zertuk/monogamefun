@@ -13,10 +13,12 @@ namespace Game1
             _width = width;
             _height = height;
             _deadRooms = deadRooms;
+            _playerSpawn = false;
         }
         int _width;
         int _height;
         int _deadRooms;
+        bool _playerSpawn;
         string[,] _dungeonArray;
 
         private void ConsoleWriteDungeon()
@@ -31,12 +33,39 @@ namespace Game1
             }
         }
 
+        private bool ChooseSpawnTile(Random rnd)
+        {
+            var random = rnd.Next(1, 100);
+            if (random > 95)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void GeneratePlayerSpawn(string[,] dungeonArray, Random rnd)
+        {
+            for (int i = 0; i < dungeonArray.GetLength(0); i++)
+            {
+                for (int k = 0; k < dungeonArray.GetLength(1); k++)
+                {
+                    if (dungeonArray[i, k] == "_" && ChooseSpawnTile(rnd))
+                    {
+                        dungeonArray[i, k] = "S";
+                        _playerSpawn = true;
+                        return;
+                    }
+                }
+            }
+        }
+
         public string[,] GenerateDungeon()
         {
             string[,] dungeonArray = new string[_width, _height];
             var deadRoomsAdded = 0;
             var Seed = (int)DateTime.Now.Ticks;
             var rnd = new Random(Seed);
+            var playerSpawn = false;
             while (deadRoomsAdded < _deadRooms)
             {
                 for (var i = 0; i < _width; i++)
@@ -44,7 +73,6 @@ namespace Game1
                     for (var j = 0; j < _height; j++)
                     {
                         var random = rnd.Next(1, 100);
-                        Console.WriteLine(random);
                         if (random > 95 && dungeonArray[i, j] != "D" && deadRoomsAdded < _deadRooms)
                         {
                             deadRoomsAdded = deadRoomsAdded + 1;
@@ -53,10 +81,19 @@ namespace Game1
                         else if (dungeonArray[i, j] != "D")
                         {
                             dungeonArray[i, j] = "_";
+                            if (ChooseSpawnTile(rnd))
+                            {
+                                dungeonArray[i, j] = "S";
+                                playerSpawn = true;
+                            }
                         }
                         random = 0;
                     }
                 }
+            }
+            while (!playerSpawn)
+            {
+                GeneratePlayerSpawn(dungeonArray, rnd);
             }
             return dungeonArray;
         }

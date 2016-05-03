@@ -33,3 +33,4 @@ C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\wall.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\MonoGame.Extended.dll
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\leek.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\room.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\boss.xnb
