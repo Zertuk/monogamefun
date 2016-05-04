@@ -17,6 +17,7 @@ namespace Game1
         Level _level;
         Map _map;
         Dungeon _dungeon;
+        World _world;
         private string[,] _dungeonArray;
 
         public Game1()
@@ -55,9 +56,7 @@ namespace Game1
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
             _level = new Level(10, 10, Content, spriteBatch);
-            _dungeon = new Dungeon(5, 5, 15);
-            _dungeonArray = _dungeon.GenerateDungeon();
-            _map = new Map(Content, spriteBatch);
+            _world = new World(Content, spriteBatch);
 
         }
 
@@ -99,7 +98,7 @@ namespace Game1
             // TODO: Add your drawing code here
             GraphicsDevice.Clear(Color.Transparent);
             _level.Draw();
-            _map.Draw(_dungeonArray);
+            _world.worldDraw();
             float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             spriteBatch.Begin();

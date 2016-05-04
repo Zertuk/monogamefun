@@ -20,6 +20,7 @@ namespace Game1
         int _deadRooms;
         bool _playerSpawn;
         string[,] _dungeonArray;
+        Level[,] _generatedArray;
 
         private void ConsoleWriteDungeon()
         {

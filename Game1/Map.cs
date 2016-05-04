@@ -21,7 +21,7 @@ namespace Game1
             _spriteBatch = spriteBatch;
         }
 
-        public void Draw(string[,] dungeonArray)
+        public void drawMap(string[,] dungeonArray)
         {
             _dungeonArray = dungeonArray;
             for (int i = 0; i < _dungeonArray.GetLength(0); i++)
