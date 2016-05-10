@@ -55,7 +55,6 @@ namespace Game1
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
-            _level = new Level(10, 10, Content, spriteBatch);
             _world = new World(Content, spriteBatch);
 
         }
@@ -97,7 +96,6 @@ namespace Game1
         {
             // TODO: Add your drawing code here
             GraphicsDevice.Clear(Color.Transparent);
-            _level.Draw();
             _world.worldDraw();
             float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
 

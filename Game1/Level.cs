@@ -23,16 +23,10 @@ namespace Game1
         private int b;
         private int _drawIndex;
 
-        public Level(int x, int y, ContentManager content, SpriteBatch spriteBatch)
+        public Level(ContentManager content, SpriteBatch spriteBatch)
         {
-            _width = x;
-            _height = y;
             _content = content;
             _spriteBatch = spriteBatch;
-            GenerateLevel();
-            a = 1;
-            b = 1;
-            _drawIndex = 0;
         }
 
         public void Draw()
@@ -51,7 +45,7 @@ namespace Game1
             _drawIndex = 0;
         }
 
-        private void DisplayLevel()
+        private Tile[] DisplayLevel()
         {
             for (var i = 0; i < _levelArray.Length; i++)
             {
@@ -73,7 +67,7 @@ namespace Game1
                 }
                 _tileArray[i] = tile;
             }
-            Draw();
+            return _tileArray;
         }
 
         private void GenerateLevel()

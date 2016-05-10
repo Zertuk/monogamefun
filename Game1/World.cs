@@ -13,20 +13,42 @@ namespace Game1
         private ContentManager _content;
         private SpriteBatch _spriteBatch;
         private string[,] _dungeonArray;
+        public Tile[,][] _worldArray;
         private Map _map;
+        private Tile[] _currentTileArray;
+        private Level _level;
+
         public World(ContentManager content, SpriteBatch spriteBatch)
         {
             _content = content;
             _spriteBatch = spriteBatch;
+
+            _level = new Level(_content, _spriteBatch);
 
             var dungeon = new Dungeon(5, 5, 10);
             _dungeonArray = dungeon.GenerateDungeon();
 
             _map = new Map(_content, _spriteBatch);
         }
+
+        private void LinkLevelsToDungeon()
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                for (var j = 0; j < 5; j++)
+                {
+                    var level = _level.GenerateLevel(10, 10);
+                    _worldArray[i, j] = level;
+                    _currentTileArray = _worldArray[0, 0];
+                }
+            }
+        }
+
         public void worldDraw()
         {
             _map.drawMap(_dungeonArray);
+            
+            _level.Draw(_currentTileArray);
         }
         
     }
