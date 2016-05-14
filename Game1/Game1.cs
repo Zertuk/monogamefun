@@ -14,7 +14,6 @@ namespace Game1
         private SpriteFont font;
         private int score = 0;
         Player _player;
-        Level _level;
         Map _map;
         Dungeon _dungeon;
         World _world;

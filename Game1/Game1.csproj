@@ -44,7 +44,6 @@
     <Compile Include="Room.cs" />
     <Compile Include="Texture2d.cs" />
     <Compile Include="Tile.cs" />
-    <Compile Include="Level.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />

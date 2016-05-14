@@ -16,7 +16,6 @@ namespace Game1
         public Tile[,][] _worldArray;
         private Map _map;
         private Tile[] _currentTileArray;
-        private Level _level;
         private Tile[,] _tileArray;
         private Room _room;
 
