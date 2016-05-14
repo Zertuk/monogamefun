@@ -73,15 +73,15 @@ namespace Game1
                     for (var j = 0; j < _height; j++)
                     {
                         var random = rnd.Next(1, 100);
-                        if (random > 95 && dungeonArray[i, j] != "D" && deadRoomsAdded < _deadRooms)
+                        if (random > 95 && dungeonArray[i, j] != "D" && dungeonArray[i, j] != "S" && deadRoomsAdded < _deadRooms)
                         {
                             deadRoomsAdded = deadRoomsAdded + 1;
                             dungeonArray[i, j] = "D";
                         }
-                        else if (dungeonArray[i, j] != "D")
+                        else if (dungeonArray[i, j] != "D" && dungeonArray[i, j] != "S")
                         {
                             dungeonArray[i, j] = "_";
-                            if (ChooseSpawnTile(rnd))
+                            if (ChooseSpawnTile(rnd) && !playerSpawn)
                             {
                                 dungeonArray[i, j] = "S";
                                 playerSpawn = true;
