@@ -18,20 +18,20 @@ namespace Game1
         private Tile[] _currentTileArray;
         private Level _level;
         private Tile[,] _tileArray;
+        private Room _room;
 
         public World(ContentManager content, SpriteBatch spriteBatch)
         {
             _content = content;
             _spriteBatch = spriteBatch;
 
-            _level = new Level(_content, _spriteBatch);
+            _room = new Room(_content, _spriteBatch);
 
             var dungeon = new Dungeon(5, 5, 10);
             _dungeonArray = dungeon.GenerateDungeon();
 
             _map = new Map(_content, _spriteBatch);
-            var room = new Room(10, 10, _content, _spriteBatch);
-            _tileArray = room.GenerateRoom(); 
+            _tileArray = _room.GenerateRoom(10, 10); 
         }
 
         private void LinkLevelsToDungeon()
@@ -48,8 +48,7 @@ namespace Game1
         public void worldDraw()
         {
             _map.drawMap(_dungeonArray);
-            var room = new Room(10, 10, _content, _spriteBatch);
-            room.Draw(_tileArray);
+            _room.Draw(_tileArray);
 
 
         }

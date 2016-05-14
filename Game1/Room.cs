@@ -13,15 +13,11 @@ namespace Game1
     {
         int _x;
         int _y;
-        int _drawIndex;
         ContentManager _content;
         SpriteBatch _spriteBatch;
 
-        public Room(int x, int y, ContentManager content, SpriteBatch spriteBatch)
+        public Room(ContentManager content, SpriteBatch spriteBatch)
         {
-            _drawIndex = 0;
-            _x = x;
-            _y = y;
             _content = content;
             _spriteBatch = spriteBatch;
         }
@@ -40,8 +36,10 @@ namespace Game1
             }
         }
 
-        public Tile[,] GenerateRoom()
+        public Tile[,] GenerateRoom(int x, int y)
         {
+            _x = x;
+            _y = y;
             var roomArray = new string[_x, _y];
 
             for (var i = 0; i < _x; i++)
