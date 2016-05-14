@@ -41,6 +41,8 @@
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="Dungeon.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Room.cs" />
+    <Compile Include="Texture2d.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Player.cs" />
