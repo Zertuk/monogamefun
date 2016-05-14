@@ -47,7 +47,7 @@ namespace Game1
                 for (var j = 0; j < _y; j++)
                 {
                     roomArray[i, j] = "F";
-                    if (i == 0 || i == _y - 1 || j == 0 || j == _x - 1)
+                    if (i == 0 || i == _x - 1 || j == 0 || j == _y - 1)
                     {
                         roomArray[i, j] = "W";
                     }

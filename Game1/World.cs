@@ -42,12 +42,12 @@ namespace Game1
                 {
                     if (_dungeonArray[i,j] == "_")
                     {
-                        var tileArray = _room.GenerateRoom(10, 10);
+                        var tileArray = _room.GenerateRoom(20, 10);
                         _worldArray[i,j] = tileArray;
                     }
                     else if (_dungeonArray[i, j] == "S")
                     {
-                        var tileArray = _room.GenerateRoom(10, 20);
+                        var tileArray = _room.GenerateRoom(20, 10);
                         _worldArray[i,j] = tileArray;
                         _activeRoom = tileArray;
                     }
