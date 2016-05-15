@@ -18,6 +18,7 @@ namespace Game1
         public string texture;
         public int health;
         public Vector2 prevPosition;
+        public double speed = 3.5;
 
 
         public Player(Texture2D texture)
@@ -39,30 +40,30 @@ namespace Game1
             {
                 prevPosition = position;
                 var dCount = 0;
-                var y = 0;
-                var x = 0;
+                double y = 0;
+                double x = 0;
 
                 if (state.IsKeyDown(Keys.Right))
                 {
                     dCount = dCount + 1;
-                    x = 3;
+                    x = speed;
                     spriteEffects = SpriteEffects.None;
                 }
                 if (state.IsKeyDown(Keys.Left))
                 {
                     dCount = dCount + 1;
-                    x = -3;
+                    x = -speed;
                     spriteEffects = SpriteEffects.FlipHorizontally;
                 }
                 if (state.IsKeyDown(Keys.Up))
                 {
                     dCount = dCount + 1;
-                    y = -3;
+                    y = -speed;
                 }
                 if (state.IsKeyDown(Keys.Down))
                 {
                     dCount = dCount + 1;
-                    y = 3;
+                    y = speed;
                 }
                 if (dCount > 1)
                 {
@@ -78,8 +79,8 @@ namespace Game1
                         negX = true;
                         x = x * -1;
                     }
-                    var posY = (float)Math.Sqrt(y);
-                    var posX = (float)Math.Sqrt(x);
+                    var posY = (double)Math.Sqrt(y) + 0.5;
+                    var posX = (double)Math.Sqrt(x) + 0.5;
                     if (negX)
                     {
                         posX = posX * -1;
@@ -88,14 +89,14 @@ namespace Game1
                     {
                         posY = posY * -1;
                     }
-                    position.Y += posY;
-                    position.X += posX;
+                    position.Y += (float)posY;
+                    position.X += (float)posX;
 
                 }
                 else
                 {
-                    position.Y += y;
-                    position.X += x;
+                    position.Y += (float)y;
+                    position.X += (float)x;
                 }
 
             }
