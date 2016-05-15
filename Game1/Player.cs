@@ -17,6 +17,7 @@ namespace Game1
         public Vector2 position;
         public string texture;
         public int health;
+        public Vector2 prevPosition;
 
 
         public Player(Texture2D texture)
@@ -32,10 +33,12 @@ namespace Game1
         }
 
 
-        public Vector2 Input(KeyboardState state, bool coolCheck)
+        public Vector2 Input(KeyboardState state, bool colCheck)
         {
-            if (!coolCheck)
+            if (!colCheck)
             {
+                prevPosition = position;
+
                 if (state.IsKeyDown(Keys.Right))
                 {
                     position.X += 3;
@@ -55,6 +58,11 @@ namespace Game1
                     position.Y += 3;
                 }
             }
+            else
+            {
+                position = prevPosition;
+            }
+
             return position;
         }
     }
