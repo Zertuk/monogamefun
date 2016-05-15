@@ -18,38 +18,54 @@ namespace Game1
 
         public bool CheckCollision(Player player)
         {
-            int playerY;
-            int playerX;
-            if ((int)player.position.Y / 64  +2> 9)
+            int playerYMax;
+            int playerYMin;
+            int playerXMax;
+            int playerXMin;
+            int rows = _tileArray.GetLength(1);
+            int columns = _tileArray.GetLength(0);
+            Debug.WriteLine("columns: " + columns);
+            Debug.WriteLine("rows: " + rows);
+            if ((int)player.position.Y / 64 + 2 >= rows)
             {
-                playerY = 9;
+                playerYMax = rows - 1;
             }
             else
             {
-                playerY = ((int)player.position.Y / 64);
+                playerYMax = ((int)player.position.Y / 64);
             }
-            if ((int)player.position.X / 64 + 2 > 9)
+            if ((int)player.position.X / 64 + 2 >= columns)
             {
-                playerX = 9;
+                playerXMax = columns - 1;
             }
             else
             {
-                playerX = ((int)player.position.X / 64);
+                playerXMax = ((int)player.position.X / 64);
+            }
+            if ((int)player.position.Y / 64 - 2 <= 0)
+            {
+                playerYMin = 0;
+            }
+            else
+            {
+                playerYMin = (int)player.position.Y / 64 - 2;
+            }
+            if ((int)(player.position.X / 64 - 2) <= 0)
+            {
+                playerXMin = 0;
+            }
+            else
+            {
+                playerXMin = (int)player.position.X / 64 - 2;
             }
 
+            Debug.WriteLine("X: " + playerXMax + " , " + playerXMin);
+            Debug.WriteLine("Y: " + playerYMax + " , " + playerYMin);
 
-            for (int y = (int)player.position.Y/64 - 2; y <= playerY + 2; y++)
+            for (int y = playerYMin; y <= playerYMax; y++)
             {
-                for (int x = (int)player.position.X / 64 - 2; x <= playerX + 2; x++)
+                for (int x = playerXMin; x <= playerXMax; x++)
                 {
-                    if (x < 0)
-                    {
-                        x = 0;
-                    }
-                    if (y < 0)
-                    {
-                        y = 0;
-                    }
                     if (!_tileArray[x, y].IsPassable)
                     {
                         if (new Rectangle(x*64, y*64, 64, 64).Intersects(player.rectangle()))
