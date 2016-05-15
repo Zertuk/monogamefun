@@ -13,6 +13,7 @@ namespace Game1
         SpriteBatch spriteBatch;
         private SpriteFont font;
         private int score = 0;
+        Tile[,] _tileArray;
         Player _player;
         Map _map;
         Dungeon _dungeon;
@@ -55,6 +56,7 @@ namespace Game1
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
             _world = new World(Content, spriteBatch);
+            _tileArray = _world._activeRoom;
 
         }
 
@@ -75,9 +77,9 @@ namespace Game1
         protected override void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
-
-            _player.Input(state);
-
+            var collision = new Collision(_tileArray);
+            var colCheck = collision.CheckCollision(_player);
+            _player.Input(state, colCheck);
             // TODO: Add your update logic here
 
             score++;
@@ -100,6 +102,8 @@ namespace Game1
 
             spriteBatch.Begin();
             spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
+            spriteBatch.DrawString(font, "x: " + _player.rectangle().X, new Vector2(10, 30), Color.Black);
+            spriteBatch.DrawString(font, "y: " + _player.rectangle().Y, new Vector2(10, 50), Color.Black);
             spriteBatch.End();
 
             _player.animatedSprite.Draw(spriteBatch, _player.position);

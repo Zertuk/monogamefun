@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
+    <Compile Include="Collision.cs" />
     <Compile Include="Dungeon.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Room.cs" />

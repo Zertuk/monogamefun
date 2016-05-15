@@ -21,30 +21,39 @@ namespace Game1
 
         public Player(Texture2D texture)
         {
-            position = new Vector2(20, 20);
+            position = new Vector2(200, 200);
             animatedSprite = new AnimatedSprite(texture, 1, 1);
             
         }
 
-        public Vector2 Input(KeyboardState state)
+        public Rectangle rectangle()
         {
-            if (state.IsKeyDown(Keys.Right))
+            return new Rectangle((int)position.X, (int)position.Y, 64, 64);
+        }
+
+
+        public Vector2 Input(KeyboardState state, bool coolCheck)
+        {
+            if (!coolCheck)
             {
-                position.X += 3;
-                spriteEffects = SpriteEffects.None;
-            }
-            if (state.IsKeyDown(Keys.Left))
-            {
-                position.X -= 3;
-                spriteEffects = SpriteEffects.FlipHorizontally;
-            }
-            if (state.IsKeyDown(Keys.Up))
-            {
-                position.Y -= 3;
-            }
-            if (state.IsKeyDown(Keys.Down))
-            {
-                position.Y += 3;
+                if (state.IsKeyDown(Keys.Right))
+                {
+                    position.X += 3;
+                    spriteEffects = SpriteEffects.None;
+                }
+                if (state.IsKeyDown(Keys.Left))
+                {
+                    position.X -= 3;
+                    spriteEffects = SpriteEffects.FlipHorizontally;
+                }
+                if (state.IsKeyDown(Keys.Up))
+                {
+                    position.Y -= 3;
+                }
+                if (state.IsKeyDown(Keys.Down))
+                {
+                    position.Y += 3;
+                }
             }
             return position;
         }

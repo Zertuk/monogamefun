@@ -15,7 +15,7 @@ namespace Game1
         private string[,] _dungeonArray;
         public Tile[,][,] _worldArray;
         private Map _map;
-        private Tile[,] _activeRoom;
+        public Tile[,] _activeRoom;
         private Tile[,] _tileArray;
         private Room _room;
 
