@@ -38,25 +38,66 @@ namespace Game1
             if (!colCheck)
             {
                 prevPosition = position;
+                var dCount = 0;
+                var y = 0;
+                var x = 0;
 
                 if (state.IsKeyDown(Keys.Right))
                 {
-                    position.X += 3;
+                    dCount = dCount + 1;
+                    x = 3;
                     spriteEffects = SpriteEffects.None;
                 }
                 if (state.IsKeyDown(Keys.Left))
                 {
-                    position.X -= 3;
+                    dCount = dCount + 1;
+                    x = -3;
                     spriteEffects = SpriteEffects.FlipHorizontally;
                 }
                 if (state.IsKeyDown(Keys.Up))
                 {
-                    position.Y -= 3;
+                    dCount = dCount + 1;
+                    y = -3;
                 }
                 if (state.IsKeyDown(Keys.Down))
                 {
-                    position.Y += 3;
+                    dCount = dCount + 1;
+                    y = 3;
                 }
+                if (dCount > 1)
+                {
+                    var negY = false;
+                    if (y < 0)
+                    {
+                        negY = true;
+                        y = y * -1;
+                    }
+                    var negX = false;
+                    if (x < 0)
+                    {
+                        negX = true;
+                        x = x * -1;
+                    }
+                    var posY = (float)Math.Sqrt(y);
+                    var posX = (float)Math.Sqrt(x);
+                    if (negX)
+                    {
+                        posX = posX * -1;
+                    }
+                    if (negY)
+                    {
+                        posY = posY * -1;
+                    }
+                    position.Y += posY;
+                    position.X += posX;
+
+                }
+                else
+                {
+                    position.Y += y;
+                    position.X += x;
+                }
+
             }
             else
             {
