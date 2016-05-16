@@ -21,7 +21,7 @@ namespace Game1
 
         public World(ContentManager content, SpriteBatch spriteBatch)
         {
-            _worldArray = new Tile[5,5][,];
+            _worldArray = new Tile[5, 5][,];
             _content = content;
             _spriteBatch = spriteBatch;
             _room = new Room(_content, _spriteBatch);
@@ -30,8 +30,48 @@ namespace Game1
             _dungeonArray = dungeon.GenerateDungeon();
 
             _map = new Map(_content, _spriteBatch);
-            _tileArray = _room.GenerateRoom(10, 10);
             RoomToDungeon();
+        }
+
+        private bool[] DoorGenCheck(int x, int y)
+        {
+            //N E S W
+            bool[] doors = { false, false, false, false };
+
+            if (x != _dungeonArray.GetLength(0) - 1)
+            {
+                //east
+                if (_dungeonArray[x + 1, y] == "_")
+                {
+                    doors[1] = true;
+                }
+            }
+            if (x != 0)
+            { 
+                //west
+                if (_dungeonArray[x - 1, y] == "_")
+                {
+                    doors[3] = true;
+                }
+            }
+            if (y != _dungeonArray.GetLength(1)-1)
+            {
+                //south
+                if (_dungeonArray[x, y + 1] == "_")
+                {
+                    doors[2] = true;
+                }
+            }
+            if (y != 0)
+            {
+                //north
+                if (_dungeonArray[x, y - 1] == "_")
+                {
+                    doors[0] = true;
+                }
+            }
+
+            return doors;
         }
 
         private void RoomToDungeon()
@@ -41,13 +81,15 @@ namespace Game1
                 for (var j = 0; j < 5; j++)
                 {
                     if (_dungeonArray[i,j] == "_")
-                    {
-                        var tileArray = _room.GenerateRoom(15, 10);
-                        _worldArray[i,j] = tileArray;
+                    { 
+                        //var doors = DoorGenCheck(i, j);
+                        //var tileArray = _room.GenerateRoom(15, 9, doors);
+                        //_worldArray[i,j] = tileArray;
                     }
                     else if (_dungeonArray[i, j] == "S")
                     {
-                        var tileArray = _room.GenerateRoom(15, 10);
+                        var doors = DoorGenCheck(i, j);
+                        var tileArray = _room.GenerateRoom(9, 9, doors);
                         _worldArray[i,j] = tileArray;
                         _activeRoom = tileArray;
                     }

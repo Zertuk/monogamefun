@@ -79,8 +79,8 @@ namespace Game1
                         negX = true;
                         x = x * -1;
                     }
-                    var posY = (double)Math.Sqrt(y) + speed/6;
-                    var posX = (double)Math.Sqrt(x) + speed/6;
+                    var posY = (double)Math.Sqrt(y) + speed/5;
+                    var posX = (double)Math.Sqrt(x) + speed/5;
                     if (negX)
                     {
                         posX = posX * -1;

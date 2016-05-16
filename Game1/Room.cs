@@ -36,10 +36,17 @@ namespace Game1
             }
         }
 
-        public Tile[,] GenerateRoom(int x, int y)
+        public Tile[,] GenerateRoom(int x, int y, bool[] doors)
         {
             _x = x;
             _y = y;
+
+            for (var k = 0; k < doors.Length; k++)
+            {
+                Console.WriteLine("DOOR" + k);
+                Console.WriteLine(doors[k]);
+            }
+
             var roomArray = new string[_x, _y];
 
             for (var i = 0; i < _x; i++)
@@ -49,7 +56,33 @@ namespace Game1
                     roomArray[i, j] = "F";
                     if (i == 0 || i == _x - 1 || j == 0 || j == _y - 1)
                     {
-                        roomArray[i, j] = "W";
+
+                        //((int)Math.Floor((double)_x / 2))
+                        //((int)Math.Floor((double)_y/2))
+                        var valAssigned = false;
+                        if (j == 4)
+                        {
+                            if ((i == _x-1 && doors[1]) || (i == 0 && doors[3]))
+                            {
+                                roomArray[i, j] = "D";
+                                valAssigned = true;
+                            }
+                            Console.WriteLine("j: " + j);
+                            Console.WriteLine("i: " + i);
+                        }
+                        if (i == 4)
+                        {
+                            if ((j == _y - 1 && doors[2]) || (j == 0 && doors[0]))
+                            {
+                                roomArray[i, j] = "D";
+                                valAssigned = true;
+                            }
+                        }
+                        if (!valAssigned)
+                        {
+                            Console.WriteLine("replacing: " + roomArray[i, j]);
+                            roomArray[i, j] = "W";
+                        }
                     }
                 }
             }
@@ -66,16 +99,25 @@ namespace Game1
                 {
                     var tile = new Tile();
                     Texture2D texture;
-                    if (levelArray[i,j] == "W")
+                    if (levelArray[i, j] == "W")
                     {
                         texture = _content.Load<Texture2D>("wall");
                         tile.IsPassable = false;
+                        tile.IsDoor = false;
                         tile.Texture = texture;
                     }
-                    else if (levelArray[i,j] == "F")
+                    else if (levelArray[i, j] == "F")
                     {
                         texture = _content.Load<Texture2D>("grass");
                         tile.IsPassable = true;
+                        tile.IsDoor = false;
+                        tile.Texture = texture;
+                    }
+                    else if (levelArray[i, j] == "D")
+                    {
+                        texture = _content.Load<Texture2D>("door");
+                        tile.IsPassable = true;
+                        tile.IsDoor = true;
                         tile.Texture = texture;
                     }
                     tileArray[i, j] = tile;

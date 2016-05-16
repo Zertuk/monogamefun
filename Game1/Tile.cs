@@ -10,6 +10,7 @@ namespace Game1
     class Tile
     {
         public bool IsPassable { get; set; }
+        public bool IsDoor { get; set; }
         public Texture2D Texture { get; set; }
     }
 }
