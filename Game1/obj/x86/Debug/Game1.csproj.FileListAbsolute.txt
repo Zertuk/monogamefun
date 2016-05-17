@@ -35,3 +35,4 @@ C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\leek.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\room.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\boss.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\door.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\playerpos.xnb

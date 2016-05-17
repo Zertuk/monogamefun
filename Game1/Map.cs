@@ -21,7 +21,7 @@ namespace Game1
             _spriteBatch = spriteBatch;
         }
 
-        public void drawMap(string[,] dungeonArray)
+        public void drawMap(string[,] dungeonArray, int[] roomIndex)
         {
             _dungeonArray = dungeonArray;
             for (int i = 0; i < _dungeonArray.GetLength(0); i++)
@@ -44,6 +44,17 @@ namespace Game1
                         _spriteBatch.Draw(texture, pos, Color.White);
                         _spriteBatch.End();
                     }
+                    //Console.WriteLine("index 1: " + roomIndex[0]);
+                    //Console.WriteLine("index 2: " + roomIndex[1]);
+                    if (roomIndex[0] == i && roomIndex[1] == k)
+                    {
+
+                        texture = _content.Load<Texture2D>("playerpos");
+                        _spriteBatch.Begin();
+                        _spriteBatch.Draw(texture, pos, Color.White);
+                        _spriteBatch.End();
+                    }
+
                 }
             }
         }

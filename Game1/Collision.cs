@@ -16,7 +16,7 @@ namespace Game1
             _tileArray = tileArray;
         }
 
-        public bool CheckCollision(Player player)
+        public bool CheckCollision(Player player, World world)
         {
             int playerYMax;
             int playerYMin;
@@ -67,6 +67,14 @@ namespace Game1
                         {
                             //Check farthest valid position and put player there
                             return true;
+                        }
+                    }
+                    if (_tileArray[x,y].IsDoor)
+                    {
+                        if (new Rectangle(x * 64, y * 64, 64, 64).Intersects(player.rectangle()))
+                        {
+                            //Check farthest valid position and put player there
+                            world.UseDoor(x, y);
                         }
                     }
 

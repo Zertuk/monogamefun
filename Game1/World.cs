@@ -18,9 +18,11 @@ namespace Game1
         public Tile[,] _activeRoom;
         private Tile[,] _tileArray;
         private Room _room;
+        private int[] _roomIndex;
 
         public World(ContentManager content, SpriteBatch spriteBatch)
         {
+            _roomIndex = new int[2];
             _worldArray = new Tile[5, 5][,];
             _content = content;
             _spriteBatch = spriteBatch;
@@ -31,6 +33,26 @@ namespace Game1
 
             _map = new Map(_content, _spriteBatch);
             RoomToDungeon();
+        }
+
+        public void UseDoor(int x, int y)
+        {
+            if (x == 0)
+            {
+                _activeRoom = _worldArray[_roomIndex[0] - 1, _roomIndex[1]];
+                _roomIndex[0] = _roomIndex[0] - 1;
+            }
+            if (y == 0)
+            {
+                _activeRoom = _worldArray[_roomIndex[0], _roomIndex[1] ];
+            }
+            //if (x == _activeRoom.GetLength(1) - 1)
+            //{
+            //    _activeRoom = _worldArray[_roomIndex[0] + 1, _roomIndex[1]];
+            //}
+            Console.WriteLine("USE DOOR HERE");
+            Console.WriteLine(x);
+            Console.WriteLine(y);
         }
 
         private bool[] DoorGenCheck(int x, int y)
@@ -88,10 +110,15 @@ namespace Game1
                     }
                     else if (_dungeonArray[i, j] == "S")
                     {
+                        Console.WriteLine("THIS SHOULD RUN ONCE ONLY");
                         var doors = DoorGenCheck(i, j);
                         var tileArray = _room.GenerateRoom(9, 9, doors);
                         _worldArray[i,j] = tileArray;
-                        _activeRoom = tileArray;
+                        _activeRoom = _worldArray[i,j];
+                        var indX = i;
+                        var indY = j;
+                        _roomIndex[0] = indX;
+                        _roomIndex[1] = indY;
                     }
                 }
             }
@@ -99,9 +126,8 @@ namespace Game1
 
         public void worldDraw()
         {
-            _room.Draw(_activeRoom);
-            _map.drawMap(_dungeonArray);
-
+            //_room.Draw(_activeRoom);
+            _map.drawMap(_dungeonArray, _roomIndex);
         }
 
     }

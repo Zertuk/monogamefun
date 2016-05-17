@@ -41,12 +41,6 @@ namespace Game1
             _x = x;
             _y = y;
 
-            for (var k = 0; k < doors.Length; k++)
-            {
-                Console.WriteLine("DOOR" + k);
-                Console.WriteLine(doors[k]);
-            }
-
             var roomArray = new string[_x, _y];
 
             for (var i = 0; i < _x; i++)
@@ -67,8 +61,6 @@ namespace Game1
                                 roomArray[i, j] = "D";
                                 valAssigned = true;
                             }
-                            Console.WriteLine("j: " + j);
-                            Console.WriteLine("i: " + i);
                         }
                         if (i == 4)
                         {
@@ -80,7 +72,6 @@ namespace Game1
                         }
                         if (!valAssigned)
                         {
-                            Console.WriteLine("replacing: " + roomArray[i, j]);
                             roomArray[i, j] = "W";
                         }
                     }

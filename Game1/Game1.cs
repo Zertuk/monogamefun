@@ -78,7 +78,8 @@ namespace Game1
         {
             KeyboardState state = Keyboard.GetState();
             var collision = new Collision(_tileArray);
-            var colCheck = collision.CheckCollision(_player);
+            var colCheck = collision.CheckCollision(_player, _world);
+
             _player.Input(state, colCheck);
             // TODO: Add your update logic here
 
