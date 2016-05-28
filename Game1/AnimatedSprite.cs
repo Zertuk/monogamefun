@@ -13,7 +13,7 @@ namespace Game1
         public Texture2D Texture { get; set; }
         public int Rows { get; set;  }
         public int Columns { get; set; }
-        private int currentFrame;
+        public int currentFrame;
         private int totalFrames;
         private int limiter;
 

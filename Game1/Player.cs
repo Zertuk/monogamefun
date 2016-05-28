@@ -111,6 +111,11 @@ namespace Game1
                 position = prevPosition;
             }
 
+            if (!playerMoving)
+            {
+                animatedSprite.currentFrame = 0;
+            }
+
             return playerMoving;
         }
     }
