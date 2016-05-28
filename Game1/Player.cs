@@ -24,7 +24,7 @@ namespace Game1
         public Player(Texture2D texture)
         {
             position = new Vector2(200, 200);
-            animatedSprite = new AnimatedSprite(texture, 1, 1);
+            animatedSprite = new AnimatedSprite(texture, 1, 6);
             
         }
 
@@ -34,8 +34,9 @@ namespace Game1
         }
 
 
-        public Vector2 Input(KeyboardState state, bool colCheck)
+        public bool Input(KeyboardState state, bool colCheck)
         {
+            var playerMoving = false;
             if (!colCheck)
             {
                 prevPosition = position;
@@ -48,22 +49,26 @@ namespace Game1
                     dCount = dCount + 1;
                     x = speed;
                     spriteEffects = SpriteEffects.None;
+                    playerMoving = true;
                 }
                 if (state.IsKeyDown(Keys.Left))
                 {
                     dCount = dCount + 1;
                     x = -speed;
                     spriteEffects = SpriteEffects.FlipHorizontally;
+                    playerMoving = true;
                 }
                 if (state.IsKeyDown(Keys.Up))
                 {
                     dCount = dCount + 1;
                     y = -speed;
+                    playerMoving = true;
                 }
                 if (state.IsKeyDown(Keys.Down))
                 {
                     dCount = dCount + 1;
                     y = speed;
+                    playerMoving = true;
                 }
                 if (dCount > 1)
                 {
@@ -102,10 +107,11 @@ namespace Game1
             }
             else
             {
+                playerMoving = true;
                 position = prevPosition;
             }
 
-            return position;
+            return playerMoving;
         }
     }
 }

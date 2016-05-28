@@ -126,7 +126,7 @@ namespace Game1
 
         public void worldDraw()
         {
-            //_room.Draw(_activeRoom);
+            _room.Draw(_activeRoom);
             _map.drawMap(_dungeonArray, _roomIndex);
         }
 

@@ -15,6 +15,7 @@ namespace Game1
         public int Columns { get; set; }
         private int currentFrame;
         private int totalFrames;
+        private int limiter;
 
         public AnimatedSprite(Texture2D texture, int rows, int columns)
         {
@@ -22,16 +23,22 @@ namespace Game1
             Rows = rows;
             Columns = columns;
             currentFrame = 0;
+            limiter = 0;
             totalFrames = Rows * Columns;
         }
 
         public void Update()
         {
-            currentFrame++;
-            if (currentFrame == totalFrames)
+            if (limiter % 4 == 0)
             {
-                currentFrame = 0;
+                limiter = 0;
+                currentFrame = currentFrame + 1;
+                if (currentFrame == totalFrames)
+                {
+                    currentFrame = 0;
+                }
             }
+            limiter = limiter + 1;
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 location)

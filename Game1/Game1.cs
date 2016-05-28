@@ -50,7 +50,7 @@ namespace Game1
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Score");
-            Texture2D texture = Content.Load<Texture2D>("leek");
+            Texture2D texture = Content.Load<Texture2D>("leeks");
             Texture2D wallTexture = Content.Load<Texture2D>("wall");
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
             _player = new Player(texture);
@@ -80,12 +80,14 @@ namespace Game1
             var collision = new Collision(_tileArray);
             var colCheck = collision.CheckCollision(_player, _world);
 
-            _player.Input(state, colCheck);
+            var playerMoving = _player.Input(state, colCheck);
             // TODO: Add your update logic here
 
             score++;
-
-            _player.animatedSprite.Update();
+            if (playerMoving)
+            {
+                _player.animatedSprite.Update();
+            }
 
             base.Update(gameTime);
         }
