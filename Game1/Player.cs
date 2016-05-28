@@ -11,7 +11,7 @@ namespace Game1
 {
     class Player
     {
-        SpriteEffects spriteEffects = SpriteEffects.FlipHorizontally;
+        public SpriteEffects spriteEffects = SpriteEffects.FlipHorizontally;
 
         public AnimatedSprite animatedSprite;
         public Vector2 position;
@@ -48,14 +48,14 @@ namespace Game1
                 {
                     dCount = dCount + 1;
                     x = speed;
-                    spriteEffects = SpriteEffects.None;
+                    spriteEffects = SpriteEffects.FlipHorizontally;
                     playerMoving = true;
                 }
                 if (state.IsKeyDown(Keys.Left))
                 {
                     dCount = dCount + 1;
                     x = -speed;
-                    spriteEffects = SpriteEffects.FlipHorizontally;
+                    spriteEffects = SpriteEffects.None;
                     playerMoving = true;
                 }
                 if (state.IsKeyDown(Keys.Up))

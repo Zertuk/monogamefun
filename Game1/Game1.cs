@@ -109,7 +109,7 @@ namespace Game1
             spriteBatch.DrawString(font, "y: " + _player.rectangle().Y, new Vector2(10, 50), Color.Black);
             spriteBatch.End();
 
-            _player.animatedSprite.Draw(spriteBatch, _player.position);
+            _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
 
             base.Draw(gameTime);
         }

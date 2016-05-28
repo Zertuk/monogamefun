@@ -41,7 +41,7 @@ namespace Game1
             limiter = limiter + 1;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 location)
+        public void Draw(SpriteBatch spriteBatch, Vector2 location, SpriteEffects spriteEffects)
         {
             int width = Texture.Width / Columns;
             int height = Texture.Height / Rows;
@@ -52,7 +52,7 @@ namespace Game1
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
+            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White, 0, new Vector2(50, 50), spriteEffects, 0f);
             spriteBatch.End();
         }
     }
