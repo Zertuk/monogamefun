@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Game1
     class World
     {
         public ContentManager _content;
+        public int tileSize;
         private SpriteBatch _spriteBatch;
         private string[,] _dungeonArray;
         public Tile[,][,] _worldArray;
@@ -19,14 +21,16 @@ namespace Game1
         private Tile[,] _tileArray;
         private Room _room;
         private int[] _roomIndex;
+        private Player _player;
 
-        public World(ContentManager content, SpriteBatch spriteBatch)
+        public World(ContentManager content, SpriteBatch spriteBatch, Player player)
         {
             _roomIndex = new int[2];
             _worldArray = new Tile[5, 5][,];
             _content = content;
             _spriteBatch = spriteBatch;
             _room = new Room(_content, _spriteBatch);
+            _player = player;
 
             var dungeon = new Dungeon(5, 5, 10);
             _dungeonArray = dungeon.GenerateDungeon();
@@ -35,24 +39,52 @@ namespace Game1
             RoomToDungeon();
         }
 
+        public void resetPlayerPosition(string playerDirection)
+        {
+            Debug.WriteLine(playerDirection);
+            switch(playerDirection)
+            { 
+                case "north":
+                    _player.position.Y = (_activeRoom.GetLength(1) - 2) * 64;
+                    break;
+                case "south":
+                    _player.position.Y = 100;
+                    break;
+                case "east":
+                    _player.position.X = 100;
+                    break;
+                case "west":
+                    _player.position.X = ((_activeRoom.GetLength(0) - 2)) * 64;
+                    break;
+            }
+        }
+
         public void UseDoor(int x, int y)
         {
             if (x == 0)
             {
                 _activeRoom = _worldArray[_roomIndex[0] - 1, _roomIndex[1]];
                 _roomIndex[0] = _roomIndex[0] - 1;
+                resetPlayerPosition("west");
             }
             if (y == 0)
             {
-                _activeRoom = _worldArray[_roomIndex[0], _roomIndex[1] ];
+                _activeRoom = _worldArray[_roomIndex[0], _roomIndex[1] - 1];
+                _roomIndex[1] = _roomIndex[1] - 1;
+                resetPlayerPosition("north");
             }
-            //if (x == _activeRoom.GetLength(1) - 1)
-            //{
-            //    _activeRoom = _worldArray[_roomIndex[0] + 1, _roomIndex[1]];
-            //}
-            Console.WriteLine("USE DOOR HERE");
-            Console.WriteLine(x);
-            Console.WriteLine(y);
+            if (x == _activeRoom.GetLength(0) - 1)
+            {
+                _activeRoom = _worldArray[_roomIndex[0] + 1, _roomIndex[1]];
+                _roomIndex[0] = _roomIndex[0] + 1;
+                resetPlayerPosition("east");
+            }
+            if (y == _activeRoom.GetLength(1) - 1)
+            {
+                _activeRoom = _worldArray[_roomIndex[0], _roomIndex[1] + 1];
+                _roomIndex[1] = _roomIndex[1] + 1;
+                resetPlayerPosition("south");
+            }
         }
 
         private bool[] DoorGenCheck(int x, int y)
@@ -63,7 +95,7 @@ namespace Game1
             if (x != _dungeonArray.GetLength(0) - 1)
             {
                 //east
-                if (_dungeonArray[x + 1, y] == "_")
+                if (_dungeonArray[x + 1, y] == "_" || _dungeonArray[x + 1, y] == "S")
                 {
                     doors[1] = true;
                 }
@@ -71,7 +103,7 @@ namespace Game1
             if (x != 0)
             { 
                 //west
-                if (_dungeonArray[x - 1, y] == "_")
+                if (_dungeonArray[x - 1, y] == "_" || _dungeonArray[x - 1, y] == "S")
                 {
                     doors[3] = true;
                 }
@@ -79,7 +111,7 @@ namespace Game1
             if (y != _dungeonArray.GetLength(1)-1)
             {
                 //south
-                if (_dungeonArray[x, y + 1] == "_")
+                if (_dungeonArray[x, y + 1] == "_" || _dungeonArray[x, y + 1] == "S")
                 {
                     doors[2] = true;
                 }
@@ -87,7 +119,7 @@ namespace Game1
             if (y != 0)
             {
                 //north
-                if (_dungeonArray[x, y - 1] == "_")
+                if (_dungeonArray[x, y - 1] == "_" || _dungeonArray[x, y - 1] == "S")
                 {
                     doors[0] = true;
                 }
@@ -103,14 +135,13 @@ namespace Game1
                 for (var j = 0; j < 5; j++)
                 {
                     if (_dungeonArray[i,j] == "_")
-                    { 
-                        //var doors = DoorGenCheck(i, j);
-                        //var tileArray = _room.GenerateRoom(15, 9, doors);
-                        //_worldArray[i,j] = tileArray;
+                    {
+                        var doors = DoorGenCheck(i, j);
+                        var tileArray = _room.GenerateRoom(9, 9, doors);
+                        _worldArray[i, j] = tileArray;
                     }
                     else if (_dungeonArray[i, j] == "S")
                     {
-                        Console.WriteLine("THIS SHOULD RUN ONCE ONLY");
                         var doors = DoorGenCheck(i, j);
                         var tileArray = _room.GenerateRoom(9, 9, doors);
                         _worldArray[i,j] = tileArray;

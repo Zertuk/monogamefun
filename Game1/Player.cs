@@ -33,7 +33,6 @@ namespace Game1
             return new Rectangle((int)position.X, (int)position.Y, 64, 64);
         }
 
-
         public bool Input(KeyboardState state, bool colCheck)
         {
             var playerMoving = false;

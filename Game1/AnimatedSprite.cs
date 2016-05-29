@@ -52,7 +52,7 @@ namespace Game1
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White, 0, new Vector2(50, 50), spriteEffects, 0f);
+            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White, 0, new Vector2(32, 32), spriteEffects, 0f);
             spriteBatch.End();
         }
     }

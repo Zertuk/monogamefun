@@ -24,7 +24,7 @@ namespace Game1
             int playerXMin;
             int rows = _tileArray.GetLength(1);
             int columns = _tileArray.GetLength(0);
-            if ((int)player.position.Y / 64 + 2 >= rows)
+            if ((int)player.position.Y / 64  >= rows)
             {
                 playerYMax = rows - 1;
             }
@@ -32,7 +32,7 @@ namespace Game1
             {
                 playerYMax = ((int)player.position.Y / 64);
             }
-            if ((int)player.position.X / 64 + 2 >= columns)
+            if ((int)player.position.X / 64  >= columns)
             {
                 playerXMax = columns - 1;
             }
@@ -46,7 +46,7 @@ namespace Game1
             }
             else
             {
-                playerYMin = (int)player.position.Y / 64 - 2;
+                playerYMin = (int)player.position.Y / 64 ;
             }
             if ((int)(player.position.X / 64 - 2) <= 0)
             {
@@ -54,7 +54,7 @@ namespace Game1
             }
             else
             {
-                playerXMin = (int)player.position.X / 64 - 2;
+                playerXMin = (int)player.position.X / 64 ;
             }
 
             for (int y = playerYMin; y <= playerYMax; y++)

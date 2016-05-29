@@ -55,7 +55,7 @@ namespace Game1
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
-            _world = new World(Content, spriteBatch);
+            _world = new World(Content, spriteBatch, _player);
             _tileArray = _world._activeRoom;
 
         }
