@@ -15,6 +15,7 @@ namespace Game1
         private int score = 0;
         Tile[,] _tileArray;
         Player _player;
+        Enemy _enemy;
         Map _map;
         Dungeon _dungeon;
         World _world;
@@ -58,7 +59,7 @@ namespace Game1
             // TODO: use this.Content to load your game content here
             _world = new World(Content, spriteBatch, _player);
             _itemDrop = new ItemDrop("heartfloat", Content);
-            
+            _enemy = new Enemy(texture);
             _tileArray = _world._activeRoom;
 
         }
@@ -94,6 +95,18 @@ namespace Game1
             }
             _itemDrop.animatedSprite.Update();
             base.Update(gameTime);
+
+            var inDistance = checkDistance(_enemy.position, _player.position);
+            _enemy.Walk(_player.position, inDistance);
+        }
+
+        private bool checkDistance(Vector2 unitA, Vector2 unitB)
+        {
+            if (Vector2.Distance(unitA, unitB) < 50)
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -116,6 +129,7 @@ namespace Game1
             _itemDrop.animatedSprite.Draw(spriteBatch, new Vector2(500, 500), SpriteEffects.None);
             _player.drawHealth(spriteBatch, Content);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
+            _enemy.animatedSprite.Draw(spriteBatch, _enemy.position, SpriteEffects.None);
 
             base.Draw(gameTime);
         }

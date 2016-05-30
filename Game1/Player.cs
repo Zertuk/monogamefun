@@ -24,40 +24,14 @@ namespace Game1
         private bool dashed = false;
         private bool dashing = false;
         private int dashCount = 0;
-        private int[] dashUpdateDir;
+        private float[] dashUpdateDir;
 
 
-        public void dash(string direction)
+        public void dash(float[] dirArr)
         {
             if (!dashed)
             {
-                switch (direction)
-                {
-                    case "right":
-                        dashUpdateDir = new int[] { 1, 0 };
-                        break;
-                    case "left":
-                        dashUpdateDir = new int[] { -1, 0 };
-                        break;
-                    case "up":
-                        dashUpdateDir = new int[] { 0, -1 };
-                        break;
-                    case "down":
-                        dashUpdateDir = new int[] { 0, 1 };
-                        break;
-                    case "leftup":
-                        dashUpdateDir = new int[] { -1, -1 };
-                        break;
-                    case "leftdown":
-                        dashUpdateDir = new int[] { -1, 1 };
-                        break;
-                    case "rightup":
-                        dashUpdateDir = new int[] { 1, -1 };
-                        break;
-                    case "rightdown":
-                        dashUpdateDir = new int[] { 1, 1 };
-                        break;
-                }
+                dashUpdateDir = dirArr;
                 dashing = true;
                 dashed = true;
             }
@@ -101,17 +75,21 @@ namespace Game1
 
         private void dashUpdate()
         {
-            if (dashing && dashCount < 5)
+            if (dashing && dashCount < 8)
             {
                 position.X = position.X + dashUpdateDir[0] * 20;
-                position.Y = position.Y + dashUpdateDir[1] * 20;
+                position.Y = position.Y + dashUpdateDir[1] * -20;
                 dashCount = dashCount + 1;
             }
-            else
+            else if (dashCount > 15)
             {
                 dashCount = 0;
                 dashed = false;
                 dashing = false;
+            }
+            else
+            {
+                dashCount = dashCount + 1;
             }
         }
 
@@ -126,35 +104,31 @@ namespace Game1
                 double y = 0;
                 double x = 0;
 
-                if (state.IsKeyDown(Keys.Right) || padState.DPad.Right == ButtonState.Pressed)
+                if (state.IsKeyDown(Keys.Right) || padState.ThumbSticks.Left.X > 0f)
                 {
                     dCount = dCount + 1;
                     x = speed;
                     spriteEffects = SpriteEffects.FlipHorizontally;
                     playerMoving = true;
-                    direction = "right";
                 }
-                if (state.IsKeyDown(Keys.Left) || padState.DPad.Left == ButtonState.Pressed)
+                if (state.IsKeyDown(Keys.Left) || padState.ThumbSticks.Left.X < 0f)
                 {
                     dCount = dCount + 1;
                     x = -speed;
                     spriteEffects = SpriteEffects.None;
                     playerMoving = true;
-                    direction = "left";
                 }
-                if (state.IsKeyDown(Keys.Up) || padState.DPad.Up == ButtonState.Pressed)
+                if (state.IsKeyDown(Keys.Up) || padState.ThumbSticks.Left.Y > 0f)
                 {
                     dCount = dCount + 1;
                     y = -speed;
                     playerMoving = true;
-                    direction = direction + "up";
                 }
-                if (state.IsKeyDown(Keys.Down) || padState.DPad.Down == ButtonState.Pressed)
+                if (state.IsKeyDown(Keys.Down) || padState.ThumbSticks.Left.Y < 0f)
                 {
                     dCount = dCount + 1;
                     y = speed;
                     playerMoving = true;
-                    direction = direction + "down";
                 }
                 if (dCount > 1)
                 {
@@ -197,9 +171,10 @@ namespace Game1
                 position = prevPosition;
             }
 
+            float[] dirArray = { padState.ThumbSticks.Left.X, padState.ThumbSticks.Left.Y };
             if (state.IsKeyDown(Keys.F) || padState.Buttons.X == ButtonState.Pressed)
             {
-                dash(direction);
+                dash(dirArray);
             }
             dashUpdate();
 
