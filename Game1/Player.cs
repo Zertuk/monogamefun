@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -16,15 +17,50 @@ namespace Game1
         public AnimatedSprite animatedSprite;
         public Vector2 position;
         public string texture;
-        public int health;
         public Vector2 prevPosition;
         public double speed = 3.5;
+        public double health = 3;
+        private double maxHealth = 4;
+        private bool dashed = false;
+
+
+        public void dash()
+        {
+            if (!dashed)
+            {
+                position.X = position.X + 250;
+                dashed = true;
+            }
+        }
+
+        public void drawHealth(SpriteBatch spriteBatch, ContentManager content)
+        {
+            var heart = content.Load <Texture2D>("heart");
+            var emptyHeart = content.Load<Texture2D>("heartempty");
+            for (var i = 0; i < maxHealth; i++)
+            {
+                if (health < maxHealth && health < i + 1)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(emptyHeart, new Vector2(16 + (i * 48), 16), Color.White);
+                    spriteBatch.End();
+                }
+                else
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(heart, new Vector2(16 + (i* 48), 16), Color.White);
+                    spriteBatch.End();
+                }
+
+
+            }
+        }
 
 
         public Player(Texture2D texture)
         {
             position = new Vector2(200, 200);
-            animatedSprite = new AnimatedSprite(texture, 1, 6);
+            animatedSprite = new AnimatedSprite(texture, 1, 6, 5);
             
         }
 
@@ -35,6 +71,10 @@ namespace Game1
 
         public bool Input(KeyboardState state, bool colCheck)
         {
+            if (state.IsKeyDown(Keys.F))
+            {
+                dash();
+            }
             var playerMoving = false;
             if (!colCheck)
             {

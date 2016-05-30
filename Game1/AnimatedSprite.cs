@@ -15,30 +15,32 @@ namespace Game1
         public int Columns { get; set; }
         public int currentFrame;
         private int totalFrames;
-        private int limiter;
+        private int _limiter;
+        private int _limiterTop;
 
-        public AnimatedSprite(Texture2D texture, int rows, int columns)
+        public AnimatedSprite(Texture2D texture, int rows, int columns, int limiter)
         {
             Texture = texture;
             Rows = rows;
             Columns = columns;
             currentFrame = 0;
-            limiter = 0;
+            _limiter = 0;
+            _limiterTop = limiter;
             totalFrames = Rows * Columns;
         }
 
         public void Update()
         {
-            if (limiter % 4 == 0)
+            if (_limiter % _limiterTop == 0)
             {
-                limiter = 0;
+                _limiter = 0;
                 currentFrame = currentFrame + 1;
                 if (currentFrame == totalFrames)
                 {
                     currentFrame = 0;
                 }
             }
-            limiter = limiter + 1;
+            _limiter = _limiter + 1;
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 location, SpriteEffects spriteEffects)

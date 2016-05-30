@@ -19,6 +19,7 @@ namespace Game1
         Dungeon _dungeon;
         World _world;
         private string[,] _dungeonArray;
+        ItemDrop _itemDrop;
 
         public Game1()
         {
@@ -47,7 +48,7 @@ namespace Game1
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            // Create a new SpriteBatch, which can be used to draw textures
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Score");
             Texture2D texture = Content.Load<Texture2D>("leeks");
@@ -56,6 +57,8 @@ namespace Game1
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
             _world = new World(Content, spriteBatch, _player);
+            _itemDrop = new ItemDrop("heartfloat", Content);
+            
             _tileArray = _world._activeRoom;
 
         }
@@ -88,7 +91,7 @@ namespace Game1
             {
                 _player.animatedSprite.Update();
             }
-
+            _itemDrop.animatedSprite.Update();
             base.Update(gameTime);
         }
 
@@ -109,6 +112,8 @@ namespace Game1
             spriteBatch.DrawString(font, "y: " + _player.rectangle().Y, new Vector2(10, 50), Color.Black);
             spriteBatch.End();
 
+            _itemDrop.animatedSprite.Draw(spriteBatch, new Vector2(500, 500), SpriteEffects.None);
+            _player.drawHealth(spriteBatch, Content);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
 
             base.Draw(gameTime);
