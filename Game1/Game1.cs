@@ -80,10 +80,11 @@ namespace Game1
         protected override void Update(GameTime gameTime)
         {
             KeyboardState state = Keyboard.GetState();
+            var padState = GamePad.GetState(PlayerIndex.One);
             var collision = new Collision(_tileArray);
             var colCheck = collision.CheckCollision(_player, _world);
 
-            var playerMoving = _player.Input(state, colCheck);
+            var playerMoving = _player.Input(state, padState, colCheck);
             // TODO: Add your update logic here
 
             score++;

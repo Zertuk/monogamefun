@@ -22,13 +22,43 @@ namespace Game1
         public double health = 3;
         private double maxHealth = 4;
         private bool dashed = false;
+        private bool dashing = false;
+        private int dashCount = 0;
+        private int[] dashUpdateDir;
 
 
-        public void dash()
+        public void dash(string direction)
         {
             if (!dashed)
             {
-                position.X = position.X + 250;
+                switch (direction)
+                {
+                    case "right":
+                        dashUpdateDir = new int[] { 1, 0 };
+                        break;
+                    case "left":
+                        dashUpdateDir = new int[] { -1, 0 };
+                        break;
+                    case "up":
+                        dashUpdateDir = new int[] { 0, -1 };
+                        break;
+                    case "down":
+                        dashUpdateDir = new int[] { 0, 1 };
+                        break;
+                    case "leftup":
+                        dashUpdateDir = new int[] { -1, -1 };
+                        break;
+                    case "leftdown":
+                        dashUpdateDir = new int[] { -1, 1 };
+                        break;
+                    case "rightup":
+                        dashUpdateDir = new int[] { 1, -1 };
+                        break;
+                    case "rightdown":
+                        dashUpdateDir = new int[] { 1, 1 };
+                        break;
+                }
+                dashing = true;
                 dashed = true;
             }
         }
@@ -69,12 +99,25 @@ namespace Game1
             return new Rectangle((int)position.X, (int)position.Y, 64, 64);
         }
 
-        public bool Input(KeyboardState state, bool colCheck)
+        private void dashUpdate()
         {
-            if (state.IsKeyDown(Keys.F))
+            if (dashing && dashCount < 5)
             {
-                dash();
+                position.X = position.X + dashUpdateDir[0] * 20;
+                position.Y = position.Y + dashUpdateDir[1] * 20;
+                dashCount = dashCount + 1;
             }
+            else
+            {
+                dashCount = 0;
+                dashed = false;
+                dashing = false;
+            }
+        }
+
+        public bool Input(KeyboardState state, GamePadState padState, bool colCheck)
+        {
+            var direction = "";
             var playerMoving = false;
             if (!colCheck)
             {
@@ -83,31 +126,35 @@ namespace Game1
                 double y = 0;
                 double x = 0;
 
-                if (state.IsKeyDown(Keys.Right))
+                if (state.IsKeyDown(Keys.Right) || padState.DPad.Right == ButtonState.Pressed)
                 {
                     dCount = dCount + 1;
                     x = speed;
                     spriteEffects = SpriteEffects.FlipHorizontally;
                     playerMoving = true;
+                    direction = "right";
                 }
-                if (state.IsKeyDown(Keys.Left))
+                if (state.IsKeyDown(Keys.Left) || padState.DPad.Left == ButtonState.Pressed)
                 {
                     dCount = dCount + 1;
                     x = -speed;
                     spriteEffects = SpriteEffects.None;
                     playerMoving = true;
+                    direction = "left";
                 }
-                if (state.IsKeyDown(Keys.Up))
+                if (state.IsKeyDown(Keys.Up) || padState.DPad.Up == ButtonState.Pressed)
                 {
                     dCount = dCount + 1;
                     y = -speed;
                     playerMoving = true;
+                    direction = direction + "up";
                 }
-                if (state.IsKeyDown(Keys.Down))
+                if (state.IsKeyDown(Keys.Down) || padState.DPad.Down == ButtonState.Pressed)
                 {
                     dCount = dCount + 1;
                     y = speed;
                     playerMoving = true;
+                    direction = direction + "down";
                 }
                 if (dCount > 1)
                 {
@@ -149,6 +196,12 @@ namespace Game1
                 playerMoving = true;
                 position = prevPosition;
             }
+
+            if (state.IsKeyDown(Keys.F) || padState.Buttons.X == ButtonState.Pressed)
+            {
+                dash(direction);
+            }
+            dashUpdate();
 
             if (!playerMoving)
             {

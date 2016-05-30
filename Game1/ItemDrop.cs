@@ -9,7 +9,7 @@ namespace Game1
         
         public ItemDrop(string type, ContentManager content)
         {
-            Texture2D texture = content.Load<Texture2D>("heartfloat");
+            Texture2D texture = content.Load<Texture2D>(type);
             animatedSprite = new AnimatedSprite(texture, 1, 6, 8);
         }
     }
