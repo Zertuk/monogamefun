@@ -93,11 +93,23 @@ namespace Game1
             {
                 _player.animatedSprite.Update();
             }
-            _itemDrop.animatedSprite.Update();
+            if (_itemDrop != null)
+            {
+                _itemDrop.animatedSprite.Update();
+            }
             base.Update(gameTime);
 
             var inDistance = checkDistance(_enemy.position, _player.position);
             _enemy.Walk(_player.position, inDistance);
+            if (_itemDrop != null)
+            {
+                inDistance = checkDistance(_itemDrop.position, _player.position);
+                var pickUp = _itemDrop.PickUp(_player, inDistance);
+                if (pickUp)
+                {
+                    _itemDrop = null;
+                }
+            }
         }
 
         private bool checkDistance(Vector2 unitA, Vector2 unitB)
@@ -125,8 +137,10 @@ namespace Game1
             spriteBatch.DrawString(font, "x: " + _player.rectangle().X, new Vector2(10, 30), Color.Black);
             spriteBatch.DrawString(font, "y: " + _player.rectangle().Y, new Vector2(10, 50), Color.Black);
             spriteBatch.End();
-
-            _itemDrop.animatedSprite.Draw(spriteBatch, new Vector2(500, 500), SpriteEffects.None);
+            if (_itemDrop != null)
+            {
+                _itemDrop.animatedSprite.Draw(spriteBatch, _itemDrop.position, SpriteEffects.None);
+            }
             _player.drawHealth(spriteBatch, Content);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
             _enemy.animatedSprite.Draw(spriteBatch, _enemy.position, SpriteEffects.None);

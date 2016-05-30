@@ -20,7 +20,7 @@ namespace Game1
         public Vector2 prevPosition;
         public double speed = 3.5;
         public double health = 3;
-        private double maxHealth = 4;
+        public double maxHealth = 4;
         private bool dashed = false;
         private bool dashing = false;
         private int dashCount = 0;
