@@ -10,7 +10,7 @@ namespace Game1
         public Vector2 position;
         public ItemDrop(string type, ContentManager content)
         {
-            position = new Vector2(500, 500);
+            position = new Vector2(400, 400);
             Texture2D texture = content.Load<Texture2D>(type);
             animatedSprite = new AnimatedSprite(texture, 1, 6, 8);
         }

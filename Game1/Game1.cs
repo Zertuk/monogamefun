@@ -143,7 +143,7 @@ namespace Game1
             }
             _player.drawHealth(spriteBatch, Content);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
-            _enemy.animatedSprite.Draw(spriteBatch, _enemy.position, SpriteEffects.None);
+            //_enemy.animatedSprite.Draw(spriteBatch, _enemy.position, SpriteEffects.None);
 
             base.Draw(gameTime);
         }
