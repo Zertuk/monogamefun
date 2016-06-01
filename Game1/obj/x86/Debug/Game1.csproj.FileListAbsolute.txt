@@ -41,3 +41,4 @@ C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\heart.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\heartempty.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\heartfloat.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\beeman.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\beemanrun.xnb
