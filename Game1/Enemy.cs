@@ -12,10 +12,10 @@ namespace Game1
     {
         public AnimatedSprite animatedSprite;
         public Vector2 position;
-        public Enemy(Texture2D texture)
+        public Enemy(Texture2D texture, int col, int row, int limiter)
         {
             position = new Vector2(400, 400);
-            animatedSprite = new AnimatedSprite(texture, 1, 6, 5);
+            animatedSprite = new AnimatedSprite(texture, col, row, limiter);
         }
 
         public void Walk(Vector2 unitPosition, bool inDistance)

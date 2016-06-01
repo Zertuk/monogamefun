@@ -53,13 +53,14 @@ namespace Game1
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Score");
             Texture2D texture = Content.Load<Texture2D>("leeks");
+            Texture2D bee = Content.Load<Texture2D>("beeman");
             Texture2D wallTexture = Content.Load<Texture2D>("wall");
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
             _world = new World(Content, spriteBatch, _player);
             _itemDrop = new ItemDrop("heartfloat", Content);
-            _enemy = new Enemy(texture);
+            _enemy = new Enemy(bee, 1, 1, 1);
             _tileArray = _world._activeRoom;
 
         }
@@ -143,7 +144,7 @@ namespace Game1
             }
             _player.drawHealth(spriteBatch, Content);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
-            //_enemy.animatedSprite.Draw(spriteBatch, _enemy.position, SpriteEffects.None);
+            _enemy.animatedSprite.Draw(spriteBatch, _enemy.position, SpriteEffects.None);
 
             base.Draw(gameTime);
         }
