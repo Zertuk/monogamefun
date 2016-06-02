@@ -30,7 +30,7 @@ namespace Game1
                 {
                     var pos = new Vector2(i * 64, j * 64);
                     _spriteBatch.Begin();
-                    _spriteBatch.Draw(tileArray[i,j].Texture, pos, Color.White);
+                    _spriteBatch.Draw(tileArray[i, j].Texture, pos, null, null, new Vector2(0, 0), 0, new Vector2((float)1, (float)1), Color.White, SpriteEffects.None);
                     _spriteBatch.End();
                 }
             }

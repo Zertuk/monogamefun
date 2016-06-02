@@ -70,7 +70,7 @@ namespace Game1
 
         public Rectangle rectangle()
         {
-            return new Rectangle((int)position.X, (int)position.Y, 64, 64);
+            return new Rectangle((int)position.X, (int)position.Y, 96, 96);
         }
 
         private void dashUpdate()

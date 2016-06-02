@@ -151,18 +151,6 @@
 /processorParam:TextureFormat=Color
 /build:playerpos.png
 
-#begin leeks.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:leeks.png
-
 #begin heart.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -222,4 +210,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:beemanrun.png
+
+#begin leeks.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:leeks.png
 

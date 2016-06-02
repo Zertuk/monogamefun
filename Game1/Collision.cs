@@ -18,43 +18,46 @@ namespace Game1
 
         public bool CheckCollision(Player player, World world)
         {
+            var tileSize = 64;
+            var scale = 1;
+            var scaledTile = (int)(tileSize * scale);
             int playerYMax;
             int playerYMin;
             int playerXMax;
             int playerXMin;
             int rows = _tileArray.GetLength(1);
             int columns = _tileArray.GetLength(0);
-            if ((int)player.position.Y / 64  >= rows)
+            if ((int)player.position.Y / scaledTile >= rows)
             {
                 playerYMax = rows - 1;
             }
             else
             {
-                playerYMax = ((int)player.position.Y / 64);
+                playerYMax = ((int)player.position.Y / scaledTile);
             }
-            if ((int)player.position.X / 64  >= columns)
+            if ((int)player.position.X / scaledTile >= columns)
             {
                 playerXMax = columns - 1;
             }
             else
             {
-                playerXMax = ((int)player.position.X / 64);
+                playerXMax = ((int)player.position.X / scaledTile);
             }
-            if ((int)player.position.Y / 64 - 2 <= 0)
+            if ((int)player.position.Y / scaledTile - 2 <= 0)
             {
                 playerYMin = 0;
             }
             else
             {
-                playerYMin = (int)player.position.Y / 64 ;
+                playerYMin = (int)player.position.Y / scaledTile;
             }
-            if ((int)(player.position.X / 64 - 2) <= 0)
+            if ((int)(player.position.X / scaledTile - 2) <= 0)
             {
                 playerXMin = 0;
             }
             else
             {
-                playerXMin = (int)player.position.X / 64 ;
+                playerXMin = (int)player.position.X / scaledTile;
             }
 
             for (int y = playerYMin; y <= playerYMax; y++)
@@ -63,7 +66,7 @@ namespace Game1
                 {
                     if (!_tileArray[x, y].IsPassable)
                     {
-                        if (new Rectangle(x*64, y*64, 64, 64).Intersects(player.rectangle()))
+                        if (new Rectangle(x* scaledTile, y* scaledTile, scaledTile, scaledTile).Intersects(player.rectangle()))
                         {
                             //Check farthest valid position and put player there
                             return true;
@@ -71,7 +74,7 @@ namespace Game1
                     }
                     if (_tileArray[x,y].IsDoor)
                     {
-                        if (new Rectangle(x * 64, y * 64, 64, 64).Intersects(player.rectangle()))
+                        if (new Rectangle(x*scaledTile, y * scaledTile, scaledTile, scaledTile).Intersects(player.rectangle()))
                         {
                             //Check farthest valid position and put player there
                             world.UseDoor(x, y);
