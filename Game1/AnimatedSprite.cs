@@ -54,7 +54,7 @@ namespace Game1
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
 
             spriteBatch.Begin();
-            spriteBatch.Draw(Texture, location, null, sourceRectangle, new Vector2(32, 32), 0, new Vector2((float)1, (float)1), Color.White, spriteEffects);
+            spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, new Vector2(32, 32), 0, new Vector2((float)1, (float)1), Color.White, spriteEffects);
             spriteBatch.End();
         }
     }

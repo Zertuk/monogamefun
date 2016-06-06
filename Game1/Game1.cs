@@ -13,6 +13,8 @@ namespace Game1
         SpriteBatch spriteBatch;
         private SpriteFont font;
         private int score = 0;
+        public double scale = 1.5;
+        public int tileSize = 64;
         Tile[,] _tileArray;
         Player _player;
         Enemy _enemy;
