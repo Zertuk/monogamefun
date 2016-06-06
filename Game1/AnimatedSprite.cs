@@ -17,6 +17,9 @@ namespace Game1
         private int totalFrames;
         private int _limiter;
         private int _limiterTop;
+        private static GameOptions _gameOptions = new GameOptions();
+        private int _scaledTile = _gameOptions.scaledTile;
+        private double _scale = _gameOptions.scale;
 
         public AnimatedSprite(Texture2D texture, int rows, int columns, int limiter)
         {
@@ -51,10 +54,10 @@ namespace Game1
             int column = currentFrame % Columns;
 
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, (int)(width * _scale), (int)(height*_scale));
 
             spriteBatch.Begin();
-            spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, new Vector2(32, 32), 0, new Vector2((float)1, (float)1), Color.White, spriteEffects);
+            spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, new Vector2(_scaledTile / 2, _scaledTile / 2), 0, new Vector2((float)_scale, (float)_scale), Color.White, spriteEffects);
             spriteBatch.End();
         }
     }

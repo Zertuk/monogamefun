@@ -22,6 +22,8 @@ namespace Game1
         private Room _room;
         private int[] _roomIndex;
         private Player _player;
+        private static GameOptions _gameOptions = new GameOptions();
+        private int _scaledTile = _gameOptions.scaledTile;
 
         public World(ContentManager content, SpriteBatch spriteBatch, Player player)
         {
@@ -45,7 +47,7 @@ namespace Game1
             switch(playerDirection)
             { 
                 case "north":
-                    _player.position.Y = (_activeRoom.GetLength(1) - 2) * 64;
+                    _player.position.Y = (_activeRoom.GetLength(1) - 2) * _scaledTile;
                     break;
                 case "south":
                     _player.position.Y = 100;
@@ -54,7 +56,7 @@ namespace Game1
                     _player.position.X = 100;
                     break;
                 case "west":
-                    _player.position.X = ((_activeRoom.GetLength(0) - 2)) * 64;
+                    _player.position.X = ((_activeRoom.GetLength(0) - 2)) * _scaledTile;
                     break;
             }
         }

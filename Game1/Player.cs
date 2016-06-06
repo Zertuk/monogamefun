@@ -25,7 +25,8 @@ namespace Game1
         private bool dashing = false;
         private int dashCount = 0;
         private float[] dashUpdateDir;
-
+        private static GameOptions _gameOptions = new GameOptions();
+        private int _scaledTile = _gameOptions.scaledTile;
 
         public void dash(float[] dirArr)
         {
@@ -70,7 +71,7 @@ namespace Game1
 
         public Rectangle rectangle()
         {
-            return new Rectangle((int)position.X, (int)position.Y, 32, 32);
+            return new Rectangle((int)position.X, (int)position.Y, _scaledTile/2, _scaledTile / 2);
         }
 
         private void dashUpdate()

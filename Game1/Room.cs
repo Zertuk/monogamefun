@@ -15,6 +15,9 @@ namespace Game1
         int _y;
         ContentManager _content;
         SpriteBatch _spriteBatch;
+        private static GameOptions _gameOptions = new GameOptions();
+        private int _scaledTile = _gameOptions.scaledTile;
+        private double _scale = _gameOptions.scale;
 
         public Room(ContentManager content, SpriteBatch spriteBatch)
         {
@@ -28,9 +31,9 @@ namespace Game1
             {
                 for (var j = 0; j < _y; j++)
                 {
-                    var pos = new Vector2(i * 64, j * 64);
+                    var pos = new Vector2(i * _scaledTile, j * _scaledTile);
                     _spriteBatch.Begin();
-                    _spriteBatch.Draw(tileArray[i, j].Texture, pos, null, null, new Vector2(0, 0), 0, new Vector2((float)1, (float)1), Color.White, SpriteEffects.None);
+                    _spriteBatch.Draw(tileArray[i, j].Texture, pos, null, null, new Vector2(0, 0), 0, new Vector2((float)_scale, (float)_scale), Color.White, SpriteEffects.None);
                     _spriteBatch.End();
                 }
             }
