@@ -18,7 +18,7 @@ namespace Game1
         public Vector2 position;
         public string texture;
         public Vector2 prevPosition;
-        public double speed = 3.5;
+        public double baseSpeed = 3.5;
         public double health = 3;
         public double maxHealth = 4;
         private bool dashed = false;
@@ -27,6 +27,8 @@ namespace Game1
         private float[] dashUpdateDir;
         private static GameOptions _gameOptions = new GameOptions();
         private int _scaledTile = _gameOptions.scaledTile;
+        private double _scale = _gameOptions.scale;
+        public double speed;
 
         public void dash(float[] dirArr)
         {
@@ -66,20 +68,21 @@ namespace Game1
         {
             position = new Vector2(200, 200);
             animatedSprite = new AnimatedSprite(texture, 1, 6, 5);
-            
-        }
+            speed = baseSpeed * _scale;
 
-        public Rectangle rectangle()
+    }
+
+    public Rectangle rectangle()
         {
-            return new Rectangle((int)position.X, (int)position.Y, _scaledTile/2, _scaledTile / 2);
+            return new Rectangle((int)position.X, (int)position.Y, _scaledTile / 2, _scaledTile / 2);
         }
 
         private void dashUpdate()
         {
             if (dashing && dashCount < 8)
             {
-                position.X = position.X + dashUpdateDir[0] * 20;
-                position.Y = position.Y + dashUpdateDir[1] * -20;
+                position.X = (float)(position.X + dashUpdateDir[0] * 20*_scale);
+                position.Y = (float)(position.Y + dashUpdateDir[1] * -20*_scale);
                 dashCount = dashCount + 1;
             }
             else if (dashCount > 15)
@@ -96,7 +99,6 @@ namespace Game1
 
         public bool Input(KeyboardState state, GamePadState padState, bool colCheck)
         {
-            var direction = "";
             var playerMoving = false;
             if (!colCheck)
             {

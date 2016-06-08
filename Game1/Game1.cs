@@ -22,6 +22,8 @@ namespace Game1
         World _world;
         private string[,] _dungeonArray;
         ItemDrop _itemDrop;
+        private GameOptions _gameOptions;
+        private double _scale;
 
         public Game1()
         {
@@ -63,6 +65,8 @@ namespace Game1
             _itemDrop = new ItemDrop("heartfloat", Content);
             _enemy = new Enemy(bee, 1, 4, 12);
             _tileArray = _world._activeRoom;
+            _gameOptions = new GameOptions();
+            _scale = _gameOptions.scale;
         }
 
         /// <summary>
@@ -85,7 +89,7 @@ namespace Game1
             var padState = GamePad.GetState(PlayerIndex.One);
             var collision = new Collision(_tileArray);
             var colCheck = collision.CheckCollision(_player, _world);
-
+            _tileArray = _world._activeRoom;
             var playerMoving = _player.Input(state, padState, colCheck);
             // TODO: Add your update logic here
 
@@ -116,7 +120,7 @@ namespace Game1
 
         private bool checkDistance(Vector2 unitA, Vector2 unitB)
         {
-            if (Vector2.Distance(unitA, unitB) < 50)
+            if (Vector2.Distance(unitA, unitB) < 50*_scale)
             {
                 return true;
             }

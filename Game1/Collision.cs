@@ -29,7 +29,7 @@ namespace Game1
             int columns = _tileArray.GetLength(0);
             if ((int)player.position.Y / _scaledTile >= rows)
             {
-                playerYMax = rows - 1;
+                playerYMax = rows;
             }
             else
             {
@@ -37,7 +37,7 @@ namespace Game1
             }
             if ((int)player.position.X / _scaledTile >= columns)
             {
-                playerXMax = columns - 1;
+                playerXMax = columns;
             }
             else
             {
@@ -72,11 +72,11 @@ namespace Game1
                             return true;
                         }
                     }
+                    Console.WriteLine(_tileArray[x,y].IsDoor);
                     if (_tileArray[x,y].IsDoor)
                     {
                         if (new Rectangle(x * _scaledTile, y * _scaledTile, _scaledTile, _scaledTile).Intersects(player.rectangle()))
                         {
-                            //Check farthest valid position and put player there
                             world.UseDoor(x, y);
                         }
                     }
