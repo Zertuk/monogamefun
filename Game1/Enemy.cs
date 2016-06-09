@@ -21,6 +21,11 @@ namespace Game1
             testage = 0;
         }
 
+        private void Navigate()
+        {
+
+        }
+
         public void Walk(Vector2 unitPosition, bool inDistance)
         {
             //if (inDistance)
