@@ -14,9 +14,9 @@ namespace Game1
         public Vector2 position;
         public SpriteEffects spriteEffects;
         private int testage;
-        public Enemy(Texture2D texture, int col, int row, int limiter)
+        public Enemy(Texture2D texture, int col, int row, int limiter, Vector2 setPos)
         {
-            position = new Vector2(300, 400);
+            position = setPos;
             animatedSprite = new AnimatedSprite(texture, col, row, limiter);
             testage = 0;
         }

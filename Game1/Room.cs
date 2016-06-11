@@ -105,6 +105,7 @@ namespace Game1
                         texture = _content.Load<Texture2D>("grass");
                         tile.IsPassable = true;
                         tile.IsDoor = false;
+                        tile.IsSpawnable = true;
                         tile.Texture = texture;
                     }
                     else if (levelArray[i, j] == "D")

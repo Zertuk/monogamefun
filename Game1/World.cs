@@ -24,11 +24,18 @@ namespace Game1
         private Player _player;
         private static GameOptions _gameOptions = new GameOptions();
         private int _scaledTile = _gameOptions.scaledTile;
+        private string[,][,] _enemyArray;
+        private List<Enemy> _activeEnemies;
+        private Random _rnd;
+        private Collision _collision;
 
         public World(ContentManager content, SpriteBatch spriteBatch, Player player)
         {
+            _rnd = new Random();
+            _activeEnemies = new List<Enemy>();
             _roomIndex = new int[2];
             _worldArray = new Tile[5, 5][,];
+            _enemyArray = new string[5, 5][,];
             _content = content;
             _spriteBatch = spriteBatch;
             _room = new Room(_content, _spriteBatch);
@@ -43,7 +50,6 @@ namespace Game1
 
         public void resetPlayerPosition(string playerDirection)
         {
-            Debug.WriteLine(playerDirection);
             switch(playerDirection)
             { 
                 case "north":
@@ -59,6 +65,9 @@ namespace Game1
                     _player.position.X = ((_activeRoom.GetLength(0) - 2)) * _scaledTile;
                     break;
             }
+            var collision = new Collision(_activeRoom);
+            _collision = collision;
+            ChangeRooms(_roomIndex[0], _roomIndex[1]);
         }
 
         public void UseDoor(int x, int y)
@@ -86,6 +95,16 @@ namespace Game1
                 _activeRoom = _worldArray[_roomIndex[0], _roomIndex[1] + 1];
                 _roomIndex[1] = _roomIndex[1] + 1;
                 resetPlayerPosition("south");
+            }
+        }
+
+        private void ChangeRooms(int x, int y)
+        {
+            _activeEnemies = new List<Enemy>();
+            if (_enemyArray[x, y] != null)
+            {
+                var spawnEnemy = new SpawnEnemy(_enemyArray[x, y], _content);
+                _activeEnemies = spawnEnemy.Spawn();
             }
         }
 
@@ -140,17 +159,15 @@ namespace Game1
                     {
                         var doors = DoorGenCheck(i, j);
                         var tileArray = _room.GenerateRoom(9, 9, doors);
-                        //var roomInfo = new RoomInfo("_", tileArray);
-                        //roomInfo.GenerateEnemies();
+                        var roomInfo = new RoomInfo("_", tileArray, _rnd);
+                        _enemyArray[i, j] = roomInfo.GenerateEnemies();
                         _worldArray[i, j] = tileArray;
-
                     }
                     else if (_dungeonArray[i, j] == "S")
                     {
                         var doors = DoorGenCheck(i, j);
                         var tileArray = _room.GenerateRoom(9, 9, doors);
-                        var roomInfo = new RoomInfo("_", tileArray);
-                        roomInfo.GenerateEnemies();
+                        var roomInfo = new RoomInfo("_", tileArray, _rnd);
                         _worldArray[i,j] = tileArray;
                         _activeRoom = _worldArray[i,j];
                         var indX = i;
@@ -162,10 +179,40 @@ namespace Game1
             }
         }
 
+        public void DrawEnemies()
+        {
+            var count = _activeEnemies.Count();
+            if (count > 0)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    _activeEnemies[i].animatedSprite.Draw(_spriteBatch, _activeEnemies[i].position, _activeEnemies[i].spriteEffects);
+                }
+            }
+        }
+
+        private void UpdateEnemies()
+        {
+            var count = _activeEnemies.Count();
+            if (count > 0)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    _activeEnemies[i].animatedSprite.Update();
+                }
+            }
+        }
+
+        public void WorldUpdate()
+        {
+            UpdateEnemies();
+        }
+
         public void worldDraw()
         {
             _room.Draw(_activeRoom);
             _map.drawMap(_dungeonArray, _roomIndex);
+            DrawEnemies();
         }
 
     }

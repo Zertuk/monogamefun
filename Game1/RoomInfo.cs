@@ -13,17 +13,19 @@ namespace Game1
         private int minEnemy = 2;
         private Random rnd;
         private int curEnemies = 0;
-        private Tile[,] currentLevel;
+        private Tile[,] _currentLevel;
         private int _x;
         private int _y;
-        public RoomInfo(string levelType, Tile[,] currentLevel)
+        private Random _rnd;
+        public RoomInfo(string levelType, Tile[,] currentLevel, Random rnd)
         {
             var Seed = (int)DateTime.Now.Ticks;
-            rnd = new Random(Seed);
+            _rnd = rnd;
             _x = currentLevel.GetLength(0) - 1;
             _y = currentLevel.GetLength(1) - 1;
+            _currentLevel = currentLevel;
         }
-        public void GenerateEnemies()
+        public string[,] GenerateEnemies()
         {
             string[,] enemyArray = new string[_x + 1, _y + 1];
             while (curEnemies <= minEnemy)
@@ -32,22 +34,20 @@ namespace Game1
                 {
                     for (var j = 0; j < _y; j++)
                     {
-                        var random = rnd.Next(1, 100);
+                        var random = _rnd.Next(1, 100);
                         if (curEnemies == maxEnemy)
                         {
                             break;
                         }
-                        else if (random < enemyChance && string.IsNullOrEmpty(enemyArray[i, j]))
+                        else if (random < enemyChance && string.IsNullOrEmpty(enemyArray[i, j]) && _currentLevel[i, j].IsSpawnable == true)
                         {
-                            Console.WriteLine("SPAWN HERE");
-                            Console.WriteLine(i);
-                            Console.WriteLine(j);
                             enemyArray[i, j] = "enemy";
                             curEnemies = curEnemies + 1;
                         }
                     }
                 }
             }
+            return enemyArray;
         }
         public void GenerateItems()
         {

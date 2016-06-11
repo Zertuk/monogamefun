@@ -47,6 +47,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="RoomInfo.cs" />
+    <Compile Include="SpawnEnemy.cs" />
     <Compile Include="Texture2d.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Player.cs" />

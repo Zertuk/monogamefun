@@ -63,7 +63,7 @@ namespace Game1
             // TODO: use this.Content to load your game content here
             _world = new World(Content, spriteBatch, _player);
             _itemDrop = new ItemDrop("heartfloat", Content);
-            _enemy = new Enemy(bee, 1, 4, 12);
+            //_enemy = new Enemy(bee, 1, 4, 12,);
             _tileArray = _world._activeRoom;
             _gameOptions = new GameOptions();
             _scale = _gameOptions.scale;
@@ -92,7 +92,7 @@ namespace Game1
             _tileArray = _world._activeRoom;
             var playerMoving = _player.Input(state, padState, colCheck);
             // TODO: Add your update logic here
-
+            _world.WorldUpdate();
             score++;
             if (playerMoving)
             {
@@ -102,14 +102,14 @@ namespace Game1
             {
                 _itemDrop.animatedSprite.Update();
             }
-            _enemy.animatedSprite.Update();
+            //_enemy.animatedSprite.Update();
             base.Update(gameTime);
 
-            var inDistance = checkDistance(_enemy.position, _player.position);
-            _enemy.Walk(_player.position, inDistance);
+            //var inDistance = checkDistance(_enemy.position, _player.position);
+            //_enemy.Walk(_player.position, inDistance);
             if (_itemDrop != null)
             {
-                inDistance = checkDistance(_itemDrop.position, _player.position);
+                var inDistance = checkDistance(_itemDrop.position, _player.position);
                 var pickUp = _itemDrop.PickUp(_player, inDistance);
                 if (pickUp)
                 {
@@ -134,8 +134,9 @@ namespace Game1
         protected override void Draw(GameTime gameTime)
         {
             // TODO: Add your drawing code here
-            GraphicsDevice.Clear(Color.Transparent);
+            //GraphicsDevice.Clear(Color.Transparent);
             _world.worldDraw();
+            //_world.DrawEnemies();
             float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             spriteBatch.Begin();
@@ -149,7 +150,7 @@ namespace Game1
             }
             _player.drawHealth(spriteBatch, Content);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
-            _enemy.animatedSprite.Draw(spriteBatch, _enemy.position, _enemy.spriteEffects);
+            //_enemy.animatedSprite.Draw(spriteBatch, _enemy.position, _enemy.spriteEffects);
 
             base.Draw(gameTime);
         }
