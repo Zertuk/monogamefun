@@ -32,21 +32,21 @@ namespace Game1
             //{
             //    position.X = position.X - 10;
             //}
-            testage = testage + 1;
-            if (testage < 70)
-            {
-                position.X = position.X + 2;
-                spriteEffects = SpriteEffects.None;
-            }
-            else if (testage < 140)
-            {
-                position.X = position.X - 2;
-                spriteEffects = SpriteEffects.FlipHorizontally;
-            }
-            else
-            {
-                testage = 0;
-            }
+            //testage = testage + 1;
+            //if (testage < 70)
+            //{
+            //    position.X = position.X + 2;
+            //    spriteEffects = SpriteEffects.None;
+            //}
+            //else if (testage < 140)
+            //{
+            //    position.X = position.X - 2;
+            //    spriteEffects = SpriteEffects.FlipHorizontally;
+            //}
+            //else
+            //{
+            //    testage = 0;
+            //}
         }
     }
 }

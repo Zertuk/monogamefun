@@ -140,12 +140,17 @@ namespace Game1
                     {
                         var doors = DoorGenCheck(i, j);
                         var tileArray = _room.GenerateRoom(9, 9, doors);
+                        //var roomInfo = new RoomInfo("_", tileArray);
+                        //roomInfo.GenerateEnemies();
                         _worldArray[i, j] = tileArray;
+
                     }
                     else if (_dungeonArray[i, j] == "S")
                     {
                         var doors = DoorGenCheck(i, j);
                         var tileArray = _room.GenerateRoom(9, 9, doors);
+                        var roomInfo = new RoomInfo("_", tileArray);
+                        roomInfo.GenerateEnemies();
                         _worldArray[i,j] = tileArray;
                         _activeRoom = _worldArray[i,j];
                         var indX = i;

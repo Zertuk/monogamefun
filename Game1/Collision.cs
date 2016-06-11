@@ -72,7 +72,6 @@ namespace Game1
                             return true;
                         }
                     }
-                    Console.WriteLine(_tileArray[x,y].IsDoor);
                     if (_tileArray[x,y].IsDoor)
                     {
                         if (new Rectangle(x * _scaledTile, y * _scaledTile, _scaledTile, _scaledTile).Intersects(player.rectangle()))
