@@ -42,7 +42,7 @@ namespace Game1
             _player = player;
 
             var dungeon = new Dungeon(5, 5, 10);
-            _dungeonArray = dungeon.GenerateDungeon();
+            _dungeonArray = dungeon.NewGenerateDungeon();
 
             _map = new Map(_content, _spriteBatch);
             RoomToDungeon();

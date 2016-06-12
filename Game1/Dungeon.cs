@@ -59,6 +59,32 @@ namespace Game1
             }
         }
 
+        private bool CheckLinkedRooms(int x, int y, string[,] dungeonArray)
+        {
+            if (dungeonArray[x, y] == "S" || dungeonArray[x, y] == "_")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public string[,] NewGenerateDungeon()
+        {
+            string[,] dungeonArray = new string[_width, _height];
+            var Seed = (int)DateTime.Now.Ticks;
+            var rnd = new Random(Seed);
+            var spawnX = rnd.Next(0, _width);
+            var spawnY = rnd.Next(0, _height);
+            dungeonArray[spawnX, spawnY] = "S";
+            var bossX = rnd.Next(0, _width);
+            var bossY = rnd.Next(0, _height);
+            dungeonArray[bossX, bossY] = "_";
+            var deadRoomsAdded = 0;
+
+
+            return dungeonArray;
+        }
+
         public string[,] GenerateDungeon()
         {
             string[,] dungeonArray = new string[_width, _height];
