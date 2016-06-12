@@ -45,6 +45,7 @@
     <Compile Include="GameOptions.cs" />
     <Compile Include="ItemDrop.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="PathFinding.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="RoomInfo.cs" />
     <Compile Include="SpawnEnemy.cs" />

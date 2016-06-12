@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace Game1
         private List<Enemy> _activeEnemies;
         private Random _rnd;
         private Collision _collision;
+        private PathFinding _pathFinding;
 
         public World(ContentManager content, SpriteBatch spriteBatch, Player player)
         {
@@ -42,7 +44,7 @@ namespace Game1
             _player = player;
 
             var dungeon = new Dungeon(5, 5, 10);
-            _dungeonArray = dungeon.NewGenerateDungeon();
+            _dungeonArray = dungeon.GenerateDungeon();
 
             _map = new Map(_content, _spriteBatch);
             RoomToDungeon();
@@ -65,6 +67,7 @@ namespace Game1
                     _player.position.X = ((_activeRoom.GetLength(0) - 2)) * _scaledTile;
                     break;
             }
+            _pathFinding = new PathFinding(_activeRoom);
             var collision = new Collision(_activeRoom);
             _collision = collision;
             ChangeRooms(_roomIndex[0], _roomIndex[1]);
@@ -165,6 +168,11 @@ namespace Game1
                     }
                     else if (_dungeonArray[i, j] == "S")
                     {
+                        var enemyArray = new String[2,2];
+                        var spawnEnemy = new SpawnEnemy(enemyArray, _content);
+
+                        _activeEnemies = spawnEnemy.Spawn();
+
                         var doors = DoorGenCheck(i, j);
                         var tileArray = _room.GenerateRoom(9, 9, doors);
                         var roomInfo = new RoomInfo("_", tileArray, _rnd);
@@ -174,6 +182,8 @@ namespace Game1
                         var indY = j;
                         _roomIndex[0] = indX;
                         _roomIndex[1] = indY;
+                        _pathFinding = new PathFinding(_activeRoom);
+
                     }
                 }
             }
@@ -188,6 +198,15 @@ namespace Game1
                 {
                     _activeEnemies[i].animatedSprite.Draw(_spriteBatch, _activeEnemies[i].position, _activeEnemies[i].spriteEffects);
                 }
+                var path = _pathFinding.PathFind(_activeEnemies[0].position, _player.position);
+
+                var texture = _content.Load<Texture2D>("playerpos");
+                for (var j = 0; j < path.Count(); j++)
+                {
+                    _spriteBatch.Begin();
+                    _spriteBatch.Draw(texture, path[j], Color.White);
+                    _spriteBatch.End();
+                }
             }
         }
 
@@ -199,6 +218,8 @@ namespace Game1
                 for (var i = 0; i < count; i++)
                 {
                     _activeEnemies[i].animatedSprite.Update();
+
+
                 }
             }
         }
@@ -213,6 +234,7 @@ namespace Game1
             _room.Draw(_activeRoom);
             _map.drawMap(_dungeonArray, _roomIndex);
             DrawEnemies();
+
         }
 
     }

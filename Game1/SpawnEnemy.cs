@@ -37,13 +37,16 @@ namespace Game1
                 {
                     if (!string.IsNullOrEmpty(_enemyArray[i, j]))
                     {
-                        var enemyPos = new Vector2(_scaledTile * i, _scaledTile * j);
-                        Console.WriteLine(enemyPos.X + ", " + enemyPos.Y);
-                        var enemy = new Enemy(bee, 1, 4, 12, enemyPos);
-                        activeEnemies.Add(enemy);
+                        //var enemyPos = new Vector2(_scaledTile * i, _scaledTile * j);
+                        //var enemy = new Enemy(bee, 1, 4, 12, enemyPos);
+                        //activeEnemies.Add(enemy);
                     }
                 }
             }
+                var enemyPos = new Vector2(300, 300);
+                var enemy = new Enemy(bee, 1, 4, 12, enemyPos);
+
+                activeEnemies.Add(enemy);
             return activeEnemies;
         }
 
