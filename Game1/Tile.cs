@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Game1
         public bool IsDoor { get; set; }
         public bool IsSpawnable { get; set; }
         public Texture2D Texture { get; set; }
+        public Vector2 Position { get; set; }
     }
 }

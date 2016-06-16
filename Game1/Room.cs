@@ -31,9 +31,8 @@ namespace Game1
             {
                 for (var j = 0; j < _y; j++)
                 {
-                    var pos = new Vector2(i * _scaledTile, j * _scaledTile);
                     _spriteBatch.Begin();
-                    _spriteBatch.Draw(tileArray[i, j].Texture, pos, null, null, new Vector2(0, 0), 0, new Vector2((float)_scale, (float)_scale), Color.White, SpriteEffects.None);
+                    _spriteBatch.Draw(tileArray[i, j].Texture, tileArray[i, j].Position, null, null, new Vector2(0, 0), 0, new Vector2((float)_scale, (float)_scale), Color.White, SpriteEffects.None);
                     _spriteBatch.End();
                 }
             }
@@ -57,7 +56,7 @@ namespace Game1
                         //((int)Math.Floor((double)_x / 2))
                         //((int)Math.Floor((double)_y/2))
                         var valAssigned = false;
-                        if (j == 4)
+                        if (j == Math.Floor((double)_y/2) - 1 || j == Math.Floor((double)_y / 2))
                         {
                             if ((i == _x-1 && doors[1]) || (i == 0 && doors[3]))
                             {
@@ -65,7 +64,7 @@ namespace Game1
                                 valAssigned = true;
                             }
                         }
-                        if (i == 4)
+                        if (i == Math.Floor((double)_x / 2) - 1 || i == Math.Floor((double)_x / 2))
                         {
                             if ((j == _y - 1 && doors[2]) || (j == 0 && doors[0]))
                             {
@@ -86,6 +85,7 @@ namespace Game1
 
         private Tile[,] GenerateTileArray(string[,] levelArray)
         {
+            var firstNorthDoor = false;
             var tileArray = new Tile[_x, _y];
             for (var i = 0; i < _x; i++)
             {
@@ -93,16 +93,25 @@ namespace Game1
                 {
                     var tile = new Tile();
                     Texture2D texture;
+                    tile.Position = new Vector2(i * _scaledTile, j * _scaledTile);
                     if (levelArray[i, j] == "W")
                     {
-                        texture = _content.Load<Texture2D>("wall");
+                        if (j == 0)
+                        {
+                            texture = _content.Load<Texture2D>("grassN1");
+                        }
+                        else
+                        {
+                            tile.Position = new Vector2(i * _scaledTile, j * _scaledTile - 20);
+                            texture = _content.Load<Texture2D>("grassT1");
+                        }
                         tile.IsPassable = false;
                         tile.IsDoor = false;
                         tile.Texture = texture;
                     }
                     else if (levelArray[i, j] == "F")
                     {
-                        texture = _content.Load<Texture2D>("grass");
+                        texture = _content.Load<Texture2D>("grass2");
                         tile.IsPassable = true;
                         tile.IsDoor = false;
                         tile.IsSpawnable = true;
@@ -110,7 +119,19 @@ namespace Game1
                     }
                     else if (levelArray[i, j] == "D")
                     {
-                        texture = _content.Load<Texture2D>("door");
+                        if (j == 0 && !firstNorthDoor)
+                        {
+                            firstNorthDoor = true;
+                            texture = _content.Load<Texture2D>("doorN1");
+                        }
+                        else if (j == 0)
+                        {
+                            texture = _content.Load<Texture2D>("doorN2");
+                        }
+                        else
+                        {
+                            texture = _content.Load<Texture2D>("door");
+                        }
                         tile.IsPassable = true;
                         tile.IsDoor = true;
                         tile.Texture = texture;

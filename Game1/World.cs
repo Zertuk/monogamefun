@@ -161,7 +161,7 @@ namespace Game1
                     if (_dungeonArray[i,j] == "_")
                     {
                         var doors = DoorGenCheck(i, j);
-                        var tileArray = _room.GenerateRoom(9, 9, doors);
+                        var tileArray = _room.GenerateRoom(10, 10, doors);
                         var roomInfo = new RoomInfo("_", tileArray, _rnd);
                         _enemyArray[i, j] = roomInfo.GenerateEnemies();
                         _worldArray[i, j] = tileArray;
@@ -174,7 +174,7 @@ namespace Game1
                         _activeEnemies = spawnEnemy.Spawn();
 
                         var doors = DoorGenCheck(i, j);
-                        var tileArray = _room.GenerateRoom(9, 9, doors);
+                        var tileArray = _room.GenerateRoom(10, 10, doors);
                         var roomInfo = new RoomInfo("_", tileArray, _rnd);
                         _worldArray[i,j] = tileArray;
                         _activeRoom = _worldArray[i,j];
@@ -198,15 +198,15 @@ namespace Game1
                 {
                     _activeEnemies[i].animatedSprite.Draw(_spriteBatch, _activeEnemies[i].position, _activeEnemies[i].spriteEffects);
                 }
-                var path = _pathFinding.PathFind(_activeEnemies[0].position, _player.position);
+                //var path = _pathFinding.PathFind(_activeEnemies[0].position, _player.position);
 
-                var texture = _content.Load<Texture2D>("playerpos");
-                for (var j = 0; j < path.Count(); j++)
-                {
-                    _spriteBatch.Begin();
-                    _spriteBatch.Draw(texture, path[j], Color.White);
-                    _spriteBatch.End();
-                }
+                //var texture = _content.Load<Texture2D>("playerpos");
+                //for (var j = 0; j < path.Count(); j++)
+                //{
+                //    _spriteBatch.Begin();
+                //    _spriteBatch.Draw(texture, path[j], Color.White);
+                //    _spriteBatch.End();
+                //}
             }
         }
 

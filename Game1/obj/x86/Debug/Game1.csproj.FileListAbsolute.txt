@@ -42,3 +42,8 @@ C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\heartfloat.xn
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\beeman.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\beemanrun.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\leeks.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\doorN1.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\doorN2.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grassN1.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grass2.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grassT1.xnb
