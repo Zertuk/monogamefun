@@ -47,3 +47,7 @@ C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\doorN2.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grassN1.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grass2.xnb
 C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grassT1.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grassside.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grasssideleft.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grasssideright.xnb
+C:\Users\ok\Desktop\game\Game1\Game1\bin\Windows\x86\Debug\Content\grasssidefull.xnb

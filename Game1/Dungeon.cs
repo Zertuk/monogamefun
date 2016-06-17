@@ -81,7 +81,6 @@ namespace Game1
             dungeonArray[bossX, bossY] = "_";
             var deadRoomsAdded = 0;
 
-
             return dungeonArray;
         }
 

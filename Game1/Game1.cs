@@ -24,6 +24,7 @@ namespace Game1
         ItemDrop _itemDrop;
         private GameOptions _gameOptions;
         private double _scale;
+        Camera _camera;
 
         public Game1()
         {
@@ -67,6 +68,7 @@ namespace Game1
             _tileArray = _world._activeRoom;
             _gameOptions = new GameOptions();
             _scale = _gameOptions.scale;
+            _camera = new Camera(GraphicsDevice.Viewport);
         }
 
         /// <summary>
@@ -116,6 +118,8 @@ namespace Game1
                     _itemDrop = null;
                 }
             }
+
+            _camera.Update(_player.position);
         }
 
         private bool checkDistance(Vector2 unitA, Vector2 unitB)
@@ -134,11 +138,10 @@ namespace Game1
         protected override void Draw(GameTime gameTime)
         {
             // TODO: Add your drawing code here
-            //GraphicsDevice.Clear(Color.Transparent);
-            _world.worldDraw();
+            GraphicsDevice.Clear(Color.Transparent);
+            _world.worldDraw(_camera.Transform);
             //_world.DrawEnemies();
             float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             spriteBatch.Begin();
             spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
             spriteBatch.DrawString(font, "x: " + _player.rectangle().X, new Vector2(10, 30), Color.Black);
@@ -146,7 +149,7 @@ namespace Game1
             spriteBatch.End();
             if (_itemDrop != null)
             {
-                _itemDrop.animatedSprite.Draw(spriteBatch, _itemDrop.position, SpriteEffects.None);
+                //_itemDrop.animatedSprite.Draw(spriteBatch, _itemDrop.position, SpriteEffects.None);
             }
             _player.drawHealth(spriteBatch, Content);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);

@@ -229,9 +229,9 @@ namespace Game1
             UpdateEnemies();
         }
 
-        public void worldDraw()
+        public void worldDraw(Matrix transform)
         {
-            _room.Draw(_activeRoom);
+            _room.Draw(_activeRoom, transform);
             _map.drawMap(_dungeonArray, _roomIndex);
             DrawEnemies();
 

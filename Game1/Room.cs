@@ -25,7 +25,7 @@ namespace Game1
             _spriteBatch = spriteBatch;
         }
 
-        public void Draw(Tile[,] tileArray)
+        public void Draw(Tile[,] tileArray, Matrix transform)
         {
             for (var i = 0; i < _x; i++)
             {
@@ -96,14 +96,14 @@ namespace Game1
                     tile.Position = new Vector2(i * _scaledTile, j * _scaledTile);
                     if (levelArray[i, j] == "W")
                     {
-                        if (j == 0)
+                        if (j == 0 || j == _y - 1)
                         {
                             texture = _content.Load<Texture2D>("grassN1");
                         }
                         else
                         {
-                            tile.Position = new Vector2(i * _scaledTile, j * _scaledTile - 20);
-                            texture = _content.Load<Texture2D>("grassT1");
+                            texture = _content.Load<Texture2D>("grasssidefull");
+                            tile.Position = new Vector2((i * _scaledTile) - _scaledTile, j * _scaledTile - 20);
                         }
                         tile.IsPassable = false;
                         tile.IsDoor = false;

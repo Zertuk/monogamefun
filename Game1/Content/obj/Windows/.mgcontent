@@ -27,5 +27,9 @@
     <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/grassN1.png</File>
     <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/grass2.png</File>
     <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/grassT1.png</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/grassside.png</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/grasssideleft.png</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/grasssideright.png</File>
+    <File>C:/Users/ok/Desktop/game/Game1/Game1/Content/grasssidefull.png</File>
   </SourceFiles>
 </SourceFileCollection>
