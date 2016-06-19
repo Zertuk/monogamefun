@@ -159,7 +159,7 @@ namespace Game1
                     if (_dungeonArray[i,j] == "_")
                     {
                         var doors = DoorGenCheck(i, j);
-                        var tileArray = _room.GenerateRoom(10, 10, doors);
+                        var tileArray = _room.GenerateRoom(20, 20, doors);
                         var roomInfo = new RoomInfo("_", tileArray, _rnd);
                         _enemyArray[i, j] = roomInfo.GenerateEnemies();
                         _worldArray[i, j] = tileArray;
@@ -172,7 +172,7 @@ namespace Game1
                         _activeEnemies = spawnEnemy.Spawn();
 
                         var doors = DoorGenCheck(i, j);
-                        var tileArray = _room.GenerateRoom(10, 10, doors);
+                        var tileArray = _room.GenerateRoom(20, 20, doors);
                         var roomInfo = new RoomInfo("_", tileArray, _rnd);
                         _worldArray[i,j] = tileArray;
                         _activeRoom = _worldArray[i,j];
@@ -192,7 +192,7 @@ namespace Game1
             var count = _activeEnemies.Count();
             if (count > 0)
             {
-                for (var i = 0; i < count; i++)
+                for (var i = 0; i < _activeEnemies.Count(); i++)
                 {
                     _activeEnemies[i].animatedSprite.Draw(spriteBatch, _activeEnemies[i].position, _activeEnemies[i].spriteEffects, false);
                 }
@@ -201,9 +201,7 @@ namespace Game1
                 //var texture = _content.Load<Texture2D>("playerpos");
                 //for (var j = 0; j < path.Count(); j++)
                 //{
-                //    _spriteBatch.Begin();
-                //    _spriteBatch.Draw(texture, path[j], Color.White);
-                //    _spriteBatch.End();
+                //    spriteBatch.Draw(texture, path[j], Color.White);
                 //}
             }
         }

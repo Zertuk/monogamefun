@@ -141,7 +141,7 @@ namespace Game1
             GraphicsDevice.Clear(Color.Transparent);
             //_world.DrawEnemies();
             float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
-            spriteBatch.Begin(SpriteSortMode.FrontToBack);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, null, null, null, null, null, Matrix.Invert(_camera.Transform));
             _world.worldDraw(spriteBatch);
             _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects, true);
             spriteBatch.End();

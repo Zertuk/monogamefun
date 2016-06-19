@@ -31,7 +31,7 @@ namespace Game1
   	        //Create view matrix
 	        _transform = Matrix.CreateRotationZ(0f) *
                          Matrix.CreateScale(new Vector3(1f, 1f, 1)) *
-                         Matrix.CreateTranslation(position.X, position.Y, 0);
+                         Matrix.CreateTranslation(position.X - 1366 / 2f, position.Y - 768 / 2f, 0);
         }
     }
 }
