@@ -14,26 +14,22 @@ namespace Game1
         int _x;
         int _y;
         ContentManager _content;
-        SpriteBatch _spriteBatch;
         private static GameOptions _gameOptions = new GameOptions();
         private int _scaledTile = _gameOptions.scaledTile;
         private double _scale = _gameOptions.scale;
 
-        public Room(ContentManager content, SpriteBatch spriteBatch)
+        public Room(ContentManager content)
         {
             _content = content;
-            _spriteBatch = spriteBatch;
         }
 
-        public void Draw(Tile[,] tileArray, Matrix transform)
+        public void Draw(Tile[,] tileArray, SpriteBatch spriteBatch)
         {
             for (var i = 0; i < _x; i++)
             {
                 for (var j = 0; j < _y; j++)
                 {
-                    _spriteBatch.Begin();
-                    _spriteBatch.Draw(tileArray[i, j].Texture, tileArray[i, j].Position, null, null, new Vector2(0, 0), 0, new Vector2((float)_scale, (float)_scale), Color.White, SpriteEffects.None);
-                    _spriteBatch.End();
+                    spriteBatch.Draw(tileArray[i, j].Texture, tileArray[i, j].Position, null, null, new Vector2(0, 0), 0, new Vector2((float)_scale, (float)_scale), Color.White, SpriteEffects.None, tileArray[i, j].Depth);
                 }
             }
         }
@@ -96,14 +92,17 @@ namespace Game1
                     tile.Position = new Vector2(i * _scaledTile, j * _scaledTile);
                     if (levelArray[i, j] == "W")
                     {
-                        if (j == 0 || j == _y - 1)
+                        if (j == 0)
                         {
                             texture = _content.Load<Texture2D>("grassN1");
+                            tile.Depth = 0;
                         }
                         else
                         {
                             texture = _content.Load<Texture2D>("grasssidefull");
                             tile.Position = new Vector2((i * _scaledTile) - _scaledTile, j * _scaledTile - 20);
+                            tile.Depth = 0.9f;
+
                         }
                         tile.IsPassable = false;
                         tile.IsDoor = false;
@@ -114,6 +113,7 @@ namespace Game1
                         texture = _content.Load<Texture2D>("grass2");
                         tile.IsPassable = true;
                         tile.IsDoor = false;
+                        tile.Depth = 0f;
                         tile.IsSpawnable = true;
                         tile.Texture = texture;
                     }
@@ -135,6 +135,7 @@ namespace Game1
                         tile.IsPassable = true;
                         tile.IsDoor = true;
                         tile.Texture = texture;
+                        tile.Depth = 0.4f;
                     }
                     tileArray[i, j] = tile;
                 }

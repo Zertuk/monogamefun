@@ -14,7 +14,6 @@ namespace Game1
     {
         public ContentManager _content;
         public int tileSize;
-        private SpriteBatch _spriteBatch;
         private string[,] _dungeonArray;
         public Tile[,][,] _worldArray;
         private Map _map;
@@ -31,7 +30,7 @@ namespace Game1
         private Collision _collision;
         private PathFinding _pathFinding;
 
-        public World(ContentManager content, SpriteBatch spriteBatch, Player player)
+        public World(ContentManager content, Player player)
         {
             _rnd = new Random();
             _activeEnemies = new List<Enemy>();
@@ -39,14 +38,13 @@ namespace Game1
             _worldArray = new Tile[5, 5][,];
             _enemyArray = new string[5, 5][,];
             _content = content;
-            _spriteBatch = spriteBatch;
-            _room = new Room(_content, _spriteBatch);
+            _room = new Room(_content);
             _player = player;
 
             var dungeon = new Dungeon(5, 5, 10);
             _dungeonArray = dungeon.GenerateDungeon();
 
-            _map = new Map(_content, _spriteBatch);
+            _map = new Map(_content);
             RoomToDungeon();
         }
 
@@ -189,14 +187,14 @@ namespace Game1
             }
         }
 
-        public void DrawEnemies()
+        public void DrawEnemies(SpriteBatch spriteBatch)
         {
             var count = _activeEnemies.Count();
             if (count > 0)
             {
                 for (var i = 0; i < count; i++)
                 {
-                    _activeEnemies[i].animatedSprite.Draw(_spriteBatch, _activeEnemies[i].position, _activeEnemies[i].spriteEffects);
+                    _activeEnemies[i].animatedSprite.Draw(spriteBatch, _activeEnemies[i].position, _activeEnemies[i].spriteEffects, false);
                 }
                 //var path = _pathFinding.PathFind(_activeEnemies[0].position, _player.position);
 
@@ -229,13 +227,15 @@ namespace Game1
             UpdateEnemies();
         }
 
-        public void worldDraw(Matrix transform)
+        public void uiDraw(SpriteBatch spriteBatch)
         {
-            _room.Draw(_activeRoom, transform);
-            _map.drawMap(_dungeonArray, _roomIndex);
-            DrawEnemies();
-
+            _map.drawMap(_dungeonArray, _roomIndex, spriteBatch);
         }
 
+        public void worldDraw(SpriteBatch spriteBatch)
+        {
+            _room.Draw(_activeRoom, spriteBatch);
+            DrawEnemies(spriteBatch);
+        }
     }
 }

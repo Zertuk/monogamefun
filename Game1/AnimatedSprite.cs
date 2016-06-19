@@ -46,7 +46,7 @@ namespace Game1
             _limiter = _limiter + 1;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 location, SpriteEffects spriteEffects)
+        public void Draw(SpriteBatch spriteBatch, Vector2 location, SpriteEffects spriteEffects, bool isPlayer)
         {
             int width = Texture.Width / Columns;
             int height = Texture.Height / Rows;
@@ -55,10 +55,13 @@ namespace Game1
 
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, (int)(width * _scale), (int)(height*_scale));
+            var depth = 0.49f;
+            if (isPlayer)
+            {
+                depth = 0.5f;
+            }
 
-            spriteBatch.Begin();
-            spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, new Vector2(_scaledTile / 2, _scaledTile / 2), 0, new Vector2((float)_scale, (float)_scale), Color.White, spriteEffects);
-            spriteBatch.End();
+            spriteBatch.Draw(Texture, null, destinationRectangle, sourceRectangle, new Vector2(_scaledTile / 2, _scaledTile / 2), 0, new Vector2((float)_scale, (float)_scale), Color.White, spriteEffects, depth);
         }
     }
 }

@@ -15,5 +15,6 @@ namespace Game1
         public bool IsSpawnable { get; set; }
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
+        public float Depth { get; set; }
     }
 }

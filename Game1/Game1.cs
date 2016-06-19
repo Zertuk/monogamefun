@@ -62,7 +62,7 @@ namespace Game1
             Texture2D grassTexture = Content.Load<Texture2D>("grass");
             _player = new Player(texture);
             // TODO: use this.Content to load your game content here
-            _world = new World(Content, spriteBatch, _player);
+            _world = new World(Content, _player);
             _itemDrop = new ItemDrop("heartfloat", Content);
             //_enemy = new Enemy(bee, 1, 4, 12,);
             _tileArray = _world._activeRoom;
@@ -139,20 +139,27 @@ namespace Game1
         {
             // TODO: Add your drawing code here
             GraphicsDevice.Clear(Color.Transparent);
-            _world.worldDraw(_camera.Transform);
             //_world.DrawEnemies();
             float frameRate = 1 / (float)gameTime.ElapsedGameTime.TotalSeconds;
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.FrontToBack);
+            _world.worldDraw(spriteBatch);
+            _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects, true);
+            spriteBatch.End();
+
+
+            //ui
+            spriteBatch.Begin(SpriteSortMode.FrontToBack);
             spriteBatch.DrawString(font, "FPS: " + frameRate, new Vector2(10, 10), Color.Black);
             spriteBatch.DrawString(font, "x: " + _player.rectangle().X, new Vector2(10, 30), Color.Black);
             spriteBatch.DrawString(font, "y: " + _player.rectangle().Y, new Vector2(10, 50), Color.Black);
+            _world.uiDraw(spriteBatch);
+            _player.drawHealth(spriteBatch, Content);
             spriteBatch.End();
+
             if (_itemDrop != null)
             {
                 //_itemDrop.animatedSprite.Draw(spriteBatch, _itemDrop.position, SpriteEffects.None);
             }
-            _player.drawHealth(spriteBatch, Content);
-            _player.animatedSprite.Draw(spriteBatch, _player.position, _player.spriteEffects);
             //_enemy.animatedSprite.Draw(spriteBatch, _enemy.position, _enemy.spriteEffects);
 
             base.Draw(gameTime);

@@ -48,15 +48,11 @@ namespace Game1
             {
                 if (health < maxHealth && health < i + 1)
                 {
-                    spriteBatch.Begin();
                     spriteBatch.Draw(emptyHeart, new Vector2(16 + (i * 48), 16), Color.White);
-                    spriteBatch.End();
                 }
                 else
                 {
-                    spriteBatch.Begin();
                     spriteBatch.Draw(heart, new Vector2(16 + (i* 48), 16), Color.White);
-                    spriteBatch.End();
                 }
 
 
