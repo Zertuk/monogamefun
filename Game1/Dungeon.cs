@@ -18,6 +18,7 @@ namespace Game1
         int _width;
         int _height;
         int _deadRooms;
+        int[] _spawnCoords;
         List<int[]> _roomPositions;
         List<int[]> _coordsChecked;
         bool _playerSpawn;
@@ -82,6 +83,7 @@ namespace Game1
             var rnd = new Random(seed);
             var spawnX = rnd.Next(0, _width);
             var spawnY = rnd.Next(0, _height);
+            _spawnCoords = new int[] { spawnX, spawnY };
             _dungeonArray[spawnX, spawnY] = "S";
             CheckNeighbors(spawnX, spawnY, rnd);
             for (var i = 0; i < _roomPositions.Count(); i++)
@@ -112,6 +114,7 @@ namespace Game1
         }
         private void CheckNeighbors(int x, int y, Random rnd)
         {
+            
             if (x != 0)
             {
                 TryRoomCreate(x - 1, y, rnd);
