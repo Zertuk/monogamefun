@@ -153,13 +153,12 @@ namespace Game1
             spriteBatch.DrawString(font, "x: " + _player.rectangle().X, new Vector2(10, 30), Color.Black);
             spriteBatch.DrawString(font, "y: " + _player.rectangle().Y, new Vector2(10, 50), Color.Black);
             _world.uiDraw(spriteBatch);
+            //if (_itemDrop != null)
+            //{
+            //    _itemDrop.animatedSprite.Draw(spriteBatch, _itemDrop.position, SpriteEffects.None, false);
+            //}
             _player.drawHealth(spriteBatch, Content);
             spriteBatch.End();
-
-            if (_itemDrop != null)
-            {
-                //_itemDrop.animatedSprite.Draw(spriteBatch, _itemDrop.position, SpriteEffects.None);
-            }
             //_enemy.animatedSprite.Draw(spriteBatch, _enemy.position, _enemy.spriteEffects);
 
             base.Draw(gameTime);

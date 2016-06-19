@@ -18,7 +18,10 @@ namespace Game1
         int _width;
         int _height;
         int _deadRooms;
+        List<int[]> _roomPositions;
+        List<int[]> _coordsChecked;
         bool _playerSpawn;
+        bool _dungeonCreating;
         string[,] _dungeonArray;
 
         private void ConsoleWriteDungeon()
@@ -70,18 +73,61 @@ namespace Game1
 
         public string[,] NewGenerateDungeon()
         {
-            string[,] dungeonArray = new string[_width, _height];
-            var Seed = (int)DateTime.Now.Ticks;
-            var rnd = new Random(Seed);
+            _deadRooms = 0;
+            _dungeonCreating = true;
+            var _dungeonArray = new string[_width, _height];
+            _roomPositions = new List<int[]>();
+            _coordsChecked = new List<int[]>();
+            var seed = (int)DateTime.Now.Ticks;
+            var rnd = new Random(seed);
             var spawnX = rnd.Next(0, _width);
             var spawnY = rnd.Next(0, _height);
-            dungeonArray[spawnX, spawnY] = "S";
-            var bossX = rnd.Next(0, _width);
-            var bossY = rnd.Next(0, _height);
-            dungeonArray[bossX, bossY] = "_";
-            var deadRoomsAdded = 0;
+            _dungeonArray[spawnX, spawnY] = "S";
+            CheckNeighbors(spawnX, spawnY, rnd);
+            for (var i = 0; i < _roomPositions.Count(); i++)
+            {
+                var coords = _roomPositions[i];
+                _dungeonArray[coords[0], coords[1]] = "_";
+            }
+            return _dungeonArray;
+        }
 
-            return dungeonArray;
+
+        private void TryRoomCreate(int x, int y, Random rnd)
+        {
+            int[] coords = { x, y };
+            var chance = rnd.Next(0, 100);
+            var roll = rnd.Next(0, 100);
+            if (_coordsChecked.Contains(coords))
+            {
+                return;
+            }
+            _coordsChecked.Add(coords);
+            if (roll < chance && _deadRooms < 10)
+            {
+                _deadRooms = _deadRooms + 1;
+                _roomPositions.Add(coords);
+                CheckNeighbors(x, y, rnd);
+            }
+        }
+        private void CheckNeighbors(int x, int y, Random rnd)
+        {
+            if (x != 0)
+            {
+                TryRoomCreate(x - 1, y, rnd);
+            }
+            if (x != _width - 1)
+            {
+                TryRoomCreate(x  + 1, y, rnd);
+            }
+            if (y != 0)
+            {
+                TryRoomCreate(x, y - 1, rnd);
+            }
+            if (y != _height - 1)
+            {
+                TryRoomCreate(x, y + 1, rnd);
+            }
         }
 
         public string[,] GenerateDungeon()

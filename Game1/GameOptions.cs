@@ -8,7 +8,7 @@ namespace Game1
 {
     class GameOptions
     {
-        public double scale = 1.25;
+        public double scale = 1.5;
         public int tileSize = 64;
         public int scaledTile;
 
