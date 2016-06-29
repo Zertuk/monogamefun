@@ -1,0 +1,488 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopGL
+/config:
+/profile:HiDef
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+/reference:../../Nez/Nez.PipelineImporter/bin/Debug/Nez.dll
+/reference:../../Nez/Nez.PipelineImporter/bin/Debug/Nez.PipelineImporter.dll
+/reference:../../Nez/Nez.PipelineImporter/bin/Debug/Newtonsoft.Json.dll
+/reference:../../Nez/Nez.PipelineImporter/bin/Debug/Ionic.ZLib.dll
+
+#---------------------------------- Content ---------------------------------#
+
+#begin AnimatedTiles/desert-palace-lamp.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AnimatedTiles/desert-palace-lamp.png
+
+#begin AnimatedTiles/desert-palace-tiles.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AnimatedTiles/desert-palace-tiles.png
+
+#begin AnimatedTiles/desert-palace.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:AnimatedTiles/desert-palace.tmx
+
+#begin Shared/moon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shared/moon.png
+
+#begin Shadows/Block.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shadows/Block.png
+
+#begin Shadows/BlockGlow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shadows/BlockGlow.png
+
+#begin Shadows/sprite-light.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Shadows/sprite-light.png
+
+#begin DestructableMap/desert-palace-tiles2x.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DestructableMap/desert-palace-tiles2x.png
+
+#begin DestructableMap/destructable-map.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:DestructableMap/destructable-map.tmx
+
+#begin NinjaAdventure/characters/1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/characters/1.png
+
+#begin NinjaAdventure/characters/5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/characters/5.png
+
+#begin NinjaAdventure/characters/6.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/characters/6.png
+
+#begin NinjaAdventure/map/tilemap.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:NinjaAdventure/map/tilemap.tmx
+
+#begin NinjaAdventure/map/tileset.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/map/tileset.png
+
+#begin SpriteLights/sprite-light.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteLights/sprite-light.png
+
+#begin SpriteLights/pixel-sprite-light.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteLights/pixel-sprite-light.png
+
+#begin SpriteLights/bg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteLights/bg.png
+
+#begin SpriteLights/tube-light.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteLights/tube-light.png
+
+#begin NinjaAdventure/plume.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/plume.tga
+
+#begin NinjaAdventure/characters/2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/characters/2.png
+
+#begin NinjaAdventure/characters/3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/characters/3.png
+
+#begin NinjaAdventure/characters/4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NinjaAdventure/characters/4.png
+
+#begin Platformer/PixelsphereTiles.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Platformer/PixelsphereTiles.png
+
+#begin Platformer/map.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Platformer/map.tmx
+
+#begin Platformer/caveman.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Platformer/caveman.png
+
+#begin DeferredLighting/moon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DeferredLighting/moon.png
+
+#begin DeferredLighting/moonNorm.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DeferredLighting/moonNorm.png
+
+#begin DeferredLighting/orange.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DeferredLighting/orange.png
+
+#begin DeferredLighting/orangeNorm.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DeferredLighting/orangeNorm.png
+
+#begin DeferredLighting/bg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DeferredLighting/bg.png
+
+#begin DeferredLighting/bgNorm.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:DeferredLighting/bgNorm.png
+
+#begin ParticleDesigner/Atomic Bubble.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Atomic Bubble.pex
+
+#begin ParticleDesigner/Blue Flame.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Blue Flame.pex
+
+#begin ParticleDesigner/Blue Galaxy.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Blue Galaxy.pex
+
+#begin ParticleDesigner/Comet.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Comet.pex
+
+#begin ParticleDesigner/Crazy Blue.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Crazy Blue.pex
+
+#begin ParticleDesigner/Electrons.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Electrons.pex
+
+#begin ParticleDesigner/Fire.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Fire.pex
+
+#begin ParticleDesigner/Foam.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Foam.pex
+
+#begin ParticleDesigner/Giros Gratis.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Giros Gratis.pex
+
+#begin ParticleDesigner/Into The Blue.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Into The Blue.pex
+
+#begin ParticleDesigner/JasonChoi_Flash.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/JasonChoi_Flash.pex
+
+#begin ParticleDesigner/JasonChoi_Swirl01.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/JasonChoi_Swirl01.pex
+
+#begin ParticleDesigner/JasonChoi_rising up.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/JasonChoi_rising up.pex
+
+#begin ParticleDesigner/Leaves.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Leaves.pex
+
+#begin ParticleDesigner/Meks Blood Spill.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Meks Blood Spill.pex
+
+#begin ParticleDesigner/Plasma Glow.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Plasma Glow.pex
+
+#begin ParticleDesigner/Real Popcorn.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Real Popcorn.pex
+
+#begin ParticleDesigner/Shooting Fireball.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Shooting Fireball.pex
+
+#begin ParticleDesigner/Snow.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Snow.pex
+
+#begin ParticleDesigner/The Sun.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/The Sun.pex
+
+#begin ParticleDesigner/Touch Up.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Touch Up.pex
+
+#begin ParticleDesigner/Trippy.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Trippy.pex
+
+#begin ParticleDesigner/Winner Stars.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/Winner Stars.pex
+
+#begin ParticleDesigner/huo1.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/huo1.pex
+
+#begin ParticleDesigner/wu1.pex
+/importer:ParticleDesignerImporter
+/processor:ParticleDesignerProcessor
+/build:ParticleDesigner/wu1.pex
+
