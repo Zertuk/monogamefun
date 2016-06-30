@@ -47,7 +47,6 @@ namespace Nez.Samples
 
 			var playerEntity = createEntity( "player", new Vector2( 256 / 2, 224 / 2 ) );
 			playerEntity.addComponent( new Ninja() );
-            playerEntity.addComponent(new ArcadeRigidbody());
 			var collider = playerEntity.colliders.add( new CircleCollider() );
 
 			// add a component to have the Camera follow the player

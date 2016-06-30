@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez.Tiled;
 using Nez;
+using Nez.UI;
 
 namespace ProjectTemplate
 {
@@ -27,10 +28,37 @@ namespace ProjectTemplate
             var tiledMapComponent = tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
             tiledMapComponent.renderLayer = 10;
 
-            var playerEntity = createRigidEntity(new Vector2(50, 50), 10f, 0.3f, 0f, new Vector2(0, 0));
-
+            var playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 0, 0f, new Vector2(0, 0));
             // add a component to have the Camera follow the player
             //camera.entity.addComponent(new FollowCamera(playerEntity.entity));
+            var stage = new Stage();
+
+            var canvas = createEntity("ui").addComponent(new UICanvas());
+            canvas.isFullScreen = true;
+            //addRenderer(new RenderLayerExcludeRenderer(0, SCREEN_SPACE_RENDER_LAYER));
+            //canvas.renderLayer = SCREEN_SPACE_RENDER_LAYER;
+
+            var table = canvas.stage.addElement(new Table());
+
+            var healthText = new Text(Graphics.instance.bitmapFont, "10", new Vector2(45, 5), Color.White);
+            var healthEntity = createEntity("healthText");
+            healthEntity.addComponent(healthText);
+            var healthBar = new ProgressBar(0, 10, 1, false, ProgressBarStyle.create(Color.Red, Color.Black));
+            var healthBarBorder = new ProgressBar(1, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
+            var healthBarBorder2 = new ProgressBar(1, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
+            healthBarBorder2.setSize(52, 12f);
+            healthBarBorder2.setPosition(5f, 2f);
+
+            healthBar.setValue(10);
+            healthBarBorder.setSize(52, 12f);
+            healthBarBorder.setPosition(5f, 4f);
+            healthBar.setSize(50f, 5f);
+            healthBar.setPosition(6f, 6f);
+            table.addElement(healthBarBorder);
+            table.addElement(healthBarBorder2);
+
+            table.addElement(healthBar);
+
         }
 
         ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity)

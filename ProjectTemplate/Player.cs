@@ -6,6 +6,8 @@ using Nez.Textures;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using Nez;
+using Nez.UI;
+using Nez.AI.FSM;
 
 namespace ProjectTemplate
 {
@@ -32,13 +34,22 @@ namespace ProjectTemplate
         VirtualIntegerAxis _yAxisInput;
         int tileSize = 16;
         int scale = 2;
+        int jumpTime;
+        int health;
+        int maxHealth;
 
+        private void DisplayHealthBar()
+        {
+        }
 
         public override void onAddedToEntity()
         {
+            health = 10;
+            maxHealth = 10;
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
-
+            jumpTime = 10;
+            
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
 
@@ -130,11 +141,25 @@ namespace ProjectTemplate
             _yAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));
         }
 
+        private double Jump()
+        {
+            if (_yAxisInput != 0)
+            {
+                if (jumpTime > 0)
+                {
+                    double y = -(5 * 0.5);
+                    jumpTime = jumpTime - 1;
+                    return y;
+                }
+            }
+            return 0;
+        }
 
         void IUpdatable.update()
         {
+            DisplayHealthBar();
             // handle movement and animations
-            var moveDir = new Vector2(_xAxisInput.value, 0);
+            var moveDir = new Vector2(_xAxisInput.value, (float)Jump());
             var animation = Animations.Idle;
 
             if (moveDir.X < 0)
