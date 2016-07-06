@@ -19,7 +19,7 @@ namespace ProjectTemplate
         {
             // setup a pixel perfect screen that fits our map
             setDesignResolution(320, 240, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(320 * 2, 240 * 2);
+            Screen.setSize(320 * 3, 240 * 3);
 
             _world = new World();
 
@@ -29,6 +29,7 @@ namespace ProjectTemplate
             tiledMapComponent.renderLayer = 10;
 
             var playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 0, 0f, new Vector2(0, 0));
+            playerEntity.shouldUseGravity = true;
             DisplayHealthBar();
             // add a component to have the Camera follow the player
             //camera.entity.addComponent(new FollowCamera(playerEntity.entity));

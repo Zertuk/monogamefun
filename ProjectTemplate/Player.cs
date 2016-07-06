@@ -37,6 +37,7 @@ namespace ProjectTemplate
         int jumpTime;
         int health;
         int maxHealth;
+        bool ignoreGravity;
 
         private void DisplayHealthBar()
         {
@@ -44,11 +45,12 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
+            ignoreGravity = false;
             health = 10;
             maxHealth = 10;
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
-            jumpTime = 10;
+            jumpTime = 20;
             
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
@@ -147,11 +149,18 @@ namespace ProjectTemplate
             {
                 if (jumpTime > 0)
                 {
-                    double y = -(5 * 0.5);
+                    ignoreGravity = true;
+                    double y = -(2)*0.85;
                     jumpTime = jumpTime - 1;
+                    Console.WriteLine(jumpTime);
                     return y;
                 }
+                ignoreGravity = false;
+
             }
+            ignoreGravity = false;
+
+
             return 0;
         }
 
@@ -174,7 +183,9 @@ namespace ProjectTemplate
             }
 
             if (moveDir.Y < 0)
+            {
                 animation = Animations.Falling;
+            }
             else if (moveDir.Y > 0)
                 animation = Animations.Jumping;
 
@@ -183,7 +194,6 @@ namespace ProjectTemplate
             {
                 if (!_animation.isAnimationPlaying(animation))
                     _animation.play(animation);
-
                 var movement = moveDir * _moveSpeed * Time.deltaTime;
 
                 CollisionResult res;
