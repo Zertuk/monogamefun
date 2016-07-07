@@ -22,6 +22,9 @@ namespace ProjectTemplate
             var myScene = new GameScene();
             scene = myScene;
         }
+        private void Update()
+        {
+        }
     }
 }
 

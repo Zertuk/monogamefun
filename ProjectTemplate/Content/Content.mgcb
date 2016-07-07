@@ -89,3 +89,8 @@
 /processor:TiledMapProcessor
 /build:map2.tmx
 
+#begin map3.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:map3.tmx
+

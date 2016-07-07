@@ -39,8 +39,16 @@ namespace ProjectTemplate
         int maxHealth;
         bool ignoreGravity;
 
+
+
         private void DisplayHealthBar()
         {
+        }
+
+        private void DisplayPosition()
+        {
+            var ninjaScene = entity.scene as GameScene;
+            ninjaScene.UpdateScene();
         }
 
         public override void onAddedToEntity()
@@ -51,7 +59,6 @@ namespace ProjectTemplate
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
             jumpTime = 20;
-            
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
 
@@ -166,6 +173,7 @@ namespace ProjectTemplate
 
         void IUpdatable.update()
         {
+            DisplayPosition();
             DisplayHealthBar();
             // handle movement and animations
             var moveDir = new Vector2(_xAxisInput.value, (float)Jump());
@@ -189,6 +197,10 @@ namespace ProjectTemplate
             else if (moveDir.Y > 0)
                 animation = Animations.Jumping;
 
+            if (moveDir.Y == 0)
+            {
+                
+            }
 
             if (moveDir != Vector2.Zero)
             {

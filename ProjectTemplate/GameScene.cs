@@ -11,10 +11,18 @@ namespace ProjectTemplate
     //[SampleScene( "Platformer", "Work in progress..." )]
     public class GameScene : DefaultScene
     {
+        private ArcadeRigidbody playerEntity;
+        private int _width;
+        private int _height;
+        private Entity _tiledEntity;
         public GameScene()
         {
+            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 0, 0f, new Vector2(0, 0));
+            playerEntity.shouldUseGravity = true;
+
         }
         private World _world;
+
         public override void initialize()
         {
             // setup a pixel perfect screen that fits our map
@@ -23,16 +31,25 @@ namespace ProjectTemplate
 
             _world = new World();
 
-            var tiledEntity = createEntity("tiled");
-            var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
-            var tiledMapComponent = tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
-            tiledMapComponent.renderLayer = 10;
+            UpdateTileMap();
 
-            var playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 0, 0f, new Vector2(0, 0));
-            playerEntity.shouldUseGravity = true;
             DisplayHealthBar();
             // add a component to have the Camera follow the player
             //camera.entity.addComponent(new FollowCamera(playerEntity.entity));
+        }
+
+        private void UpdateTileMap()
+        {
+            if (_tiledEntity != null)
+            {
+                _tiledEntity.destroy();
+            }
+            _tiledEntity = createEntity("tiled");
+            var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
+            var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
+            _width = tiledmap.width * 16;
+            _height = tiledmap.height * 16;
+            tiledMapComponent.renderLayer = 10;
         }
 
         private void DisplayHealthBar()
@@ -62,6 +79,50 @@ namespace ProjectTemplate
             table.addElement(healthBarBorder2);
 
             table.addElement(healthBar);
+        }
+
+        public void UpdateScene()
+        {
+            Core.debugRenderEnabled = true;
+            //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
+            CheckDoors();
+        }
+
+        private void CheckDoors()
+        {
+            Console.WriteLine("CURRENT INDEX: " + _world.activeRoom.index[0] + ", " + _world.activeRoom.index[1]);
+            if (playerEntity.transform.position.X <= 0)
+            {
+                //go left
+                Console.WriteLine("left");
+                _world.ChangeRoom(0, -1);
+                playerEntity.transform.position = new Vector2(_width - 16, playerEntity.transform.position.Y);
+                UpdateTileMap();
+            }
+            else if (playerEntity.transform.position.X >= _width)
+            {
+                //go right
+                Console.WriteLine("right");
+                _world.ChangeRoom(0, 1);
+                playerEntity.transform.position = new Vector2(16, playerEntity.transform.position.Y);
+                UpdateTileMap();
+            }
+            else if (playerEntity.transform.position.Y <= 0)
+            {
+                //go up
+                Console.WriteLine("up");
+                _world.ChangeRoom(-1, 0);
+                playerEntity.transform.position = new Vector2(playerEntity.transform.position.X, _height - 16);
+                UpdateTileMap();
+            }
+            else if (playerEntity.transform.position.Y >= _height)
+            {
+                //go down
+                Console.WriteLine("down");
+                _world.ChangeRoom(1, 0);
+                playerEntity.transform.position = new Vector2(playerEntity.transform.position.X, 16);
+                UpdateTileMap();
+            }
         }
 
         ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity)
