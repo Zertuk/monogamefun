@@ -19,6 +19,8 @@ namespace ProjectTemplate
         {
             playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 0, 0f, new Vector2(0, 0));
             playerEntity.shouldUseGravity = true;
+            // add a component to have the Camera follow the player
+            camera.entity.addComponent(new FollowCamera(playerEntity.entity));
 
         }
         private World _world;
@@ -34,8 +36,6 @@ namespace ProjectTemplate
             UpdateTileMap();
 
             DisplayHealthBar();
-            // add a component to have the Camera follow the player
-            //camera.entity.addComponent(new FollowCamera(playerEntity.entity));
         }
 
         private void UpdateTileMap()
@@ -47,6 +47,7 @@ namespace ProjectTemplate
             _tiledEntity = createEntity("tiled");
             var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
             var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
+            _tiledEntity.addComponent( new CameraBounds( new Vector2(0, 0), new Vector2( 16 * ( tiledmap.width ), 16 * ( tiledmap.height ) ) ) );
             _width = tiledmap.width * 16;
             _height = tiledmap.height * 16;
             tiledMapComponent.renderLayer = 10;
@@ -83,7 +84,7 @@ namespace ProjectTemplate
 
         public void UpdateScene()
         {
-            Core.debugRenderEnabled = true;
+            //Core.debugRenderEnabled = true;
             //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
             CheckDoors();
         }
@@ -137,7 +138,7 @@ namespace ProjectTemplate
             entity.transform.position = position;
             entity.addComponent(new Player());
             entity.addComponent(rigidbody);
-            entity.addCollider(new CircleCollider());
+            entity.addCollider(new CircleCollider(8, new Vector2(0, 0)));
 
             return rigidbody;
         }
