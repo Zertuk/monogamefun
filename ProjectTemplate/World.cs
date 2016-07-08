@@ -13,8 +13,8 @@ namespace ProjectTemplate
         public World()
         {
             _rooms = new Room[,] { 
-                { new Room(0, 0, "map"), new Room(0, 1, "map3") },
-                { new Room(1, 0, "map"), new Room(1, 1, "map") }
+                { new Room(0, 0, "map", 1, 2),  new Room(0, 1, "map", 1, 1),  new Room(0, 2, "map3", 1, 1), },
+                { new Room(1, 0, "map2", 1, 1), new Room(1, 1, "map3", 1, 1), new Room(1, 2, "map2", 1, 1) }
             };
             activeRoom = _rooms[0, 0];
         }

@@ -196,7 +196,7 @@ namespace ProjectTemplate
             }
             else if (moveDir.Y > 0)
                 animation = Animations.Jumping;
-
+                
             if (moveDir.Y == 0)
             {
                 

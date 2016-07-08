@@ -10,10 +10,14 @@ namespace ProjectTemplate
     {
         public string tilemap;
         public int[] index;
-        public Room(int x, int y, string tileMapName)
+        public int[] roomIndex;
+        public int width;
+        public int height;
+        public Room(int x, int y, string tileMapName, int roomX, int roomY)
         {
             tilemap = tileMapName;
             index = new int[] { x, y };
+            roomIndex = new int[] { roomX, roomY };
         }
     }
 }
