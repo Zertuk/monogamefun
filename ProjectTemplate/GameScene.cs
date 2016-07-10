@@ -19,7 +19,7 @@ namespace ProjectTemplate
         public GameScene()
         {
             _world = new World();
-            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 0, 0f, new Vector2(0, 0));
+            playerEntity = createRigidEntity(new Vector2(50, 50), 100f, 100f, 0f, new Vector2(0, 0));
             playerEntity.shouldUseGravity = true;
             UpdateTileMap(new Vector2(100, 100));
 
@@ -39,8 +39,6 @@ namespace ProjectTemplate
         private void UpdateTileMap(Vector2 newPos)
         {
             //only load if actually new room and not just new part of old room
-            Console.WriteLine(_prevTileMapName);
-            Console.WriteLine(_world.activeRoom.tilemap);
             if (_prevTileMapName != _world.activeRoom.tilemap)
             {
                 if (_tiledEntity != null)
@@ -57,10 +55,6 @@ namespace ProjectTemplate
                 _prevTileMapName = _world.activeRoom.tilemap;
                 playerEntity.transform.position = newPos;
             }
-            else
-            {
-                Console.WriteLine("DO NOT LOAD");
-            }
         }
 
         private void DisplayHealthBar()
@@ -68,7 +62,6 @@ namespace ProjectTemplate
             var stage = new Stage();
 
             var canvas = createEntity("ui").addComponent(new UICanvas());
-            Console.WriteLine(canvas.width);
             var table = canvas.stage.addElement(new Table());
 
             var healthText = new Text(Graphics.instance.bitmapFont, "10", new Vector2(45, 7), Color.White);
@@ -100,7 +93,6 @@ namespace ProjectTemplate
 
         private void CheckDoors()
         {
-            Console.WriteLine("CURRENT INDEX: " + _world.activeRoom.index[0] + ", " + _world.activeRoom.index[1]);
             if (playerEntity.transform.position.X <= 0)
             {
                 //go left

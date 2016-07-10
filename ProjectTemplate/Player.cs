@@ -202,15 +202,15 @@ namespace ProjectTemplate
                 
             }
 
+            CollisionResult res;
+            var movement = moveDir * _moveSpeed * Time.deltaTime;
+            _mover.move(movement, out res);
+
             if (moveDir != Vector2.Zero)
             {
                 if (!_animation.isAnimationPlaying(animation))
                     _animation.play(animation);
-                var movement = moveDir * _moveSpeed * Time.deltaTime;
 
-                CollisionResult res;
-                
-                _mover.move(movement, out res);
             }
             else
             {
