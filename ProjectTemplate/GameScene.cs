@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Nez.Tiled;
 using Nez;
 using Nez.UI;
+using Microsoft.Xna.Framework.Input;
+using static Nez.Tiled.TiledMapMover;
+using System.Linq;
 
 namespace ProjectTemplate
 {
@@ -18,6 +21,7 @@ namespace ProjectTemplate
         private string _prevTileMapName;
         public GameScene()
         {
+            Physics.gravity.Y = 300f;
             _world = new World();
             playerEntity = createRigidEntity(new Vector2(50, 50), 100f, 100f, 0f, new Vector2(0, 0));
             playerEntity.shouldUseGravity = true;
@@ -48,6 +52,7 @@ namespace ProjectTemplate
                 _tiledEntity = createEntity("tiled");
                 var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
                 var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
+                tiledMapComponent.physicsLayer = 10;
                 _tiledEntity.addComponent(new CameraBounds(new Vector2(0, 0), new Vector2(16 * (tiledmap.width), 16 * (tiledmap.height))));
                 _width = tiledmap.width * 16;
                 _height = tiledmap.height * 16;
@@ -86,9 +91,29 @@ namespace ProjectTemplate
 
         public void UpdateScene()
         {
-            //Core.debugRenderEnabled = true;
+            CheckGrounded();
+            Core.debugRenderEnabled = true;
             //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
             CheckDoors();
+        }
+
+        private void CheckGrounded()
+        {
+            CollisionResult res;
+            var phys = Physics.getAllColliders();
+            var test = phys.AsEnumerable();
+            var player = playerEntity.entity.getComponent<Player>();
+            foreach (var collider in test)
+            {
+                if (collider.physicsLayer == 10)
+                {
+                    if (collider.collidesWith(playerEntity.entity.colliders[0], out res))
+                    {
+                        player.grounded = true;
+                        //Console.WriteLine("grounded");
+                    }
+                }
+            }
         }
 
         private void CheckDoors()
@@ -139,8 +164,8 @@ namespace ProjectTemplate
             entity.transform.position = position;
             entity.addComponent(new Player());
             entity.addComponent(rigidbody);
-            entity.addCollider(new CircleCollider(8, new Vector2(0, 0)));
-
+            entity.addCollider(new CircleCollider(8));
+            //entity.addCollider(new BoxCollider(12, 12));
             return rigidbody;
         }
 

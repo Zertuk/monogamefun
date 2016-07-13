@@ -37,6 +37,8 @@ namespace ProjectTemplate
         int jumpTime;
         int health;
         int maxHealth;
+        float jumpGrav;
+        public bool grounded;
         bool ignoreGravity;
 
 
@@ -47,18 +49,19 @@ namespace ProjectTemplate
 
         private void DisplayPosition()
         {
-            var ninjaScene = entity.scene as GameScene;
-            ninjaScene.UpdateScene();
+            var myScene = entity.scene as GameScene;
+            myScene.UpdateScene();
         }
 
         public override void onAddedToEntity()
         {
+            jumpGrav = 0;
             ignoreGravity = false;
             health = 10;
             maxHealth = 10;
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
-            jumpTime = 20;
+            jumpTime = 14;
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
 
@@ -156,18 +159,13 @@ namespace ProjectTemplate
             {
                 if (jumpTime > 0)
                 {
-                    ignoreGravity = true;
-                    double y = -(2)*0.85;
+                    jumpGrav = jumpGrav + 0.01f;
+                    double y = -(2)*0.95 + (jumpGrav);
                     jumpTime = jumpTime - 1;
-                    Console.WriteLine(jumpTime);
                     return y;
                 }
-                ignoreGravity = false;
-
             }
-            ignoreGravity = false;
-
-
+            jumpGrav = 0;
             return 0;
         }
 
@@ -193,9 +191,13 @@ namespace ProjectTemplate
             if (moveDir.Y < 0)
             {
                 animation = Animations.Falling;
+                grounded = false;
             }
             else if (moveDir.Y > 0)
+            {
                 animation = Animations.Jumping;
+                grounded = false;
+            }
                 
             if (moveDir.Y == 0)
             {
@@ -217,9 +219,11 @@ namespace ProjectTemplate
                 _animation.stop();
             }
 
-            // handle firing a projectile
-            if (_fireInput.isPressed)
-                _animation.play(Animations.Attack);
+            if (grounded)
+            {
+                jumpTime = 14;
+                jumpGrav = 0;
+            }
         }
 
 
