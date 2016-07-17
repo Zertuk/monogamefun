@@ -34,7 +34,7 @@ namespace ProjectTemplate
         VirtualIntegerAxis _yAxisInput;
         int tileSize = 16;
         int scale = 2;
-        int jumpTime;
+        double jumpTime;
         int health;
         int maxHealth;
         float jumpGrav;
@@ -61,7 +61,7 @@ namespace ProjectTemplate
             maxHealth = 10;
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
-            jumpTime = 14;
+            jumpTime = 1;
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
 
@@ -155,15 +155,19 @@ namespace ProjectTemplate
 
         private double Jump()
         {
-            if (_yAxisInput != 0)
+            if (_yAxisInput != 0 || jumpTime < 1 && jumpTime > 0.5)
             {
                 if (jumpTime > 0)
                 {
                     jumpGrav = jumpGrav + 0.01f;
-                    double y = -(2)*0.95 + (jumpGrav);
-                    jumpTime = jumpTime - 1;
+                    double y = -(3)*0.75 + (jumpGrav*jumpTime);
+                    jumpTime = jumpTime - 0.1;
                     return y;
                 }
+            }
+            else
+            {
+                jumpTime = 0;
             }
             jumpGrav = 0;
             return 0;
@@ -174,7 +178,11 @@ namespace ProjectTemplate
             DisplayPosition();
             DisplayHealthBar();
             // handle movement and animations
-            var moveDir = new Vector2(_xAxisInput.value, (float)Jump());
+            var moveDir = new Vector2(_xAxisInput.value, 0);
+            if (grounded || jumpTime < 1)
+            {
+                moveDir.Y = (float)Jump();
+            }
             var animation = Animations.Idle;
 
             if (moveDir.X < 0)
@@ -199,11 +207,6 @@ namespace ProjectTemplate
                 grounded = false;
             }
                 
-            if (moveDir.Y == 0)
-            {
-                
-            }
-
             CollisionResult res;
             var movement = moveDir * _moveSpeed * Time.deltaTime;
             _mover.move(movement, out res);
@@ -221,7 +224,7 @@ namespace ProjectTemplate
 
             if (grounded)
             {
-                jumpTime = 14;
+                jumpTime = 1;
                 jumpGrav = 0;
             }
         }

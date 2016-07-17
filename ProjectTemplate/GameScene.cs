@@ -107,7 +107,7 @@ namespace ProjectTemplate
             {
                 if (collider.physicsLayer == 10)
                 {
-                    if (collider.collidesWith(playerEntity.entity.colliders[0], out res))
+                    if (collider.collidesWith(playerEntity.entity.colliders[0], out res) && playerEntity.velocity.Y == 0)
                     {
                         player.grounded = true;
                         //Console.WriteLine("grounded");
