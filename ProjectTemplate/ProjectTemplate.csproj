@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="CameraBounds.cs" />
     <Compile Include="DefaultScene.cs" />
+    <Compile Include="Enemy.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameScene.cs" />
     <Compile Include="Player.cs" />

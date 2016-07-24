@@ -23,9 +23,12 @@ namespace ProjectTemplate
         {
             Physics.gravity.Y = 200f;
             _world = new World();
-            playerEntity = createRigidEntity(new Vector2(50, 50), 100f, 100f, 0f, new Vector2(0, 0));
+            playerEntity = createRigidEntity(new Vector2(50, 50), 100f, 100f, 0f, new Vector2(0, 0), true);
             playerEntity.shouldUseGravity = false;
             UpdateTileMap(new Vector2(100, 100), false);
+
+            var enemyEntity = createRigidEntity(new Vector2(150, 50), 100f, 100f, 0f, new Vector2(0, 0), false);
+
 
             // add a component to have the Camera follow the player
             camera.entity.addComponent(new FollowCamera(playerEntity.entity));
@@ -159,7 +162,7 @@ namespace ProjectTemplate
             }
         }
 
-        ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity)
+        ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity, bool isPlayer)
         {
             var rigidbody = new ArcadeRigidbody()
                 .setMass(mass)
@@ -169,7 +172,14 @@ namespace ProjectTemplate
 
             var entity = createEntity(Utils.randomString(3));
             entity.transform.position = position;
-            entity.addComponent(new Player());
+            if (isPlayer)
+            {
+                entity.addComponent(new Player());
+            }
+            else
+            {
+                entity.addComponent(new Enemy());
+            }
             entity.addComponent(rigidbody);
             entity.addCollider(new CircleCollider(8));
             //entity.addCollider(new BoxCollider(12, 12));

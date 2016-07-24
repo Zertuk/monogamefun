@@ -27,24 +27,33 @@ namespace ProjectTemplate
 
         Sprite<Animations> _animation;
         Mover _mover;
-        float _moveSpeed = 100f;
+        float _moveSpeed = 120f;
 
-        VirtualButton _fireInput;
+        VirtualButton _jumpInput;
         VirtualIntegerAxis _xAxisInput;
-        VirtualIntegerAxis _yAxisInput;
         int tileSize = 16;
         int scale = 2;
-        double jumpTime;
+        int jumpTime;
         int health;
         int maxHealth;
         float jumpGrav;
         public bool grounded;
+        int groundFrames;
         bool ignoreGravity;
+        bool hasJumped;
+        int airTime;
 
 
 
         private void DisplayHealthBar()
         {
+        }
+
+        private float gravity()
+        {
+            var y = -1 + airTime * 0.1f;
+            airTime = airTime + 1;
+            return y;
         }
 
         private void DisplayPosition()
@@ -55,15 +64,19 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
-            jumpGrav = 0;
+            groundFrames = 0;
+            airTime = 0;
+            hasJumped = false;
+            jumpGrav = 1;
             ignoreGravity = false;
             health = 10;
             maxHealth = 10;
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
-            jumpTime = 1;
+            jumpTime = 40;
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
+
 
             //extract the animations from the atlas. they are setup in rows with 8 columns
             _animation.addAnimation(Animations.Walk, new SpriteAnimation(new List<Subtexture>()
@@ -125,21 +138,8 @@ namespace ProjectTemplate
             setupInput();
         }
 
-
-        public override void onRemovedFromEntity()
-        {
-            // deregister virtual input
-            _fireInput.deregister();
-        }
-
-
         void setupInput()
         {
-            // setup input for shooting a fireball. we will allow z on the keyboard or a on the gamepad
-            _fireInput = new VirtualButton();
-            _fireInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.Z));
-            _fireInput.nodes.Add(new Nez.VirtualButton.GamePadButton(0, Buttons.A));
-
             // horizontal input from dpad, left stick or keyboard left/right
             _xAxisInput = new VirtualIntegerAxis();
             _xAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadDpadLeftRight());
@@ -147,29 +147,25 @@ namespace ProjectTemplate
             _xAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right));
 
             // vertical input from dpad, left stick or keyboard up/down
-            _yAxisInput = new VirtualIntegerAxis();
-            _yAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadDpadUpDown());
-            _yAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadLeftStickY());
-            _yAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));
+            _jumpInput = new VirtualButton();
+            _jumpInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.A));
+            _jumpInput.nodes.Add(new Nez.VirtualButton.GamePadButton(0, Buttons.A));
         }
 
-        private double Jump()
+        private float Jump()
         {
-            if (_yAxisInput != 0 || jumpTime < 1 && jumpTime > 0.5)
+            if (jumpTime > 0)
             {
-                if (jumpTime > 0)
+                jumpGrav = jumpGrav - 0.02f;
+                if (jumpGrav < 0.02f)
                 {
-                    jumpGrav = jumpGrav + 0.01f;
-                    double y = -(3)*0.75 + (jumpGrav*jumpTime);
-                    jumpTime = jumpTime - 0.1;
-                    return y;
+                    jumpGrav = 0.02f;
                 }
+                float y = (float)-(2 * (jumpGrav * jumpGrav)) / 2;
+                jumpTime = jumpTime - 1;
+                return y;
             }
-            else
-            {
-                jumpTime = 0;
-            }
-            jumpGrav = 0;
+            jumpTime = 0;
             return 0;
         }
 
@@ -179,10 +175,17 @@ namespace ProjectTemplate
             DisplayHealthBar();
             // handle movement and animations
             var moveDir = new Vector2(_xAxisInput.value, 0);
-            if (grounded || jumpTime < 1)
+            
+            if ((_jumpInput.isDown && !hasJumped && jumpTime != 0))
             {
                 moveDir.Y = (float)Jump();
             }
+            else if (jumpTime < 0.5)
+            {
+                hasJumped = true;
+            }
+
+
             var animation = Animations.Idle;
 
             if (moveDir.X < 0)
@@ -195,6 +198,21 @@ namespace ProjectTemplate
                 animation = Animations.Run;
                 _animation.flipX = true;
             }
+            float test;
+            if (grounded)
+            {
+                    groundFrames = groundFrames + 1;
+                    airTime = 0;
+                    test = 0;
+            }
+            else
+            {
+                groundFrames = 0;
+                test = gravity();
+            }
+            moveDir.Y = moveDir.Y + test;
+
+
 
             if (moveDir.Y < 0)
             {
@@ -221,11 +239,14 @@ namespace ProjectTemplate
             {
                 _animation.stop();
             }
-
             if (grounded)
             {
-                jumpTime = 1;
-                jumpGrav = 0;
+                jumpTime = 10;
+                jumpGrav = 1;
+                if (!_jumpInput.isDown)
+                {
+                    hasJumped = false;
+                }
             }
         }
 
