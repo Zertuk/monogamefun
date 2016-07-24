@@ -21,11 +21,11 @@ namespace ProjectTemplate
         private string _prevTileMapName;
         public GameScene()
         {
-            Physics.gravity.Y = 300f;
+            Physics.gravity.Y = 200f;
             _world = new World();
             playerEntity = createRigidEntity(new Vector2(50, 50), 100f, 100f, 0f, new Vector2(0, 0));
-            playerEntity.shouldUseGravity = true;
-            UpdateTileMap(new Vector2(100, 100));
+            playerEntity.shouldUseGravity = false;
+            UpdateTileMap(new Vector2(100, 100), false);
 
             // add a component to have the Camera follow the player
             camera.entity.addComponent(new FollowCamera(playerEntity.entity));
@@ -40,7 +40,7 @@ namespace ProjectTemplate
             DisplayHealthBar();
         }
 
-        private void UpdateTileMap(Vector2 newPos)
+        private void UpdateTileMap(Vector2 newPos, bool left)
         {
             //only load if actually new room and not just new part of old room
             if (_prevTileMapName != _world.activeRoom.tilemap)
@@ -58,6 +58,11 @@ namespace ProjectTemplate
                 _height = tiledmap.height * 16;
                 tiledMapComponent.renderLayer = 10;
                 _prevTileMapName = _world.activeRoom.tilemap;
+                //if left make sure we set pos to new width
+                if (left)
+                {
+                    newPos.X = _width - 16;
+                }
                 playerEntity.transform.position = newPos;
             }
         }
@@ -100,6 +105,7 @@ namespace ProjectTemplate
         private void CheckGrounded()
         {
             CollisionResult res;
+
             var phys = Physics.getAllColliders();
             var test = phys.AsEnumerable();
             var player = playerEntity.entity.getComponent<Player>();
@@ -123,8 +129,9 @@ namespace ProjectTemplate
                 //go left
                 Console.WriteLine("left");
                 _world.ChangeRoom(0, -1);
+
                 var newPos = new Vector2(_width - 16, playerEntity.transform.position.Y);
-                UpdateTileMap(newPos);
+                UpdateTileMap(newPos, true);
             }
             else if (playerEntity.transform.position.X >= _width/_world.activeRoom.roomIndex[1])
             {
@@ -132,7 +139,7 @@ namespace ProjectTemplate
                 Console.WriteLine("right");
                 _world.ChangeRoom(0, 1);
                 var newPos = new Vector2(16, playerEntity.transform.position.Y);
-                UpdateTileMap(newPos);
+                UpdateTileMap(newPos, false);
             }
             else if (playerEntity.transform.position.Y <= 0)
             {
@@ -140,7 +147,7 @@ namespace ProjectTemplate
                 Console.WriteLine("up");
                 _world.ChangeRoom(-1, 0);
                 var newPos = new Vector2(playerEntity.transform.position.X, _height - 16);
-                UpdateTileMap(newPos);
+                UpdateTileMap(newPos, false);
             }
             else if (playerEntity.transform.position.Y >= _height / _world.activeRoom.roomIndex[0])
             {
@@ -148,7 +155,7 @@ namespace ProjectTemplate
                 Console.WriteLine("down");
                 _world.ChangeRoom(1, 0);
                 var newPos = new Vector2(playerEntity.transform.position.X, 16);
-                UpdateTileMap(newPos);
+                UpdateTileMap(newPos, false);
             }
         }
 
