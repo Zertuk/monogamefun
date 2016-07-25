@@ -169,8 +169,8 @@ namespace Nez
 
 			if( shouldUseGravity )
 				velocity += Physics.gravity * Time.deltaTime;
-			
-			entity.colliders.unregisterAllCollidersWithPhysicsSystem();
+
+            entity.colliders.unregisterAllCollidersWithPhysicsSystem();
 			entity.transform.position += velocity * Time.deltaTime;
 
 			CollisionResult collisionResult;

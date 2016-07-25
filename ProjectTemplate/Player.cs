@@ -161,7 +161,7 @@ namespace ProjectTemplate
                 {
                     jumpGrav = 0.02f;
                 }
-                float y = (float)-(2 * (jumpGrav * jumpGrav)) / 2;
+                float y = (float)-(5 * (jumpGrav * jumpGrav)) / 2;
                 jumpTime = jumpTime - 1;
                 return y;
             }
@@ -208,7 +208,8 @@ namespace ProjectTemplate
             else
             {
                 groundFrames = 0;
-                test = gravity();
+                test = 0;
+                Console.WriteLine(Time.deltaTime);
             }
             moveDir.Y = moveDir.Y + test;
 

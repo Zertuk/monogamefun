@@ -8,6 +8,8 @@ using Nez.UI;
 using Microsoft.Xna.Framework.Input;
 using static Nez.Tiled.TiledMapMover;
 using System.Linq;
+using Nez.AI.Pathfinding;
+using System.Collections.Generic;
 
 namespace ProjectTemplate
 {
@@ -15,20 +17,24 @@ namespace ProjectTemplate
     public class GameScene : DefaultScene
     {
         private ArcadeRigidbody playerEntity;
+        private ArcadeRigidbody enemyEntity;
         private int _width;
         private int _height;
         private Entity _tiledEntity;
         private string _prevTileMapName;
+        private TiledTileLayer _tileCollLayer;
         public GameScene()
         {
             Physics.gravity.Y = 200f;
             _world = new World();
             playerEntity = createRigidEntity(new Vector2(50, 50), 100f, 100f, 0f, new Vector2(0, 0), true);
-            playerEntity.shouldUseGravity = false;
+            playerEntity.shouldUseGravity = true;
             UpdateTileMap(new Vector2(100, 100), false);
 
-            var enemyEntity = createRigidEntity(new Vector2(150, 50), 100f, 100f, 0f, new Vector2(0, 0), false);
+            enemyEntity = createRigidEntity(new Vector2(150, 50), 100f, 100f, 0f, new Vector2(0, 0), false);
 
+            var cameFrom = new Dictionary<Vector2, Vector2>();
+            var tiled = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
 
             // add a component to have the Camera follow the player
             camera.entity.addComponent(new FollowCamera(playerEntity.entity));
@@ -61,6 +67,7 @@ namespace ProjectTemplate
                 _height = tiledmap.height * 16;
                 tiledMapComponent.renderLayer = 10;
                 _prevTileMapName = _world.activeRoom.tilemap;
+                _tileCollLayer = tiledMapComponent.collisionLayer;
                 //if left make sure we set pos to new width
                 if (left)
                 {
@@ -103,6 +110,16 @@ namespace ProjectTemplate
             Core.debugRenderEnabled = true;
             //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
             CheckDoors();
+
+            var graph = new WeightedGridGraph(_tileCollLayer);
+
+            var path = graph.search(VectorToPoint(enemyEntity.transform.position), VectorToPoint(playerEntity.transform.position));
+            Console.WriteLine(path.Count());
+        }
+
+        public Point VectorToPoint(Vector2 input)
+        {
+            return new Point((int)input.X / 16, (int)input.Y / 16);
         }
 
         private void CheckGrounded()
