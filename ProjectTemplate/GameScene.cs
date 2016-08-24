@@ -25,9 +25,9 @@ namespace ProjectTemplate
         private TiledTileLayer _tileCollLayer;
         public GameScene()
         {
-            Physics.gravity.Y = 200f;
+            Physics.gravity.Y = 300f;
             _world = new World();
-            playerEntity = createRigidEntity(new Vector2(50, 50), 100f, 100f, 0f, new Vector2(0, 0), true);
+            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 10f, 0, new Vector2(0, 0), true);
             playerEntity.shouldUseGravity = true;
             UpdateTileMap(new Vector2(100, 100), false);
 
@@ -114,7 +114,8 @@ namespace ProjectTemplate
             var graph = new WeightedGridGraph(_tileCollLayer);
 
             var path = graph.search(VectorToPoint(enemyEntity.transform.position), VectorToPoint(playerEntity.transform.position));
-            Console.WriteLine(path.Count());
+            var enemy = enemyEntity.entity.getComponent<Enemy>();
+            //enemy.UsePath(path);
         }
 
         public Point VectorToPoint(Vector2 input)

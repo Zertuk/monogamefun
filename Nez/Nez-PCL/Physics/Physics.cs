@@ -19,7 +19,7 @@ namespace Nez
 		/// <summary>
 		/// convenience field for storing a gravity value globally 
 		/// </summary>
-		public static Vector2 gravity = new Vector2( 0, 200f );
+		public static Vector2 gravity = new Vector2( 0, 0f );
 
 		/// <summary>
 		/// cell size used when reset is called and a new SpatialHash is created

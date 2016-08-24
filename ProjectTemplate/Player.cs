@@ -67,7 +67,7 @@ namespace ProjectTemplate
             groundFrames = 0;
             airTime = 0;
             hasJumped = false;
-            jumpGrav = 1;
+            jumpGrav = 0;
             ignoreGravity = false;
             health = 10;
             maxHealth = 10;
@@ -156,12 +156,9 @@ namespace ProjectTemplate
         {
             if (jumpTime > 0)
             {
-                jumpGrav = jumpGrav - 0.02f;
-                if (jumpGrav < 0.02f)
-                {
-                    jumpGrav = 0.02f;
-                }
-                float y = (float)-(5 * (jumpGrav * jumpGrav)) / 2;
+                jumpGrav = jumpGrav + 0.01f;
+                var x = 2.5f;
+                float y = 1f - (0.5f* x*x);
                 jumpTime = jumpTime - 1;
                 return y;
             }
@@ -243,7 +240,7 @@ namespace ProjectTemplate
             if (grounded)
             {
                 jumpTime = 10;
-                jumpGrav = 1;
+                jumpGrav = 0;
                 if (!_jumpInput.isDown)
                 {
                     hasJumped = false;
