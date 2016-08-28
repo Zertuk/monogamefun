@@ -25,13 +25,11 @@ namespace ProjectTemplate
         private TiledTileLayer _tileCollLayer;
         public GameScene()
         {
-            Physics.gravity.Y = 300f;
             _world = new World();
-            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 10f, 0, new Vector2(0, 0), true);
-            playerEntity.shouldUseGravity = true;
+            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true);
             UpdateTileMap(new Vector2(100, 100), false);
 
-            enemyEntity = createRigidEntity(new Vector2(150, 50), 100f, 100f, 0f, new Vector2(0, 0), false);
+            enemyEntity = createRigidEntity(new Vector2(150, 50), 1f, 100f, 0f, new Vector2(0, 0), false);
 
             var cameFrom = new Dictionary<Vector2, Vector2>();
             var tiled = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
@@ -44,8 +42,8 @@ namespace ProjectTemplate
         public override void initialize()
         {
             // setup a pixel perfect screen that fits our map
-            setDesignResolution(320, 240, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(320*3, 240*3);
+            setDesignResolution(320, 180, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
+            Screen.setSize(320 * 4, 180 * 4);
             DisplayHealthBar();
         }
 
@@ -106,8 +104,9 @@ namespace ProjectTemplate
 
         public void UpdateScene()
         {
+            Physics.gravity.Y = 250f;
             CheckGrounded();
-            Core.debugRenderEnabled = true;
+            //Core.debugRenderEnabled = true;
             //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
             CheckDoors();
 

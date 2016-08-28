@@ -27,34 +27,19 @@ namespace ProjectTemplate
 
         Sprite<Animations> _animation;
         Mover _mover;
-        float _moveSpeed = 120f;
+        float _moveSpeed = 76f;
 
         VirtualButton _jumpInput;
         VirtualIntegerAxis _xAxisInput;
         int tileSize = 16;
-        int scale = 2;
         int jumpTime;
         int health;
         int maxHealth;
         float jumpGrav;
         public bool grounded;
         int groundFrames;
-        bool ignoreGravity;
         bool hasJumped;
-        int airTime;
-
-
-
-        private void DisplayHealthBar()
-        {
-        }
-
-        private float gravity()
-        {
-            var y = -1 + airTime * 0.1f;
-            airTime = airTime + 1;
-            return y;
-        }
+        public bool enableGravity;
 
         private void DisplayPosition()
         {
@@ -65,15 +50,12 @@ namespace ProjectTemplate
         public override void onAddedToEntity()
         {
             groundFrames = 0;
-            airTime = 0;
             hasJumped = false;
-            jumpGrav = 0;
-            ignoreGravity = false;
             health = 10;
             maxHealth = 10;
-            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
+            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun3");
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
-            jumpTime = 40;
+            jumpTime = 20;
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
 
@@ -154,14 +136,16 @@ namespace ProjectTemplate
 
         private float Jump()
         {
+            var count = 0;
             if (jumpTime > 0)
             {
-                jumpGrav = jumpGrav + 0.01f;
+                count = count + 1;
                 var x = 2.5f;
                 float y = 1f - (0.5f* x*x);
                 jumpTime = jumpTime - 1;
                 return y;
             }
+            count = 0;
             jumpTime = 0;
             return 0;
         }
@@ -169,7 +153,7 @@ namespace ProjectTemplate
         void IUpdatable.update()
         {
             DisplayPosition();
-            DisplayHealthBar();
+
             // handle movement and animations
             var moveDir = new Vector2(_xAxisInput.value, 0);
             
@@ -181,7 +165,6 @@ namespace ProjectTemplate
             {
                 hasJumped = true;
             }
-
 
             var animation = Animations.Idle;
 
@@ -195,22 +178,15 @@ namespace ProjectTemplate
                 animation = Animations.Run;
                 _animation.flipX = true;
             }
-            float test;
             if (grounded)
             {
                     groundFrames = groundFrames + 1;
-                    airTime = 0;
-                    test = 0;
             }
             else
             {
                 groundFrames = 0;
-                test = 0;
                 Console.WriteLine(Time.deltaTime);
             }
-            moveDir.Y = moveDir.Y + test;
-
-
 
             if (moveDir.Y < 0)
             {
@@ -225,6 +201,7 @@ namespace ProjectTemplate
                 
             CollisionResult res;
             var movement = moveDir * _moveSpeed * Time.deltaTime;
+            Console.WriteLine(movement.X);
             _mover.move(movement, out res);
 
             if (moveDir != Vector2.Zero)
@@ -239,8 +216,7 @@ namespace ProjectTemplate
             }
             if (grounded)
             {
-                jumpTime = 10;
-                jumpGrav = 0;
+                jumpTime = 20;
                 if (!_jumpInput.isDown)
                 {
                     hasJumped = false;
