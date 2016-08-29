@@ -54,12 +54,17 @@ namespace ProjectTemplate
             health = 10;
             maxHealth = 10;
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun3");
+            var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle");
+            var fallTexture = entity.scene.contentManager.Load<Texture2D>("leekfall");
+            var jumpTexture = entity.scene.contentManager.Load<Texture2D>("leekjump");
+
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
+            var idleSubtexture = Subtexture.subtexturesFromAtlas(idleTexture, 20, 21);
+            var fallSubtexture = Subtexture.subtexturesFromAtlas(fallTexture, 20, 21);
+            var jumpSubtexture = Subtexture.subtexturesFromAtlas(jumpTexture, 20, 21);
             jumpTime = 20;
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
-
-
             //extract the animations from the atlas. they are setup in rows with 8 columns
             _animation.addAnimation(Animations.Walk, new SpriteAnimation(new List<Subtexture>()
             {
@@ -79,7 +84,12 @@ namespace ProjectTemplate
 
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
             {
-                subtextures[0]
+                idleSubtexture[0],
+                idleSubtexture[0],
+                idleSubtexture[1],
+                idleSubtexture[1],
+                idleSubtexture[2],
+                idleSubtexture[2]
             }));
 
             _animation.addAnimation(Animations.Attack, new SpriteAnimation(new List<Subtexture>()
@@ -108,15 +118,14 @@ namespace ProjectTemplate
                 subtextures[0],
                 subtextures[1]
             }));
-
             _animation.addAnimation(Animations.Jumping, new SpriteAnimation(new List<Subtexture>()
             {
-                subtextures[0],
-                subtextures[1],
-                subtextures[2],
-                subtextures[3],
+                jumpSubtexture[0]
             }));
-
+            _animation.addAnimation(Animations.Falling, new SpriteAnimation(new List<Subtexture>()
+            {
+                fallSubtexture[0]
+            }));
             setupInput();
         }
 
@@ -170,7 +179,7 @@ namespace ProjectTemplate
 
             if (moveDir.X < 0)
             {
-                animation = Animations.Walk;
+                animation = Animations.Run;
                 _animation.flipX = false;
             }
             else if (moveDir.X > 0)
@@ -188,32 +197,34 @@ namespace ProjectTemplate
                 Console.WriteLine(Time.deltaTime);
             }
 
-            if (moveDir.Y < 0)
+            if (moveDir.Y > 0)
             {
                 animation = Animations.Falling;
                 grounded = false;
             }
-            else if (moveDir.Y > 0)
+            else if (moveDir.Y < 0)
             {
                 animation = Animations.Jumping;
                 grounded = false;
             }
-                
+            Console.WriteLine(moveDir.X);
+            Console.WriteLine(moveDir.Y);
+            if (moveDir.X == 0 && moveDir.Y == 0)
+            {
+                Console.WriteLine("test");
+                animation = Animations.Idle;
+            }
+
             CollisionResult res;
-            var movement = moveDir * _moveSpeed * Time.deltaTime;
+            var movement = (moveDir * _moveSpeed * Time.deltaTime);
             Console.WriteLine(movement.X);
             _mover.move(movement, out res);
 
-            if (moveDir != Vector2.Zero)
+            if (!_animation.isAnimationPlaying(animation))
             {
-                if (!_animation.isAnimationPlaying(animation))
-                    _animation.play(animation);
+                _animation.play(animation);
+            }
 
-            }
-            else
-            {
-                _animation.stop();
-            }
             if (grounded)
             {
                 jumpTime = 20;

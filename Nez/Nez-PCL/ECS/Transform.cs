@@ -470,7 +470,7 @@ namespace Nez
 		/// </summary>
 		public void roundPosition()
 		{
-			position = _position.round();
+			position = _position;
 		}
 	
 

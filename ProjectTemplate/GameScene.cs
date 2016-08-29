@@ -27,6 +27,7 @@ namespace ProjectTemplate
         {
             _world = new World();
             playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true);
+            
             UpdateTileMap(new Vector2(100, 100), false);
 
             enemyEntity = createRigidEntity(new Vector2(150, 50), 1f, 100f, 0f, new Vector2(0, 0), false);
@@ -41,6 +42,8 @@ namespace ProjectTemplate
 
         public override void initialize()
         {
+            //Core.debugRenderEnabled = true;
+
             // setup a pixel perfect screen that fits our map
             setDesignResolution(320, 180, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
             Screen.setSize(320 * 4, 180 * 4);
@@ -57,13 +60,31 @@ namespace ProjectTemplate
                     _tiledEntity.destroy();
                 }
                 _tiledEntity = createEntity("tiled");
+
+
+
+
+
+
                 var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
                 var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
+                tiledMapComponent.setLayersToRender(new string[] { "collision" });
+                tiledMapComponent.renderLayer = 10;
                 tiledMapComponent.physicsLayer = 10;
+
+                var accentComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "accent"));
+                accentComponent.renderLayer = -1;
+                accentComponent.collisionLayer = null;
+                accentComponent.setLayersToRender("accent");
+
+                var bgComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "bg"));
+                bgComponent.setLayersToRender("bg");
+                bgComponent.renderLayer = 11;
+                bgComponent.collisionLayer = null;
+
                 _tiledEntity.addComponent(new CameraBounds(new Vector2(0, 0), new Vector2(16 * (tiledmap.width), 16 * (tiledmap.height))));
                 _width = tiledmap.width * 16;
                 _height = tiledmap.height * 16;
-                tiledMapComponent.renderLayer = 10;
                 _prevTileMapName = _world.activeRoom.tilemap;
                 _tileCollLayer = tiledMapComponent.collisionLayer;
                 //if left make sure we set pos to new width
@@ -106,7 +127,7 @@ namespace ProjectTemplate
         {
             Physics.gravity.Y = 250f;
             CheckGrounded();
-            //Core.debugRenderEnabled = true;
+            
             //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
             CheckDoors();
 
@@ -198,8 +219,8 @@ namespace ProjectTemplate
                 entity.addComponent(new Enemy());
             }
             entity.addComponent(rigidbody);
-            entity.addCollider(new CircleCollider(8));
-            //entity.addCollider(new BoxCollider(12, 12));
+            //entity.addCollider(new CircleCollider(8));
+            entity.addCollider(new BoxCollider(-7, -7, 16, 16));
             return rigidbody;
         }
 
