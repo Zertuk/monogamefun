@@ -12,35 +12,27 @@ using System.Threading.Tasks;
 
 namespace ProjectTemplate
 {
-    public class Enemy : Component
-        //, ITriggerListener, IUpdatable
+    public class Enemy : Component, ITriggerListener, IUpdatable
     {
 
-        //enum Animations
-        //{
-        //    Walk,
-        //    Run,
-        //    Idle,
-        //    Attack,
-        //    Death,
-        //    Falling,
-        //    Hurt,
-        //    Jumping
-        //}
+        enum Animations
+        {
+            Idle
+        }
 
-        //Sprite<Animations> _animation;
-        //public int health;
-        //private Mover _mover;
-        //private Gravity _gravity;
-        //private float _moveSpeed;
-        //public Enemy()
-        //{
-        //    _gravity = new Gravity();
-        //    _moveSpeed = 100f;
-        //    health = 10;
-        //    _mover = entity.addComponent(new Mover());
+        Sprite<Animations> _animation;
+        public int health;
+        private Mover _mover;
+        private Gravity _gravity;
+        private float _moveSpeed;
+        public Enemy()
+        {
+            _gravity = new Gravity();
+            _moveSpeed = 100f;
+            health = 10;
+            //_mover = entity.addComponent(new Mover());
 
-        //}
+        }
 
         //public void UsePath(List<Point> path)
         //{
@@ -50,85 +42,59 @@ namespace ProjectTemplate
         //    _mover.move(new Vector2(_moveSpeed, 0), out res);
         //}
 
-        //public override void onAddedToEntity()
-        //{
-        //    var texture = entity.scene.contentManager.Load<Texture2D>("leekrun");
-        //    var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
-        //    _mover = entity.addComponent(new Mover());
-        //    _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
+        public override void onAddedToEntity()
+        {
+            var texture = entity.scene.contentManager.Load<Texture2D>("beetle");
 
-        //    _animation.addAnimation(Animations.Run, new SpriteAnimation(new List<Subtexture>()
-        //    {
-        //        subtextures[0],
-        //        subtextures[1],
-        //        subtextures[2],
-        //        subtextures[3],
-        //    }));
+            var subtextures = Subtexture.subtexturesFromAtlas(texture, 16, 16);
+            _mover = entity.addComponent(new Mover());
+            _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
 
-        //    _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
-        //    {
-        //        subtextures[0]
-        //    }));
 
-        //    _animation.addAnimation(Animations.Attack, new SpriteAnimation(new List<Subtexture>()
-        //    {
-        //        subtextures[0],
-        //        subtextures[1],
-        //        subtextures[2],
-        //        subtextures[3],
-        //    }));
 
-        //    _animation.addAnimation(Animations.Death, new SpriteAnimation(new List<Subtexture>()
-        //    {
-        //        subtextures[0],
-        //        subtextures[1],
-        //        subtextures[2],
-        //        subtextures[3],
-        //    }));
+            _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
+            {
+                subtextures[0],
+                subtextures[0],
+                subtextures[1],
+                subtextures[1],
+                subtextures[2],
+                subtextures[2],
+                subtextures[3],
+                subtextures[3]
+            }));
+            
 
-        //    _animation.addAnimation(Animations.Falling, new SpriteAnimation(new List<Subtexture>()
-        //    {
-        //        subtextures[0]
-        //    }));
+        }
 
-        //    _animation.addAnimation(Animations.Hurt, new SpriteAnimation(new List<Subtexture>()
-        //    {
-        //        subtextures[0],
-        //        subtextures[1]
-        //    }));
+        void IUpdatable.update()
+        {
+            var animation = Animations.Idle;
+            if (!_animation.isAnimationPlaying(animation))
+            {
+                _animation.play(animation);
+            }
+            var moveDir = new Vector2(0, 0);
+            //moveDir.Y = _gravity.calcGrav();
+            var movement = moveDir * _moveSpeed * Time.deltaTime;
+            Console.WriteLine("DO WE UPDATE: " + animation);
+            CollisionResult res;
+            _mover.move(movement, out res);
 
-        //    _animation.addAnimation(Animations.Jumping, new SpriteAnimation(new List<Subtexture>()
-        //    {
-        //        subtextures[0],
-        //        subtextures[1],
-        //        subtextures[2],
-        //        subtextures[3],
-        //    }));
-        //}
-
-        //void IUpdatable.update()
-        //{
-        //    var moveDir = new Vector2(0, 0);
-        //    //moveDir.Y = _gravity.calcGrav();
-        //    var movement = moveDir * _moveSpeed * Time.deltaTime;
-
-        //    CollisionResult res;
-        //    _mover.move(movement, out res);
-
-        //}
+        }
 
         //#region ITriggerListener implementation
 
-        //void ITriggerListener.onTriggerEnter(Collider other, Collider self)
-        //{
-        //    Debug.log("triggerEnter: {0}", other.entity.name);
-        //}
+        void ITriggerListener.onTriggerEnter(Collider other, Collider self)
+        {
+            Debug.log("triggerEnter: {0}", other.entity.name);
+        }
 
 
-        //void ITriggerListener.onTriggerExit(Collider other, Collider self)
-        //{
-        //    Debug.log("triggerExit: {0}", other.entity.name);
-        //}
+        void ITriggerListener.onTriggerExit(Collider other, Collider self)
+        {
+            Debug.log("triggerExit: {0}", other.entity.name);
+        }
 
         //#endregion
 

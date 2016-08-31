@@ -53,15 +53,17 @@ namespace ProjectTemplate
             hasJumped = false;
             health = 10;
             maxHealth = 10;
-            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun3");
+            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun4");
             var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle");
             var fallTexture = entity.scene.contentManager.Load<Texture2D>("leekfall");
             var jumpTexture = entity.scene.contentManager.Load<Texture2D>("leekjump");
+            var attackTexture = entity.scene.contentManager.Load<Texture2D>("leekattack2");
 
-            var subtextures = Subtexture.subtexturesFromAtlas(texture, 20, 21);
+            var subtextures = Subtexture.subtexturesFromAtlas(texture, 21, 21);
             var idleSubtexture = Subtexture.subtexturesFromAtlas(idleTexture, 20, 21);
             var fallSubtexture = Subtexture.subtexturesFromAtlas(fallTexture, 20, 21);
             var jumpSubtexture = Subtexture.subtexturesFromAtlas(jumpTexture, 20, 21);
+            var attackSubtexture = Subtexture.subtexturesFromAtlas(attackTexture, 42, 30);
             jumpTime = 20;
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
@@ -77,27 +79,37 @@ namespace ProjectTemplate
             _animation.addAnimation(Animations.Run, new SpriteAnimation(new List<Subtexture>()
             {
                 subtextures[0],
+                subtextures[0],
+                subtextures[1],
                 subtextures[1],
                 subtextures[2],
+                subtextures[2],
                 subtextures[3],
+                subtextures[3]
             }));
 
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
             {
-                idleSubtexture[0],
-                idleSubtexture[0],
-                idleSubtexture[1],
-                idleSubtexture[1],
-                idleSubtexture[2],
-                idleSubtexture[2]
+                //idleSubtexture[0],
+                //idleSubtexture[0],
+                //idleSubtexture[1],
+                //idleSubtexture[1],
+                //idleSubtexture[2],
+                //idleSubtexture[2]
+                                attackSubtexture[0],
+                attackSubtexture[1],
+                attackSubtexture[2],
+                attackSubtexture[3]
+
             }));
 
             _animation.addAnimation(Animations.Attack, new SpriteAnimation(new List<Subtexture>()
             {
-                subtextures[0],
-                subtextures[1],
-                subtextures[2],
-                subtextures[3],
+                attackSubtexture[0],
+                attackSubtexture[1],
+                attackSubtexture[2],
+                attackSubtexture[3],
+                attackSubtexture[3]
             }));
 
             _animation.addAnimation(Animations.Death, new SpriteAnimation(new List<Subtexture>()
@@ -189,12 +201,12 @@ namespace ProjectTemplate
             }
             if (grounded)
             {
+                Console.WriteLine("GROUNDED??");
                     groundFrames = groundFrames + 1;
             }
             else
             {
                 groundFrames = 0;
-                Console.WriteLine(Time.deltaTime);
             }
 
             if (moveDir.Y > 0)
@@ -207,8 +219,7 @@ namespace ProjectTemplate
                 animation = Animations.Jumping;
                 grounded = false;
             }
-            Console.WriteLine(moveDir.X);
-            Console.WriteLine(moveDir.Y);
+            Console.WriteLine("Y: " + moveDir.Y);
             if (moveDir.X == 0 && moveDir.Y == 0)
             {
                 Console.WriteLine("test");
@@ -217,7 +228,6 @@ namespace ProjectTemplate
 
             CollisionResult res;
             var movement = (moveDir * _moveSpeed * Time.deltaTime);
-            Console.WriteLine(movement.X);
             _mover.move(movement, out res);
 
             if (!_animation.isAnimationPlaying(animation))
@@ -227,6 +237,7 @@ namespace ProjectTemplate
 
             if (grounded)
             {
+                Console.WriteLine("grounded??");
                 jumpTime = 20;
                 if (!_jumpInput.isDown)
                 {

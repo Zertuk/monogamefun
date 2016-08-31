@@ -42,7 +42,7 @@ namespace ProjectTemplate
 
         public override void initialize()
         {
-            //Core.debugRenderEnabled = true;
+            Core.debugRenderEnabled = true;
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(320, 180, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
@@ -135,7 +135,6 @@ namespace ProjectTemplate
 
             var path = graph.search(VectorToPoint(enemyEntity.transform.position), VectorToPoint(playerEntity.transform.position));
             var enemy = enemyEntity.entity.getComponent<Enemy>();
-            //enemy.UsePath(path);
         }
 
         public Point VectorToPoint(Vector2 input)
@@ -154,10 +153,11 @@ namespace ProjectTemplate
             {
                 if (collider.physicsLayer == 10)
                 {
-                    if (collider.collidesWith(playerEntity.entity.colliders[0], out res) && playerEntity.velocity.Y == 0)
+                    //collider.collidesWith(playerEntity.entity.colliders[0], out res)
+                    if (playerEntity.velocity.Y == 0)
                     {
                         player.grounded = true;
-                        //Console.WriteLine("grounded");
+                        Console.WriteLine("grounded");
                     }
                 }
             }
@@ -219,8 +219,8 @@ namespace ProjectTemplate
                 entity.addComponent(new Enemy());
             }
             entity.addComponent(rigidbody);
-            //entity.addCollider(new CircleCollider(8));
-            entity.addCollider(new BoxCollider(-7, -7, 16, 16));
+            entity.addCollider(new CircleCollider(16));
+            //entity.addCollider(new BoxCollider(-7, -7, 16, 16));
             return rigidbody;
         }
 
