@@ -34,7 +34,6 @@ namespace ProjectTemplate
         private VirtualButton _rollInput;
         private VirtualIntegerAxis _xAxisInput;
 
-        private int _tileSize = 16;
         private int _jumpTime;
 
         public int Health;
@@ -46,6 +45,7 @@ namespace ProjectTemplate
         private bool _isRolling;
         private int _rollCount;
         private int _maxJumpTime;
+        private bool _canAction;
 
         private void DisplayPosition()
         {
@@ -55,11 +55,15 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
+            Health = 10;
+            MaxHealth = 10;
+
             _groundFrames = 0;
             _hasJumped = false;
             _maxJumpTime = 20;
-            Health = 10;
-            MaxHealth = 10;
+            _jumpTime = _maxJumpTime;
+            _mover = entity.addComponent(new Mover());
+
 
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun4");
             var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle");
@@ -74,9 +78,9 @@ namespace ProjectTemplate
             var jumpSubtexture = Subtexture.subtexturesFromAtlas(jumpTexture, 20, 21);
             var attackSubtexture = Subtexture.subtexturesFromAtlas(attackTexture, 42, 30);
             var rollSubtexture = Subtexture.subtexturesFromAtlas(rollTexture, 20, 21);
-            _jumpTime = _maxJumpTime;
-            _mover = entity.addComponent(new Mover());
+
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
+
             //extract the animations from the atlas. they are setup in rows with 8 columns
             _animation.addAnimation(Animations.Walk, new SpriteAnimation(new List<Subtexture>()
             {
@@ -199,7 +203,7 @@ namespace ProjectTemplate
 
         private bool CheckJumpInput()
         {
-            if ((_jumpInput.isDown && !_hasJumped && _jumpTime != 0))
+            if ((_jumpInput.isDown && !_hasJumped && _jumpTime != 0 && _canAction) || (_jumpInput.isDown && !_hasJumped && _jumpTime != _maxJumpTime))
             {
                 return true;
             }
@@ -214,14 +218,28 @@ namespace ProjectTemplate
 
             //keep
             var moveDir = new Vector2(_xAxisInput.value, 0);
+            if (_isRolling && _rollCount != 29)
+            {
+                moveDir.X = 0;
+            }
+
             var animation = Animations.Idle;
+
+            if (Grounded && !_isRolling)
+            {
+                _canAction = true;
+            }
+            else
+            {
+                _canAction = false;
+            }
 
             //jump
             if (CheckJumpInput())
             {
                 moveDir.Y = (float)Jump();
             }
-            else if (_jumpTime < 5)
+            else if (_jumpTime < 0.5)
             {
                 _hasJumped = true;
             }
@@ -267,7 +285,7 @@ namespace ProjectTemplate
             }
 
             //roll
-            if (_rollInput || _isRolling)
+            if ((_rollInput&&_canAction) || _isRolling)
             {
                 _isRolling = true;
                 animation = Animations.Rolling;
