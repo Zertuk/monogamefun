@@ -22,24 +22,30 @@ namespace ProjectTemplate
             Death,
             Falling,
             Hurt,
-            Jumping
+            Jumping,
+            Rolling
         }
 
-        Sprite<Animations> _animation;
-        Mover _mover;
-        float _moveSpeed = 76f;
+        private Sprite<Animations> _animation;
+        private Mover _mover;
+        private float _moveSpeed = 76f;
 
-        VirtualButton _jumpInput;
-        VirtualIntegerAxis _xAxisInput;
-        int tileSize = 16;
-        int jumpTime;
-        int health;
-        int maxHealth;
-        float jumpGrav;
-        public bool grounded;
-        int groundFrames;
-        bool hasJumped;
-        public bool enableGravity;
+        private VirtualButton _jumpInput;
+        private VirtualButton _rollInput;
+        private VirtualIntegerAxis _xAxisInput;
+
+        private int _tileSize = 16;
+        private int _jumpTime;
+
+        public int Health;
+        public int MaxHealth;
+        public bool Grounded;
+
+        private int _groundFrames;
+        private bool _hasJumped;
+        private bool _isRolling;
+        private int _rollCount;
+        private int _maxJumpTime;
 
         private void DisplayPosition()
         {
@@ -49,22 +55,26 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
-            groundFrames = 0;
-            hasJumped = false;
-            health = 10;
-            maxHealth = 10;
+            _groundFrames = 0;
+            _hasJumped = false;
+            _maxJumpTime = 20;
+            Health = 10;
+            MaxHealth = 10;
+
             var texture = entity.scene.contentManager.Load<Texture2D>("leekrun4");
             var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle");
             var fallTexture = entity.scene.contentManager.Load<Texture2D>("leekfall");
             var jumpTexture = entity.scene.contentManager.Load<Texture2D>("leekjump");
             var attackTexture = entity.scene.contentManager.Load<Texture2D>("leekattack2");
+            var rollTexture = entity.scene.contentManager.Load<Texture2D>("leekroll");
 
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 21, 21);
             var idleSubtexture = Subtexture.subtexturesFromAtlas(idleTexture, 20, 21);
             var fallSubtexture = Subtexture.subtexturesFromAtlas(fallTexture, 20, 21);
             var jumpSubtexture = Subtexture.subtexturesFromAtlas(jumpTexture, 20, 21);
             var attackSubtexture = Subtexture.subtexturesFromAtlas(attackTexture, 42, 30);
-            jumpTime = 20;
+            var rollSubtexture = Subtexture.subtexturesFromAtlas(rollTexture, 20, 21);
+            _jumpTime = _maxJumpTime;
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
             //extract the animations from the atlas. they are setup in rows with 8 columns
@@ -90,16 +100,16 @@ namespace ProjectTemplate
 
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
             {
-                //idleSubtexture[0],
-                //idleSubtexture[0],
-                //idleSubtexture[1],
-                //idleSubtexture[1],
-                //idleSubtexture[2],
-                //idleSubtexture[2]
-                                attackSubtexture[0],
-                attackSubtexture[1],
-                attackSubtexture[2],
-                attackSubtexture[3]
+                idleSubtexture[0],
+                idleSubtexture[0],
+                idleSubtexture[1],
+                idleSubtexture[1],
+                idleSubtexture[2],
+                idleSubtexture[2]
+                //attackSubtexture[0],
+                //attackSubtexture[1],
+                //attackSubtexture[2],
+                //attackSubtexture[3]
 
             }));
 
@@ -138,6 +148,18 @@ namespace ProjectTemplate
             {
                 fallSubtexture[0]
             }));
+            _animation.addAnimation(Animations.Rolling, new SpriteAnimation(new List<Subtexture>()
+            {
+                rollSubtexture[0],
+                rollSubtexture[0],
+                rollSubtexture[1],
+                rollSubtexture[1],
+                rollSubtexture[2],
+                rollSubtexture[2],
+                rollSubtexture[2],
+                rollSubtexture[2]
+            }));
+
             setupInput();
         }
 
@@ -153,42 +175,58 @@ namespace ProjectTemplate
             _jumpInput = new VirtualButton();
             _jumpInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.A));
             _jumpInput.nodes.Add(new Nez.VirtualButton.GamePadButton(0, Buttons.A));
+
+            _rollInput = new VirtualButton();
+            _rollInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.Q));
+            _rollInput.nodes.Add(new Nez.VirtualButton.GamePadButton(0, Buttons.X));
         }
 
         private float Jump()
         {
             var count = 0;
-            if (jumpTime > 0)
+            if (_jumpTime > 0)
             {
                 count = count + 1;
                 var x = 2.5f;
                 float y = 1f - (0.5f* x*x);
-                jumpTime = jumpTime - 1;
+                _jumpTime = _jumpTime - 1;
                 return y;
             }
             count = 0;
-            jumpTime = 0;
+            _jumpTime = 0;
             return 0;
+        }
+
+        private bool CheckJumpInput()
+        {
+            if ((_jumpInput.isDown && !_hasJumped && _jumpTime != 0))
+            {
+                return true;
+            }
+            return false;
         }
 
         void IUpdatable.update()
         {
+            //dev
             DisplayPosition();
 
-            // handle movement and animations
+
+            //keep
             var moveDir = new Vector2(_xAxisInput.value, 0);
-            
-            if ((_jumpInput.isDown && !hasJumped && jumpTime != 0))
+            var animation = Animations.Idle;
+
+            //jump
+            if (CheckJumpInput())
             {
                 moveDir.Y = (float)Jump();
             }
-            else if (jumpTime < 0.5)
+            else if (_jumpTime < 5)
             {
-                hasJumped = true;
+                _hasJumped = true;
             }
 
-            var animation = Animations.Idle;
-
+            //run
             if (moveDir.X < 0)
             {
                 animation = Animations.Run;
@@ -199,31 +237,58 @@ namespace ProjectTemplate
                 animation = Animations.Run;
                 _animation.flipX = true;
             }
-            if (grounded)
+
+            //grounded
+            if (Grounded)
             {
-                Console.WriteLine("GROUNDED??");
-                    groundFrames = groundFrames + 1;
+                _groundFrames = _groundFrames + 1;
             }
             else
             {
-                groundFrames = 0;
+                _groundFrames = 0;
             }
 
+            //fall/jumping
             if (moveDir.Y > 0)
             {
                 animation = Animations.Falling;
-                grounded = false;
+                Grounded = false;
             }
             else if (moveDir.Y < 0)
             {
                 animation = Animations.Jumping;
-                grounded = false;
+                Grounded = false;
             }
-            Console.WriteLine("Y: " + moveDir.Y);
+
+            //idle
             if (moveDir.X == 0 && moveDir.Y == 0)
             {
-                Console.WriteLine("test");
                 animation = Animations.Idle;
+            }
+
+            //roll
+            if (_rollInput || _isRolling)
+            {
+                _isRolling = true;
+                animation = Animations.Rolling;
+                _rollCount = _rollCount + 1;
+
+                if (_rollCount > 30)
+                {
+                    _isRolling = false;
+                    _rollCount = 0;
+                }
+                else
+                {
+                    if (_animation.flipX)
+                    {
+                        moveDir.X = 1;
+                    }
+                    else
+                    {
+                        moveDir.X = -1;
+                    }
+                }
             }
 
             CollisionResult res;
@@ -235,15 +300,16 @@ namespace ProjectTemplate
                 _animation.play(animation);
             }
 
-            if (grounded)
+            if (Grounded)
             {
-                Console.WriteLine("grounded??");
-                jumpTime = 20;
+                _jumpTime = _maxJumpTime;
                 if (!_jumpInput.isDown)
                 {
-                    hasJumped = false;
+                    _hasJumped = false;
                 }
             }
+
+
         }
 
 

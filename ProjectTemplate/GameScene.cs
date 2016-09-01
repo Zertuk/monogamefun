@@ -42,7 +42,7 @@ namespace ProjectTemplate
 
         public override void initialize()
         {
-            Core.debugRenderEnabled = true;
+            //Core.debugRenderEnabled = true;
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(320, 180, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
@@ -156,8 +156,7 @@ namespace ProjectTemplate
                     //collider.collidesWith(playerEntity.entity.colliders[0], out res)
                     if (playerEntity.velocity.Y == 0)
                     {
-                        player.grounded = true;
-                        Console.WriteLine("grounded");
+                        player.Grounded = true;
                     }
                 }
             }
@@ -219,8 +218,8 @@ namespace ProjectTemplate
                 entity.addComponent(new Enemy());
             }
             entity.addComponent(rigidbody);
-            entity.addCollider(new CircleCollider(16));
-            //entity.addCollider(new BoxCollider(-7, -7, 16, 16));
+            //entity.addCollider(new CircleCollider(16));
+            entity.addCollider(new BoxCollider(-7, -7, 16, 16));
             return rigidbody;
         }
 
