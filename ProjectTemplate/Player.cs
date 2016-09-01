@@ -32,6 +32,7 @@ namespace ProjectTemplate
 
         private VirtualButton _jumpInput;
         private VirtualButton _rollInput;
+        private VirtualButton _attackInput;
         private VirtualIntegerAxis _xAxisInput;
 
         private int _jumpTime;
@@ -39,13 +40,15 @@ namespace ProjectTemplate
         public int Health;
         public int MaxHealth;
         public bool Grounded;
-
+        public bool IsRolling;
+        
         private int _groundFrames;
         private bool _hasJumped;
-        private bool _isRolling;
         private int _rollCount;
         private int _maxJumpTime;
         private bool _canAction;
+        private bool _isAttacking;
+        private int _attackTimer;
 
         private void DisplayPosition()
         {
@@ -57,7 +60,9 @@ namespace ProjectTemplate
         {
             Health = 10;
             MaxHealth = 10;
+            IsRolling = false;
 
+            _attackTimer = 0;
             _groundFrames = 0;
             _hasJumped = false;
             _maxJumpTime = 20;
@@ -123,6 +128,8 @@ namespace ProjectTemplate
                 attackSubtexture[1],
                 attackSubtexture[2],
                 attackSubtexture[3],
+                attackSubtexture[3],
+                attackSubtexture[3],
                 attackSubtexture[3]
             }));
 
@@ -183,6 +190,9 @@ namespace ProjectTemplate
             _rollInput = new VirtualButton();
             _rollInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.Q));
             _rollInput.nodes.Add(new Nez.VirtualButton.GamePadButton(0, Buttons.X));
+
+            _attackInput = new VirtualButton();
+            _attackInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.F));
         }
 
         private float Jump()
@@ -218,14 +228,14 @@ namespace ProjectTemplate
 
             //keep
             var moveDir = new Vector2(_xAxisInput.value, 0);
-            if (_isRolling && _rollCount != 29)
+            if (IsRolling && _rollCount != 29 || _isAttacking)
             {
                 moveDir.X = 0;
             }
 
             var animation = Animations.Idle;
 
-            if (Grounded && !_isRolling)
+            if (Grounded && !IsRolling && !_isAttacking)
             {
                 _canAction = true;
             }
@@ -284,16 +294,29 @@ namespace ProjectTemplate
                 animation = Animations.Idle;
             }
 
-            //roll
-            if ((_rollInput&&_canAction) || _isRolling)
+            //grounded attacks
+            if (_attackInput&&_canAction || _isAttacking)
             {
-                _isRolling = true;
+                animation = Animations.Attack;
+                _isAttacking = true;
+                _attackTimer = _attackTimer + 1;
+                if (_attackTimer > 23)
+                {
+                    _isAttacking = false;
+                    _attackTimer = 0;
+                }
+            }
+
+            //roll
+            if ((_rollInput&&_canAction) || IsRolling)
+            {
+                IsRolling = true;
                 animation = Animations.Rolling;
                 _rollCount = _rollCount + 1;
 
                 if (_rollCount > 30)
                 {
-                    _isRolling = false;
+                    IsRolling = false;
                     _rollCount = 0;
                 }
                 else

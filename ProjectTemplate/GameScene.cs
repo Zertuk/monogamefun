@@ -159,6 +159,10 @@ namespace ProjectTemplate
                         player.Grounded = true;
                     }
                 }
+                else
+                {
+                    Console.WriteLine("TEST COLLIDE");
+                }
             }
         }
 
