@@ -162,11 +162,7 @@ namespace ProjectTemplate
             _animation.addAnimation(Animations.Rolling, new SpriteAnimation(new List<Subtexture>()
             {
                 rollSubtexture[0],
-                rollSubtexture[0],
                 rollSubtexture[1],
-                rollSubtexture[1],
-                rollSubtexture[2],
-                rollSubtexture[2],
                 rollSubtexture[2],
                 rollSubtexture[2]
             }));
@@ -228,7 +224,7 @@ namespace ProjectTemplate
 
             //keep
             var moveDir = new Vector2(_xAxisInput.value, 0);
-            if (IsRolling && _rollCount != 29 || _isAttacking)
+            if (IsRolling && _rollCount != 14 || _isAttacking)
             {
                 moveDir.X = 0;
             }
@@ -314,7 +310,7 @@ namespace ProjectTemplate
                 animation = Animations.Rolling;
                 _rollCount = _rollCount + 1;
 
-                if (_rollCount > 30)
+                if (_rollCount > 15)
                 {
                     IsRolling = false;
                     _rollCount = 0;
@@ -323,11 +319,11 @@ namespace ProjectTemplate
                 {
                     if (_animation.flipX)
                     {
-                        moveDir.X = 1;
+                        moveDir.X = 2;
                     }
                     else
                     {
-                        moveDir.X = -1;
+                        moveDir.X = -2;
                     }
                 }
             }
