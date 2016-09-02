@@ -243,11 +243,12 @@ namespace ProjectTemplate
             //jump
             if (CheckJumpInput())
             {
-                moveDir.Y = (float)Jump();
-            }
-            else if (_jumpTime < 0.5)
-            {
-                _hasJumped = true;
+                moveDir.Y = Jump();
+                if (moveDir.Y >= 0)
+                {
+                    Console.WriteLine("FUCK");
+                    _hasJumped = true;
+                }
             }
 
             //run
