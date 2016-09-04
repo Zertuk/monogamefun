@@ -25,6 +25,7 @@ namespace ProjectTemplate
         private TiledTileLayer _tileCollLayer;
         public GameScene()
         {
+            addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
             _world = new World();
             playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true);
             
@@ -37,6 +38,7 @@ namespace ProjectTemplate
 
             // add a component to have the Camera follow the player
             camera.entity.addComponent(new FollowCamera(playerEntity.entity));
+
         }
         private World _world;
 
@@ -98,18 +100,18 @@ namespace ProjectTemplate
 
         private void DisplayHealthBar()
         {
-            var stage = new Stage();
-
             var canvas = createEntity("ui").addComponent(new UICanvas());
+            canvas.isFullScreen = true;
+            canvas.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
             var table = canvas.stage.addElement(new Table());
-
+            table.setFillParent(true);
             var healthText = new Text(Graphics.instance.bitmapFont, "10", new Vector2(45, 7), Color.White);
             var healthEntity = createEntity("healthText");
+            healthText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
             healthEntity.addComponent(healthText);
             var healthBar = new ProgressBar(0, 10, 1, false, ProgressBarStyle.create(Color.Red, Color.Black));
             var healthBarBorder = new ProgressBar(1, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
             var healthBarBorder2 = new ProgressBar(1, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
-
             healthBarBorder2.setSize(52, 12f);
             healthBarBorder2.setPosition(5f, 4f);
             healthBar.setValue(10);
@@ -119,7 +121,6 @@ namespace ProjectTemplate
             healthBar.setPosition(6f, 8f);
             table.addElement(healthBarBorder);
             table.addElement(healthBarBorder2);
-
             table.addElement(healthBar);
         }
 

@@ -23,11 +23,9 @@ namespace ProjectTemplate
         Sprite<Animations> _animation;
         public int health;
         private Mover _mover;
-        private Gravity _gravity;
         private float _moveSpeed;
         public Enemy()
         {
-            _gravity = new Gravity();
             _moveSpeed = 100f;
             health = 10;
             //_mover = entity.addComponent(new Mover());
