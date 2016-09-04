@@ -124,13 +124,10 @@ namespace ProjectTemplate
 
             _animation.addAnimation(Animations.Attack, new SpriteAnimation(new List<Subtexture>()
             {
-                attackSubtexture[0],
                 attackSubtexture[1],
                 attackSubtexture[2],
                 attackSubtexture[3],
                 attackSubtexture[3],
-                attackSubtexture[3],
-                attackSubtexture[3]
             }));
 
             _animation.addAnimation(Animations.Death, new SpriteAnimation(new List<Subtexture>()
@@ -292,12 +289,12 @@ namespace ProjectTemplate
             }
 
             //grounded attacks
-            if (_attackInput&&_canAction || _isAttacking)
+            if (_attackInput.isPressed&&_canAction || _isAttacking)
             {
                 animation = Animations.Attack;
                 _isAttacking = true;
                 _attackTimer = _attackTimer + 1;
-                if (_attackTimer > 23)
+                if (_attackTimer > 15)
                 {
                     _isAttacking = false;
                     _attackTimer = 0;
@@ -305,12 +302,11 @@ namespace ProjectTemplate
             }
 
             //roll
-            if ((_rollInput&&_canAction) || IsRolling)
+            if ((_rollInput.isPressed&&_canAction) || IsRolling)
             {
                 IsRolling = true;
                 animation = Animations.Rolling;
                 _rollCount = _rollCount + 1;
-
                 if (_rollCount > 15)
                 {
                     IsRolling = false;
