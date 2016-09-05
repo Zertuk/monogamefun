@@ -127,7 +127,7 @@ namespace ProjectTemplate
                 attackSubtexture[1],
                 attackSubtexture[2],
                 attackSubtexture[3],
-                attackSubtexture[3],
+                attackSubtexture[3]
             }));
 
             _animation.addAnimation(Animations.Death, new SpriteAnimation(new List<Subtexture>()
@@ -135,12 +135,7 @@ namespace ProjectTemplate
                 subtextures[0],
                 subtextures[1],
                 subtextures[2],
-                subtextures[3],
-            }));
-
-            _animation.addAnimation(Animations.Falling, new SpriteAnimation(new List<Subtexture>()
-            {
-                subtextures[0]
+                subtextures[3]
             }));
 
             _animation.addAnimation(Animations.Hurt, new SpriteAnimation(new List<Subtexture>()
