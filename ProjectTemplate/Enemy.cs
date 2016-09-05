@@ -75,7 +75,6 @@ namespace ProjectTemplate
             var moveDir = new Vector2(0, 0);
             //moveDir.Y = _gravity.calcGrav();
             var movement = moveDir * _moveSpeed * Time.deltaTime;
-            Console.WriteLine("DO WE UPDATE: " + animation);
             CollisionResult res;
             _mover.move(movement, out res);
 

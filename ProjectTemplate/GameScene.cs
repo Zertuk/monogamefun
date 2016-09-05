@@ -48,7 +48,8 @@ namespace ProjectTemplate
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(320, 180, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(320 * 4, 180 * 4);
+            Screen.setSize(320*4, 180 * 4);
+
             DisplayHealthBar();
         }
 
@@ -75,7 +76,7 @@ namespace ProjectTemplate
                 tiledMapComponent.physicsLayer = 10;
 
                 var accentComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "accent"));
-                accentComponent.renderLayer = -1;
+                accentComponent.renderLayer = 0;
                 accentComponent.collisionLayer = null;
                 accentComponent.setLayersToRender("accent");
 
@@ -160,10 +161,6 @@ namespace ProjectTemplate
                         player.Grounded = true;
                     }
                 }
-                else
-                {
-                    Console.WriteLine("TEST COLLIDE");
-                }
             }
         }
 
@@ -224,7 +221,7 @@ namespace ProjectTemplate
             }
             entity.addComponent(rigidbody);
             //entity.addCollider(new CircleCollider(16));
-            entity.addCollider(new BoxCollider(-7, -7, 16, 16));
+            entity.addCollider(new BoxCollider(-7, -6, 14, 16));
             return rigidbody;
         }
 

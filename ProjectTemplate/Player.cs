@@ -19,6 +19,8 @@ namespace ProjectTemplate
             Run,
             Idle,
             Attack,
+            Attack2,
+            Attack3,
             Death,
             Falling,
             Hurt,
@@ -70,18 +72,18 @@ namespace ProjectTemplate
             _mover = entity.addComponent(new Mover());
 
 
-            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun4");
-            var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle");
+            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun-sheet");
+            var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle-sheet");
             var fallTexture = entity.scene.contentManager.Load<Texture2D>("leekfall");
             var jumpTexture = entity.scene.contentManager.Load<Texture2D>("leekjump");
-            var attackTexture = entity.scene.contentManager.Load<Texture2D>("leekattack2");
+            var attackTexture = entity.scene.contentManager.Load<Texture2D>("leekattack-sheet");
             var rollTexture = entity.scene.contentManager.Load<Texture2D>("leekroll");
 
-            var subtextures = Subtexture.subtexturesFromAtlas(texture, 21, 21);
-            var idleSubtexture = Subtexture.subtexturesFromAtlas(idleTexture, 20, 21);
+            var subtextures = Subtexture.subtexturesFromAtlas(texture, 50, 50);
+            var idleSubtexture = Subtexture.subtexturesFromAtlas(idleTexture, 50, 50);
             var fallSubtexture = Subtexture.subtexturesFromAtlas(fallTexture, 20, 21);
             var jumpSubtexture = Subtexture.subtexturesFromAtlas(jumpTexture, 20, 21);
-            var attackSubtexture = Subtexture.subtexturesFromAtlas(attackTexture, 42, 30);
+            var attackSubtexture = Subtexture.subtexturesFromAtlas(attackTexture, 50, 50);
             var rollSubtexture = Subtexture.subtexturesFromAtlas(rollTexture, 20, 21);
 
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
@@ -124,10 +126,26 @@ namespace ProjectTemplate
 
             _animation.addAnimation(Animations.Attack, new SpriteAnimation(new List<Subtexture>()
             {
+                attackSubtexture[0],
                 attackSubtexture[1],
-                attackSubtexture[2],
+                attackSubtexture[1],
+                attackSubtexture[2]
+            }));
+
+            _animation.addAnimation(Animations.Attack2, new SpriteAnimation(new List<Subtexture>()
+            {
                 attackSubtexture[3],
-                attackSubtexture[3]
+                attackSubtexture[3],
+                attackSubtexture[4]
+            }));
+
+            _animation.addAnimation(Animations.Attack3, new SpriteAnimation(new List<Subtexture>()
+            {
+                attackSubtexture[5],
+                attackSubtexture[6],
+                attackSubtexture[6],
+                attackSubtexture[7],
+                attackSubtexture[7]
             }));
 
             _animation.addAnimation(Animations.Death, new SpriteAnimation(new List<Subtexture>()
@@ -289,8 +307,17 @@ namespace ProjectTemplate
                 animation = Animations.Attack;
                 _isAttacking = true;
                 _attackTimer = _attackTimer + 1;
-                if (_attackTimer > 15)
+                if (36 >= _attackTimer && _attackTimer > 24)
                 {
+                    animation = Animations.Attack2;
+                }
+                else if (56 >= _attackTimer && _attackTimer > 36)
+                {
+                    animation = Animations.Attack3;
+                }
+                else if (_attackTimer > 56)
+                {
+                    animation = Animations.Attack3;
                     _isAttacking = false;
                     _attackTimer = 0;
                 }
