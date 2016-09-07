@@ -26,19 +26,9 @@ namespace ProjectTemplate
         private float _moveSpeed;
         public Enemy()
         {
-            _moveSpeed = 100f;
+            _moveSpeed = 50f;
             health = 10;
-            //_mover = entity.addComponent(new Mover());
-
         }
-
-        //public void UsePath(List<Point> path)
-        //{
-        //    var next = path.First();
-        //    Console.WriteLine(next);
-        //    CollisionResult res;
-        //    _mover.move(new Vector2(_moveSpeed, 0), out res);
-        //}
 
         public override void onAddedToEntity()
         {
@@ -47,9 +37,6 @@ namespace ProjectTemplate
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 16, 16);
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
-
-
-
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
             {
                 subtextures[0],
@@ -61,8 +48,6 @@ namespace ProjectTemplate
                 subtextures[3],
                 subtextures[3]
             }));
-            
-
         }
 
         void IUpdatable.update()
@@ -76,6 +61,7 @@ namespace ProjectTemplate
             //moveDir.Y = _gravity.calcGrav();
             var movement = moveDir * _moveSpeed * Time.deltaTime;
             CollisionResult res;
+            
             _mover.move(movement, out res);
 
         }

@@ -33,6 +33,8 @@ namespace ProjectTemplate
 
             enemyEntity = createRigidEntity(new Vector2(150, 50), 1f, 100f, 0f, new Vector2(0, 0), false);
 
+            //var graph = new WeightedGridGraph();
+
             var cameFrom = new Dictionary<Vector2, Vector2>();
             var tiled = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
 
@@ -96,6 +98,7 @@ namespace ProjectTemplate
                     newPos.X = _width - 16;
                 }
                 playerEntity.transform.position = newPos;
+                
             }
         }
 
@@ -220,8 +223,9 @@ namespace ProjectTemplate
                 entity.addComponent(new Enemy());
             }
             entity.addComponent(rigidbody);
-            //entity.addCollider(new CircleCollider(16));
-            entity.addCollider(new BoxCollider(-7, -6, 14, 16));
+            //entity.addCollider(new CircleCollider(8));
+            entity.addCollider(new BoxCollider(-9, -6, 13, 16));
+            
             return rigidbody;
         }
 
