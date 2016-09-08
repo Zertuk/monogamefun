@@ -13,14 +13,6 @@ namespace ProjectTemplate
 {
     public class Player : Component, ITriggerListener, IUpdatable
     {
-
-        enum Attack
-        {
-            One,
-            Two,
-            Three
-        }
-
         public enum State
         {
             Normal,
@@ -46,9 +38,8 @@ namespace ProjectTemplate
 
         private Sprite<Animations> _animation;
         private Mover _mover;
-        private float _moveSpeed = 76f;
+        private float _moveSpeed = 70f;
         public State activeState;
-        private Attack activeAttack;
 
         private VirtualButton _jumpInput;
         private VirtualButton _rollInput;
@@ -66,15 +57,11 @@ namespace ProjectTemplate
         private bool _hasJumped;
         private int _rollCount;
         private int _maxJumpTime;
-        private bool _canAction;
-        private bool _isAttacking;
         private int _attackTimer;
 
         private bool _secondAttack;
         private bool _thirdAttack;
         
-        private Queue<Attack> _attackQueue;
-
         private void DisplayPosition()
         {
             var myScene = entity.scene as GameScene;
@@ -83,7 +70,6 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
-            _attackQueue = new Queue<Attack>();
             Health = 10;
             MaxHealth = 10;
             IsRolling = false;
@@ -326,11 +312,7 @@ namespace ProjectTemplate
             {
                 if (!_secondAttack && _attackTimer >= 22)
                 {
-                    _isAttacking = false;
-                    _secondAttack = false;
-                    _thirdAttack = false;
-                    activeState = State.Normal;
-                    _attackTimer = 0;
+                    ExitAttack();
                 }
                 else if (_secondAttack)
                 {
@@ -351,11 +333,7 @@ namespace ProjectTemplate
             {
                 if (!_thirdAttack && _attackTimer >= 40)
                 {
-                    _isAttacking = false;
-                    _secondAttack = false;
-                    _thirdAttack = false;
-                    activeState = State.Normal;
-                    _attackTimer = 0;
+                    ExitAttack();
                 }
                 else if (_thirdAttack)
                 {
@@ -363,18 +341,22 @@ namespace ProjectTemplate
                 }
             }
 
-            if (_attackTimer > 50)
+            if (_attackTimer > 54)
             {
                 animation = Animations.Attack3;
-                _isAttacking = false;
-                _secondAttack = false;
-                _thirdAttack = false;
-                activeState = State.Normal;
-                _attackTimer = 0;
+                ExitAttack();
             }
 
             var moveDir = new Vector2(0, 0);
             DoMovement(moveDir, animation);
+        }
+
+        private void ExitAttack()
+        {
+            _secondAttack = false;
+            _thirdAttack = false;
+            activeState = State.Normal;
+            _attackTimer = 0;
         }
 
         private void DoRoll()

@@ -25,6 +25,7 @@ namespace ProjectTemplate
         private TiledTileLayer _tileCollLayer;
         public GameScene()
         {
+            Transform.shouldRoundPosition = false;
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
             _world = new World();
             playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true);
