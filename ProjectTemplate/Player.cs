@@ -61,6 +61,7 @@ namespace ProjectTemplate
 
         private bool _secondAttack;
         private bool _thirdAttack;
+        private int _actionTimer;
         
         private void DisplayPosition()
         {
@@ -74,6 +75,7 @@ namespace ProjectTemplate
             MaxHealth = 10;
             IsRolling = false;
 
+            _actionTimer = 0;
             _attackTimer = 0;
             _groundFrames = 0;
             _hasJumped = false;
@@ -229,7 +231,7 @@ namespace ProjectTemplate
         {
             var moveDir = new Vector2(_xAxisInput.value, 0);
             var animation = Animations.Idle;
-
+            _actionTimer = _actionTimer + 1;
             //jump
             if (CheckJumpInput())
             {
@@ -240,15 +242,18 @@ namespace ProjectTemplate
                 }
             }
 
-            //roll
-            if (_rollInput.isPressed)
+            if (_actionTimer > 5)
             {
-                activeState = State.Roll;
-            }
+                //roll
+                if (_rollInput.isPressed)
+                {
+                    activeState = State.Roll;
+                }
 
-            if (_attackInput.isPressed)
-            {
-                activeState = State.Attack;
+                if (_attackInput.isPressed)
+                {
+                    activeState = State.Attack;
+                }
             }
 
             //run
@@ -357,6 +362,7 @@ namespace ProjectTemplate
             _thirdAttack = false;
             activeState = State.Normal;
             _attackTimer = 0;
+            _actionTimer = 0;
         }
 
         private void DoRoll()
@@ -377,7 +383,7 @@ namespace ProjectTemplate
             {
                 moveDir.X = -2;
             }
-
+            _actionTimer = 0;
             DoMovement(moveDir, animation);
         }
 
