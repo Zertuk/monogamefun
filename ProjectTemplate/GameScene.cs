@@ -28,11 +28,12 @@ namespace ProjectTemplate
             Transform.shouldRoundPosition = false;
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
             _world = new World();
-            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true);
             
-            UpdateTileMap(new Vector2(100, 100), false);
-
             enemyEntity = createRigidEntity(new Vector2(150, 50), 1f, 100f, 0f, new Vector2(0, 0), false);
+            enemyEntity.entity.tag = 5;
+            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true);
+
+            UpdateTileMap(new Vector2(100, 100), false);
 
             //var graph = new WeightedGridGraph();
 
@@ -50,10 +51,11 @@ namespace ProjectTemplate
             //Core.debugRenderEnabled = true;
 
             // setup a pixel perfect screen that fits our map
-            setDesignResolution(320, 180, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(320*4, 180 * 4);
+            setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
+            Screen.setSize(256*3, 144* 3);
+            //Screen.isFullscreen = true;
 
-            DisplayHealthBar();
+            DisplayHealthBar(9, 10);
         }
 
         private void UpdateTileMap(Vector2 newPos, bool left)
@@ -103,23 +105,27 @@ namespace ProjectTemplate
             }
         }
 
-        private void DisplayHealthBar()
+        private void UpdateHealthBar(int health, int maxHealth)
+        {
+        }
+
+        private void DisplayHealthBar(int health, int maxHealth)
         {
             var canvas = createEntity("ui").addComponent(new UICanvas());
             canvas.isFullScreen = true;
             canvas.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
             var table = canvas.stage.addElement(new Table());
             table.setFillParent(true);
-            var healthText = new Text(Graphics.instance.bitmapFont, "10", new Vector2(45, 7), Color.White);
+            var healthText = new Text(Graphics.instance.bitmapFont, health.ToString(), new Vector2(45, 7), Color.White);
             var healthEntity = createEntity("healthText");
             healthText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
             healthEntity.addComponent(healthText);
-            var healthBar = new ProgressBar(0, 10, 1, false, ProgressBarStyle.create(Color.Red, Color.Black));
-            var healthBarBorder = new ProgressBar(1, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
-            var healthBarBorder2 = new ProgressBar(1, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
+            var healthBar = new ProgressBar(0, maxHealth, 1, false, ProgressBarStyle.create(Color.Red, Color.Black));
+            var healthBarBorder = new ProgressBar(1, maxHealth, 1, false, ProgressBarStyle.create(Color.White, Color.White));
+            var healthBarBorder2 = new ProgressBar(1, maxHealth, 1, false, ProgressBarStyle.create(Color.White, Color.White));
             healthBarBorder2.setSize(52, 12f);
             healthBarBorder2.setPosition(5f, 4f);
-            healthBar.setValue(10);
+            healthBar.setValue(maxHealth);
             healthBarBorder.setSize(52, 12f);
             healthBarBorder.setPosition(5f, 6f);
             healthBar.setSize(50f, 5f);
@@ -153,13 +159,36 @@ namespace ProjectTemplate
             CollisionResult res;
 
             var phys = Physics.getAllColliders();
-            var test = phys.AsEnumerable();
+            var colliders = phys.AsEnumerable();
             var player = playerEntity.entity.getComponent<Player>();
-            foreach (var collider in test)
+            foreach (var collider in colliders)
             {
+                if (collider.physicsLayer == 1)
+                {
+                    if (collider.entity.tag == 5)
+                    {
+                        collider.entity.getComponent<Enemy>().SetMoveDirection(collider.entity.transform.position, playerEntity.transform.position);
+
+                    }
+                    if (player.activeState == Player.State.Attack)
+                    {
+                        if (collider.overlaps(playerEntity.entity.colliders[1]) && collider.entity.getComponent<Enemy>().ActiveState != Enemy.State.Stun)
+                        {
+                            collider.entity.getComponent<Enemy>().ActiveState = Enemy.State.Stun;
+                               
+                            Console.WriteLine("HIT");
+                        }
+                    }
+                    if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider) 
+                    {
+                        player.activeState = Player.State.Knockback;
+                        player.DoHurt(1);
+                        DisplayHealthBar(player.Health, player.MaxHealth);
+                        Console.WriteLine("SHOULD COLLIDE");
+                    }
+                }
                 if (collider.physicsLayer == 10)
                 {
-                    //collider.collidesWith(playerEntity.entity.colliders[0], out res)
                     if (playerEntity.velocity.Y == 0)
                     {
                         player.Grounded = true;
@@ -225,8 +254,16 @@ namespace ProjectTemplate
             }
             entity.addComponent(rigidbody);
             //entity.addCollider(new CircleCollider(8));
-            entity.addCollider(new BoxCollider(-9, -6, 13, 16));
-            
+            var collider = new BoxCollider(-9, -6, 13, 16);
+            collider.collidesWithLayers = 10;
+            entity.addCollider(collider);
+
+            var hitboxCollider = new BoxCollider(6, -14, 20, 24);
+            //hitboxCollider.isTrigger = true;
+            hitboxCollider.collidesWithLayers = 0;
+            hitboxCollider.physicsLayer = 100;
+            entity.addCollider(hitboxCollider);
+
             return rigidbody;
         }
 

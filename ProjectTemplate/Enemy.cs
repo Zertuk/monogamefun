@@ -32,6 +32,7 @@ namespace ProjectTemplate
         private Mover _mover;
         private float _moveSpeed;
         public State ActiveState;
+        private int _moveDirection;
         public Enemy()
         {
             _moveSpeed = 50f;
@@ -64,7 +65,7 @@ namespace ProjectTemplate
             _animation.addAnimation(Animations.Stun, new SpriteAnimation(new List<Subtexture>()
             {
                 hurtSubtextures[0],
-                hurtSubtextures[1]
+                hurtSubtextures[0]
             }));
 
 
@@ -85,17 +86,31 @@ namespace ProjectTemplate
 
         private void DoNormal()
         {
-            var moveDir = new Vector2(0.1f, 0);
+            var moveDir = new Vector2(1*_moveDirection, 0);
             var animation = Animations.Idle;
-            
+            var distance = Vector2.Distance(new Vector2(150, 0), new Vector2(100, 0));
+            Console.WriteLine(distance);
+
             DoMovement(moveDir, animation);
+        }
+
+        public void SetMoveDirection(Vector2 position, Vector2 followVector)
+        {
+            if (position.X > followVector.X)
+            {
+                _moveDirection = -1;
+            }
+            else
+            {
+                _moveDirection = 1;
+            }
         }
 
         private void DoStun()
         {
             _stunCount = _stunCount + 1;
             var animation = Animations.Stun;
-            var moveDir = new Vector2(0, 0);
+            var moveDir = new Vector2(0f, -0f);
 
             if (_stunCount > 25)
             {
@@ -130,7 +145,6 @@ namespace ProjectTemplate
         {
             Debug.log("triggerEnter: {0}", other.entity.name);
         }
-
 
         void ITriggerListener.onTriggerExit(Collider other, Collider self)
         {

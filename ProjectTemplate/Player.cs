@@ -17,7 +17,8 @@ namespace ProjectTemplate
         {
             Normal,
             Attack,
-            Roll
+            Roll,
+            Knockback
         }
 
         enum Animations
@@ -33,7 +34,8 @@ namespace ProjectTemplate
             Falling,
             Hurt,
             Jumping,
-            Rolling
+            Rolling,
+            Knockback
         }
 
         private Sprite<Animations> _animation;
@@ -58,6 +60,7 @@ namespace ProjectTemplate
         private int _rollCount;
         private int _maxJumpTime;
         private int _attackTimer;
+        private int _knockbackTimer;
 
         private bool _secondAttack;
         private bool _thirdAttack;
@@ -224,7 +227,29 @@ namespace ProjectTemplate
                 case State.Roll:
                     DoRoll();
                     break;
+                case State.Knockback:
+                    DoKnockback();
+                    break;
             }
+        }
+
+        public void DoKnockback()
+        {
+            var moveDir = new Vector2(2, -1);
+            if (_animation.flipX)
+            {
+                moveDir.X = moveDir.X * -1;
+            }
+
+            _knockbackTimer = _knockbackTimer + 1;
+            Console.WriteLine(_knockbackTimer);
+            if (_knockbackTimer > 6)
+            {
+                _knockbackTimer = 0;
+                activeState = State.Normal;
+            }
+            DoMovement(moveDir, Animations.Run);
+
         }
 
         private void DoNormal()
@@ -363,6 +388,11 @@ namespace ProjectTemplate
             activeState = State.Normal;
             _attackTimer = 0;
             _actionTimer = 0;
+        }
+
+        public void DoHurt(int damage)
+        {
+            Health = Health - damage;
         }
 
         private void DoRoll()

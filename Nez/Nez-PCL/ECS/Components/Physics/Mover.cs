@@ -69,11 +69,12 @@ namespace Nez
 
 					if( collider.collidesWith( neighbor, motion, out collisionResult ) )
 					{
-						// hit. back off our motion
-						motion -= collisionResult.minimumTranslationVector;
+                        // hit. back off our motion
+                        motion -= collisionResult.minimumTranslationVector;
 					}
 				}
 			}
+
 			// 2. move entity to its new position if we have a collision else move the full amount. motion is updated when a collision occurs
 			entity.transform.position += motion;
 
