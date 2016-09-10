@@ -167,8 +167,8 @@ namespace ProjectTemplate
                 {
                     if (collider.entity.tag == 5)
                     {
+                        collider.entity.getComponent<Enemy>().CheckInRange(collider.entity.transform.position, playerEntity.transform.position);
                         collider.entity.getComponent<Enemy>().SetMoveDirection(collider.entity.transform.position, playerEntity.transform.position);
-
                     }
                     if (player.activeState == Player.State.Attack)
                     {

@@ -23,19 +23,23 @@ namespace ProjectTemplate
         enum Animations
         {
             Idle,
-            Stun
+            Stun,
+            Attack
         }
 
         Sprite<Animations> _animation;
         public int health;
         private int _stunCount;
+        private int _attackCount;
         private Mover _mover;
         private float _moveSpeed;
         public State ActiveState;
         private int _moveDirection;
+        private int _attackRange;
         public Enemy()
         {
-            _moveSpeed = 50f;
+            _attackRange = 20;
+            _moveSpeed = 20f;
             health = 10;
             _stunCount = 0;
             ActiveState = State.Normal;
@@ -81,17 +85,41 @@ namespace ProjectTemplate
                 case State.Stun:
                     DoStun();
                     break;
+                case State.Attack:
+                    DoAttack();
+                    break;
             }
+        }
+
+        private void DoAttack()
+        {
+            var moveDir = new Vector2(0, 0);
+            var animation = Animations.Stun;
+
+            _attackCount = _attackCount + 1;
+            if (_attackCount > 25)
+            {
+                _attackCount = 0;
+                ActiveState = State.Normal;
+            }
+
+            DoMovement(moveDir, animation);
         }
 
         private void DoNormal()
         {
-            var moveDir = new Vector2(1*_moveDirection, 0);
+            var moveDir = new Vector2(_moveDirection, 0);
             var animation = Animations.Idle;
-            var distance = Vector2.Distance(new Vector2(150, 0), new Vector2(100, 0));
-            Console.WriteLine(distance);
 
             DoMovement(moveDir, animation);
+        }
+
+        public void CheckInRange(Vector2 position, Vector2 followVector)
+        {
+            if (Vector2.Distance(position, followVector) < _attackRange)
+            {
+                ActiveState = State.Attack;
+            }
         }
 
         public void SetMoveDirection(Vector2 position, Vector2 followVector)
