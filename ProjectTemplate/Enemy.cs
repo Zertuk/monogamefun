@@ -28,7 +28,8 @@ namespace ProjectTemplate
         }
 
         Sprite<Animations> _animation;
-        public int health;
+        public int Health;
+        public bool Dead;
         private int _stunCount;
         private int _attackCount;
         private Mover _mover;
@@ -39,8 +40,8 @@ namespace ProjectTemplate
         public Enemy()
         {
             _attackRange = 20;
-            _moveSpeed = 20f;
-            health = 10;
+            _moveSpeed = 0f;
+            Health = 3;
             _stunCount = 0;
             ActiveState = State.Normal;
         }
@@ -134,6 +135,11 @@ namespace ProjectTemplate
             }
         }
 
+        public void DoHurt(int damage)
+        {
+            Health = Health - damage;
+        }
+
         private void DoStun()
         {
             _stunCount = _stunCount + 1;
@@ -163,9 +169,13 @@ namespace ProjectTemplate
 
         void IUpdatable.update()
         {
+            if (Health <= 0)
+            {
+                Dead = true;
+            }
             StateMachine();
-            
         }
+        
 
         //#region ITriggerListener implementation
 

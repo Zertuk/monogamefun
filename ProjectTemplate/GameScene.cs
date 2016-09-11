@@ -165,8 +165,14 @@ namespace ProjectTemplate
             {
                 if (collider.physicsLayer == 1)
                 {
+                    //enemies
                     if (collider.entity.tag == 5)
                     {
+                        if (collider.entity.getComponent<Enemy>().Dead)
+                        {
+                            collider.entity.detachFromScene();
+                            return;
+                        }
                         collider.entity.getComponent<Enemy>().CheckInRange(collider.entity.transform.position, playerEntity.transform.position);
                         collider.entity.getComponent<Enemy>().SetMoveDirection(collider.entity.transform.position, playerEntity.transform.position);
                     }
@@ -175,7 +181,7 @@ namespace ProjectTemplate
                         if (collider.overlaps(playerEntity.entity.colliders[1]) && collider.entity.getComponent<Enemy>().ActiveState != Enemy.State.Stun)
                         {
                             collider.entity.getComponent<Enemy>().ActiveState = Enemy.State.Stun;
-                               
+                            collider.entity.getComponent<Enemy>().DoHurt(1);
                             Console.WriteLine("HIT");
                         }
                     }
