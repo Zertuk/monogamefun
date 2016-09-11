@@ -24,23 +24,26 @@ namespace ProjectTemplate
         {
             Idle,
             Stun,
-            Attack
+            Attack,
+            Run
         }
 
         Sprite<Animations> _animation;
         public int Health;
         public bool Dead;
         private int _stunCount;
-        private int _attackCount;
+        public int _attackCount;
         private Mover _mover;
         private float _moveSpeed;
         public State ActiveState;
         private int _moveDirection;
         private int _attackRange;
+        private int _dropAmount;
         public Enemy()
         {
-            _attackRange = 20;
-            _moveSpeed = 0f;
+            _dropAmount = 5;
+            _attackRange = 30;
+            _moveSpeed = 40f;
             Health = 3;
             _stunCount = 0;
             ActiveState = State.Normal;
@@ -49,10 +52,15 @@ namespace ProjectTemplate
         public override void onAddedToEntity()
         {
             var texture = entity.scene.contentManager.Load<Texture2D>("beetle");
+            var runTexture = entity.scene.contentManager.Load<Texture2D>("beetlerun");
             var hurtTexture = entity.scene.contentManager.Load<Texture2D>("beetlehurt");
-
+            var attackTexture = entity.scene.contentManager.Load<Texture2D>("beetleattack");
+            
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 16, 16);
             var hurtSubtextures = Subtexture.subtexturesFromAtlas(hurtTexture, 20, 20);
+            var attackSubtextures = Subtexture.subtexturesFromAtlas(attackTexture, 50, 50);
+            var runSubtextureTexture = Subtexture.subtexturesFromAtlas(runTexture, 50, 50);
+
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
@@ -73,7 +81,27 @@ namespace ProjectTemplate
                 hurtSubtextures[0]
             }));
 
+            _animation.addAnimation(Animations.Attack, new SpriteAnimation(new List<Subtexture>()
+            {
+                attackSubtextures[0],
+                attackSubtextures[1],
+                attackSubtextures[2],
+                attackSubtextures[3],
+                attackSubtextures[4],
+                attackSubtextures[5],
+                attackSubtextures[6],
+                attackSubtextures[7],
+                attackSubtextures[8],
+                attackSubtextures[9]
+            }));
 
+            _animation.addAnimation(Animations.Run, new SpriteAnimation(new List<Subtexture>()
+            {
+                runSubtextureTexture[0],
+                runSubtextureTexture[1],
+                runSubtextureTexture[2],
+                runSubtextureTexture[3]
+            }));
         }
 
         private void StateMachine()
@@ -95,22 +123,49 @@ namespace ProjectTemplate
         private void DoAttack()
         {
             var moveDir = new Vector2(0, 0);
-            var animation = Animations.Stun;
+            var animation = Animations.Attack;
 
             _attackCount = _attackCount + 1;
-            if (_attackCount > 25)
+            if (_attackCount > 35)
+            {
+                moveDir.X = -1.5f;
+            }
+
+            if (_attackCount > 50)
             {
                 _attackCount = 0;
                 ActiveState = State.Normal;
             }
 
+            if (_animation.flipX)
+            {
+                moveDir.X = moveDir.X * -1;
+            }
+
             DoMovement(moveDir, animation);
+        }
+
+        public void DoDeath()
+        {
+            
         }
 
         private void DoNormal()
         {
             var moveDir = new Vector2(_moveDirection, 0);
             var animation = Animations.Idle;
+            if (moveDir.X != 0)
+            {
+                animation = Animations.Run;
+            }
+            if (moveDir.X > 0)
+            {
+                _animation.flipX = true;
+            }
+            else
+            {
+                _animation.flipX = false;
+            }
 
             DoMovement(moveDir, animation);
         }
@@ -161,6 +216,8 @@ namespace ProjectTemplate
             {
                 _animation.play(animation);
             }
+
+
             CollisionResult res;
             var movement = moveDir * _moveSpeed * Time.deltaTime;
             _mover.move(movement, out res);

@@ -168,12 +168,23 @@ namespace ProjectTemplate
                     //enemies
                     if (collider.entity.tag == 5)
                     {
+                        if (collider.entity.getComponent<Enemy>().ActiveState == Enemy.State.Attack)
+                        {
+                            if (collider.entity.getComponent<Enemy>()._attackCount > 30 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]))
+                            {
+                                player.activeState = Player.State.Knockback;
+                                Console.WriteLine("OVERLAP");
+                            }
+                        }
                         if (collider.entity.getComponent<Enemy>().Dead)
                         {
                             collider.entity.detachFromScene();
                             return;
                         }
-                        collider.entity.getComponent<Enemy>().CheckInRange(collider.entity.transform.position, playerEntity.transform.position);
+                        if (collider.entity.getComponent<Enemy>().ActiveState != Enemy.State.Stun)
+                        {
+                            collider.entity.getComponent<Enemy>().CheckInRange(collider.entity.transform.position, playerEntity.transform.position);
+                        }
                         collider.entity.getComponent<Enemy>().SetMoveDirection(collider.entity.transform.position, playerEntity.transform.position);
                     }
                     if (player.activeState == Player.State.Attack)
