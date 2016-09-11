@@ -32,9 +32,15 @@ namespace Nez
 		/// <returns><c>true</c>, if move actor was newed, <c>false</c> otherwise.</returns>
 		/// <param name="motion">Motion.</param>
 		/// <param name="collisionResult">Collision result.</param>
-		public bool move( Vector2 motion, out CollisionResult collisionResult )
+		public bool move( Vector2 motion, out CollisionResult collisionResult , bool isInvuln = false)
 		{
 			collisionResult = new CollisionResult();
+
+            if (isInvuln)
+            {
+                entity.transform.position += motion;
+                return false;
+            }
 
 			// no collider? just move and forget about it
 			if( entity.colliders.Count == 0 )
@@ -67,7 +73,13 @@ namespace Nez
 					if( neighbor.isTrigger )
 						continue;
 
-					if( collider.collidesWith( neighbor, motion, out collisionResult ) )
+                    if (isInvuln)
+                    {
+                        continue;
+                    }
+
+
+                    if ( collider.collidesWith( neighbor, motion, out collisionResult ) )
 					{
                         // hit. back off our motion
                         motion -= collisionResult.minimumTranslationVector;

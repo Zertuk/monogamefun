@@ -52,7 +52,7 @@ namespace ProjectTemplate
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(256*3, 144* 3);
+            Screen.setSize(256*3, 144*3);
             //Screen.isFullscreen = true;
 
             DisplayHealthBar(9, 10);
@@ -161,6 +161,19 @@ namespace ProjectTemplate
             var phys = Physics.getAllColliders();
             var colliders = phys.AsEnumerable();
             var player = playerEntity.entity.getComponent<Player>();
+
+            if (player.activeState == Player.State.Roll)
+            {
+                Console.WriteLine("SHOULD IGNORE ENEMY COLISSION");
+                player.Invuln = true;
+                player.entity.colliders[0].isTrigger = true;
+            }
+            else
+            {
+                player.Invuln = false;
+                player.entity.colliders[0].isTrigger = false;
+            }
+
             foreach (var collider in colliders)
             {
                 if (collider.physicsLayer == 1)
@@ -199,7 +212,7 @@ namespace ProjectTemplate
                     if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider) 
                     {
                         player.activeState = Player.State.Knockback;
-                        player.DoHurt(1);
+                        //player.DoHurt(1);
                         DisplayHealthBar(player.Health, player.MaxHealth);
                         Console.WriteLine("SHOULD COLLIDE");
                     }

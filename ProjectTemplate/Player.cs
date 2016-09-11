@@ -42,6 +42,7 @@ namespace ProjectTemplate
         private Mover _mover;
         private float _moveSpeed = 70f;
         public State activeState;
+        public bool Invuln;
 
         private VirtualButton _jumpInput;
         private VirtualButton _rollInput;
@@ -421,7 +422,7 @@ namespace ProjectTemplate
         {
             CollisionResult res;
             var movement = (moveDir * _moveSpeed * Time.deltaTime);
-            _mover.move(movement, out res);
+            _mover.move(movement, out res, Invuln);
             if (!_animation.isAnimationPlaying(animation))
             {
                 _animation.play(animation);
