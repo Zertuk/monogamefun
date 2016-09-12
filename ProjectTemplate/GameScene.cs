@@ -29,9 +29,9 @@ namespace ProjectTemplate
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
             _world = new World();
             
-            enemyEntity = createRigidEntity(new Vector2(150, 50), 1f, 100f, 0f, new Vector2(0, 0), false);
+            enemyEntity = createRigidEntity(new Vector2(150, 50), 1f, 100f, 0f, new Vector2(0, 0), false, true);
             enemyEntity.entity.tag = 5;
-            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true);
+            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true, false);
 
             UpdateTileMap(new Vector2(100, 100), false);
 
@@ -55,7 +55,7 @@ namespace ProjectTemplate
             Screen.setSize(256*3, 144*3);
             //Screen.isFullscreen = true;
 
-            DisplayHealthBar(9, 10);
+            DisplayHealthBar(9, 10, 0);
         }
 
         private void UpdateTileMap(Vector2 newPos, bool left)
@@ -109,7 +109,7 @@ namespace ProjectTemplate
         {
         }
 
-        private void DisplayHealthBar(int health, int maxHealth)
+        private void DisplayHealthBar(int health, int maxHealth, int dropCount)
         {
             var canvas = createEntity("ui").addComponent(new UICanvas());
             canvas.isFullScreen = true;
@@ -123,6 +123,11 @@ namespace ProjectTemplate
             var healthBar = new ProgressBar(0, maxHealth, 1, false, ProgressBarStyle.create(Color.Red, Color.Black));
             var healthBarBorder = new ProgressBar(1, maxHealth, 1, false, ProgressBarStyle.create(Color.White, Color.White));
             var healthBarBorder2 = new ProgressBar(1, maxHealth, 1, false, ProgressBarStyle.create(Color.White, Color.White));
+
+            //var dropText = new Text(Graphics.instance.bitmapFont, dropCount.ToString(), new Vector2(60, 100), Color.White);
+            //dropText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
+            //healthEntity.addComponent(dropText);    
+
             healthBarBorder2.setSize(52, 12f);
             healthBarBorder2.setPosition(5f, 4f);
             healthBar.setValue(maxHealth);
@@ -176,21 +181,50 @@ namespace ProjectTemplate
 
             foreach (var collider in colliders)
             {
+                if (collider.physicsLayer == 100)
+                {
+                    //drops
+                    if (collider.entity.tag == 4)
+                    {
+                        var drop = collider.entity.getComponent<Drop>();
+                        if (drop.Collected)
+                        {
+                            continue;
+                        }
+                        drop.SetMoveDirection(drop.transform.position, player.transform.position);
+                        drop.ActiveState = Drop.State.Follow;
+                        if (collider.entity.colliders[0].overlaps(playerEntity.entity.colliders[0]))
+                        {
+                            player.UpdateDropCount(drop.Value);
+                            Console.WriteLine("DROPCOUNT: " + player.DropCount);
+                            drop.entity.detachFromScene();
+                        }
+                    }
+                }
                 if (collider.physicsLayer == 1)
                 {
                     //enemies
                     if (collider.entity.tag == 5)
                     {
-                        if (collider.entity.getComponent<Enemy>().ActiveState == Enemy.State.Attack)
+                        var enemy = collider.entity.getComponent<Enemy>();
+                        if (enemy.ActiveState == Enemy.State.Attack)
                         {
-                            if (collider.entity.getComponent<Enemy>()._attackCount > 30 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]))
+                            if (enemy._attackCount > 30 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]))
                             {
                                 player.activeState = Player.State.Knockback;
                                 Console.WriteLine("OVERLAP");
                             }
                         }
-                        if (collider.entity.getComponent<Enemy>().Dead)
+                        if (enemy.Dead)
                         {
+                            var pos = enemy.transform.position;
+                            for (var i = 0; i < 5; i++)
+                            {
+                                var random = Nez.Random.random;
+                                var posX = pos.X + 1/10*random.Next() + i*5;
+                                var posY = pos.Y + 1/10*random.Next() + i*5;
+                                var dropEntity = CreateDrop(new Vector2(posX, posY));
+                            }
                             collider.entity.detachFromScene();
                             return;
                         }
@@ -213,7 +247,7 @@ namespace ProjectTemplate
                     {
                         player.activeState = Player.State.Knockback;
                         //player.DoHurt(1);
-                        DisplayHealthBar(player.Health, player.MaxHealth);
+                        DisplayHealthBar(player.Health, player.MaxHealth, player.DropCount);
                         Console.WriteLine("SHOULD COLLIDE");
                     }
                 }
@@ -264,7 +298,32 @@ namespace ProjectTemplate
             }
         }
 
-        ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity, bool isPlayer)
+        ArcadeRigidbody CreateDrop(Vector2 position)
+        {
+            var rigidbody = new ArcadeRigidbody();
+            var entity = createEntity("DROP: " + Utils.randomString(3));
+            entity.transform.position = position;
+            entity.addComponent(new Drop(1));
+            entity.addComponent(rigidbody);
+            entity.tag = 4;
+
+            var collider = new BoxCollider(-2, -3, 4, 4);
+            collider.collidesWithLayers = 10;
+            collider.physicsLayer = 100;
+            entity.addCollider(collider);
+
+            var hitboxCollider = new BoxCollider(-10, -10, 20, 20);
+            //hitboxCollider.isTrigger = true;
+            hitboxCollider.collidesWithLayers = 0;
+            hitboxCollider.physicsLayer = 100;
+            entity.addCollider(hitboxCollider);
+
+
+
+            return rigidbody;
+        }
+
+        ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity, bool isPlayer, bool isEnemy)
         {
             var rigidbody = new ArcadeRigidbody()
                 .setMass(mass)
@@ -278,10 +337,11 @@ namespace ProjectTemplate
             {
                 entity.addComponent(new Player());
             }
-            else
+            else if (isEnemy)
             {
                 entity.addComponent(new Enemy());
             }
+
             entity.addComponent(rigidbody);
             //entity.addCollider(new CircleCollider(8));
             var collider = new BoxCollider(-9, -6, 13, 16);

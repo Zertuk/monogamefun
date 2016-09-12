@@ -178,9 +178,9 @@ namespace ProjectTemplate
             }
         }
 
-        public void SetMoveDirection(Vector2 position, Vector2 followVector)
+        public void SetMoveDirection(Vector2 position, Vector2 follow)
         {
-            if (position.X > followVector.X)
+            if (position.X > follow.X)
             {
                 _moveDirection = -1;
             }

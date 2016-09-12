@@ -55,6 +55,7 @@ namespace ProjectTemplate
         public int MaxHealth;
         public bool Grounded;
         public bool IsRolling;
+        public int DropCount;
         
         private int _groundFrames;
         private bool _hasJumped;
@@ -75,6 +76,7 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
+            DropCount = 0;
             Health = 10;
             MaxHealth = 10;
             IsRolling = false;
@@ -215,7 +217,7 @@ namespace ProjectTemplate
             setupInput();
         }
 
-        public void StateMachine()
+        private void StateMachine()
         {
             switch(activeState)
             {
@@ -232,6 +234,11 @@ namespace ProjectTemplate
                     DoKnockback();
                     break;
             }
+        }
+
+        public void UpdateDropCount(int val)
+        {
+            DropCount = DropCount + val;
         }
 
         public void DoKnockback()
@@ -422,7 +429,7 @@ namespace ProjectTemplate
         {
             CollisionResult res;
             var movement = (moveDir * _moveSpeed * Time.deltaTime);
-            _mover.move(movement, out res, Invuln);
+            _mover.move(movement, out res);
             if (!_animation.isAnimationPlaying(animation))
             {
                 _animation.play(animation);
