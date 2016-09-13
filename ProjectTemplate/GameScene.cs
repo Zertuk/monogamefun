@@ -195,6 +195,7 @@ namespace ProjectTemplate
                         drop.ActiveState = Drop.State.Follow;
                         if (collider.entity.colliders[0].overlaps(playerEntity.entity.colliders[0]))
                         {
+                            drop.Collected = true;
                             player.UpdateDropCount(drop.Value);
                             Console.WriteLine("DROPCOUNT: " + player.DropCount);
                             drop.entity.detachFromScene();
@@ -220,9 +221,9 @@ namespace ProjectTemplate
                             var pos = enemy.transform.position;
                             for (var i = 0; i < 5; i++)
                             {
-                                var random = Nez.Random.random;
-                                var posX = pos.X + 1/10*random.Next() + i*5;
-                                var posY = pos.Y + 1/10*random.Next() + i*5;
+
+                                var posX = pos.X + 5 * i;
+                                var posY = pos.Y + 5 * i;
                                 var dropEntity = CreateDrop(new Vector2(posX, posY));
                             }
                             collider.entity.detachFromScene();
