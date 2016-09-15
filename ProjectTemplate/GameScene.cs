@@ -71,24 +71,34 @@ namespace ProjectTemplate
 
 
 
-
-
-
                 var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
+
                 var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
                 tiledMapComponent.setLayersToRender(new string[] { "collision" });
                 tiledMapComponent.renderLayer = 10;
                 tiledMapComponent.physicsLayer = 10;
+                //fix me ;-;
+                try
+                {
+                    var accentComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "accent"));
+                    accentComponent.renderLayer = 0;
+                    accentComponent.collisionLayer = null;
+                    accentComponent.setLayersToRender("accent");
+                }
+                catch
+                {
+                }
 
-                var accentComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "accent"));
-                accentComponent.renderLayer = 0;
-                accentComponent.collisionLayer = null;
-                accentComponent.setLayersToRender("accent");
-
-                var bgComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "bg"));
-                bgComponent.setLayersToRender("bg");
-                bgComponent.renderLayer = 11;
-                bgComponent.collisionLayer = null;
+                try
+                {
+                    var bgComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "bg"));
+                    bgComponent.setLayersToRender("bg");
+                    bgComponent.renderLayer = 11;
+                    bgComponent.collisionLayer = null;
+                }
+                catch
+                {
+                }
 
                 _tiledEntity.addComponent(new CameraBounds(new Vector2(0, 0), new Vector2(16 * (tiledmap.width), 16 * (tiledmap.height))));
                 _width = tiledmap.width * 16;
@@ -171,12 +181,12 @@ namespace ProjectTemplate
             {
                 Console.WriteLine("SHOULD IGNORE ENEMY COLISSION");
                 player.Invuln = true;
-                player.entity.colliders[0].isTrigger = true;
+               //player.entity.colliders[0].isTrigger = true;
             }
             else
             {
                 player.Invuln = false;
-                player.entity.colliders[0].isTrigger = false;
+                //player.entity.colliders[0].isTrigger = false;
             }
 
             foreach (var collider in colliders)
@@ -210,7 +220,7 @@ namespace ProjectTemplate
                         var enemy = collider.entity.getComponent<Enemy>();
                         if (enemy.ActiveState == Enemy.State.Attack)
                         {
-                            if (enemy._attackCount > 30 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]))
+                            if (enemy._attackCount > 30 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && player.activeState != Player.State.Roll)
                             {
                                 player.activeState = Player.State.Knockback;
                                 Console.WriteLine("OVERLAP");
@@ -221,9 +231,14 @@ namespace ProjectTemplate
                             var pos = enemy.transform.position;
                             for (var i = 0; i < 5; i++)
                             {
+                                var mult = -1;
+                                if (i % 2 == 0)
+                                {
+                                    mult = 1;
+                                }
 
-                                var posX = pos.X + 5 * i;
-                                var posY = pos.Y + 5 * i;
+                                var posX = pos.X + 5 * i * mult;
+                                var posY = pos.Y - 5 * i * mult - 5;
                                 var dropEntity = CreateDrop(new Vector2(posX, posY));
                             }
                             collider.entity.detachFromScene();
@@ -244,7 +259,7 @@ namespace ProjectTemplate
                             Console.WriteLine("HIT");
                         }
                     }
-                    if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider) 
+                    if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider && player.activeState != Player.State.Roll) 
                     {
                         player.activeState = Player.State.Knockback;
                         //player.DoHurt(1);
@@ -302,6 +317,7 @@ namespace ProjectTemplate
         ArcadeRigidbody CreateDrop(Vector2 position)
         {
             var rigidbody = new ArcadeRigidbody();
+            rigidbody.setElasticity(0.7f);
             var entity = createEntity("DROP: " + Utils.randomString(3));
             entity.transform.position = position;
             entity.addComponent(new Drop(1));
@@ -327,9 +343,9 @@ namespace ProjectTemplate
         ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity, bool isPlayer, bool isEnemy)
         {
             var rigidbody = new ArcadeRigidbody()
-                .setMass(mass)
-                .setFriction(friction)
-                .setElasticity(elasticity)
+                .setMass(50000f)
+                .setFriction(1)
+                .setElasticity(0)
                 .setVelocity(velocity);
 
             var entity = createEntity(Utils.randomString(3));
@@ -344,13 +360,14 @@ namespace ProjectTemplate
             }
 
             entity.addComponent(rigidbody);
+ 
             //entity.addCollider(new CircleCollider(8));
             var collider = new BoxCollider(-9, -6, 13, 16);
             collider.collidesWithLayers = 10;
+            //collider.physicsLayer = 101;
             entity.addCollider(collider);
 
             var hitboxCollider = new BoxCollider(6, -14, 20, 24);
-            //hitboxCollider.isTrigger = true;
             hitboxCollider.collidesWithLayers = 0;
             hitboxCollider.physicsLayer = 100;
             entity.addCollider(hitboxCollider);
