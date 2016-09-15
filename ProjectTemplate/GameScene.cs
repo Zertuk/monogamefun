@@ -177,18 +177,6 @@ namespace ProjectTemplate
             var colliders = phys.AsEnumerable();
             var player = playerEntity.entity.getComponent<Player>();
 
-            if (player.activeState == Player.State.Roll)
-            {
-                Console.WriteLine("SHOULD IGNORE ENEMY COLISSION");
-                player.Invuln = true;
-               //player.entity.colliders[0].isTrigger = true;
-            }
-            else
-            {
-                player.Invuln = false;
-                //player.entity.colliders[0].isTrigger = false;
-            }
-
             foreach (var collider in colliders)
             {
                 if (collider.physicsLayer == 100)
