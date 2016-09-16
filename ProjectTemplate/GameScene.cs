@@ -13,7 +13,6 @@ using System.Collections.Generic;
 
 namespace ProjectTemplate
 {
-    //[SampleScene( "Platformer", "Work in progress..." )]
     public class GameScene : DefaultScene
     {
         private ArcadeRigidbody playerEntity;
@@ -21,6 +20,7 @@ namespace ProjectTemplate
         private int _width;
         private int _height;
         private Entity _tiledEntity;
+        private UICanvas _canvas;
         private string _prevTileMapName;
         private TiledTileLayer _tileCollLayer;
         public GameScene()
@@ -55,6 +55,7 @@ namespace ProjectTemplate
             Screen.setSize(256*3, 144*3);
             //Screen.isFullscreen = true;
 
+            CreateUI();
             DisplayHealthBar(9, 10, 0);
         }
 
@@ -119,12 +120,22 @@ namespace ProjectTemplate
         {
         }
 
+        private void CreateUI()
+        {
+            _canvas = createEntity("ui").addComponent(new UICanvas());
+            _canvas.isFullScreen = true;
+            _canvas.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
+
+        }
+
         private void DisplayHealthBar(int health, int maxHealth, int dropCount)
         {
-            var canvas = createEntity("ui").addComponent(new UICanvas());
-            canvas.isFullScreen = true;
-            canvas.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
-            var table = canvas.stage.addElement(new Table());
+            var test = _canvas.stage.findAllElementsOfType<Table>();
+            if (test.Count() > 0)
+            {
+                test[0].remove();
+            }
+            var table = _canvas.stage.addElement(new Table());
             table.setFillParent(true);
             var healthText = new Text(Graphics.instance.bitmapFont, health.ToString(), new Vector2(45, 7), Color.White);
             var healthEntity = createEntity("healthText");
@@ -154,7 +165,6 @@ namespace ProjectTemplate
         {
             Physics.gravity.Y = 250f;
             CheckGrounded();
-            
             //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
             CheckDoors();
 
@@ -171,12 +181,10 @@ namespace ProjectTemplate
 
         private void CheckGrounded()
         {
-            CollisionResult res;
 
             var phys = Physics.getAllColliders();
             var colliders = phys.AsEnumerable();
             var player = playerEntity.entity.getComponent<Player>();
-
             foreach (var collider in colliders)
             {
                 if (collider.physicsLayer == 100)
@@ -247,10 +255,10 @@ namespace ProjectTemplate
                             Console.WriteLine("HIT");
                         }
                     }
-                    if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider && player.activeState != Player.State.Roll) 
+                    if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider && player.activeState != Player.State.Roll && player.activeState != Player.State.Knockback) 
                     {
                         player.activeState = Player.State.Knockback;
-                        //player.DoHurt(1);
+                        player.DoHurt(1);
                         DisplayHealthBar(player.Health, player.MaxHealth, player.DropCount);
                         Console.WriteLine("SHOULD COLLIDE");
                     }
@@ -350,12 +358,12 @@ namespace ProjectTemplate
             entity.addComponent(rigidbody);
  
             //entity.addCollider(new CircleCollider(8));
-            var collider = new BoxCollider(-9, -6, 13, 16);
+            var collider = new BoxCollider(-6, -6, 13, 16);
             collider.collidesWithLayers = 10;
             //collider.physicsLayer = 101;
             entity.addCollider(collider);
-
-            var hitboxCollider = new BoxCollider(6, -14, 20, 24);
+            
+            var hitboxCollider = new BoxCollider(7, -14, 20, 24);
             hitboxCollider.collidesWithLayers = 0;
             hitboxCollider.physicsLayer = 100;
             entity.addCollider(hitboxCollider);

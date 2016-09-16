@@ -90,9 +90,9 @@ namespace ProjectTemplate
             _mover = entity.addComponent(new Mover());
 
 
-            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun-sheet");
+            var texture = entity.scene.contentManager.Load<Texture2D>("leekrun5");
             var textureRev = entity.scene.contentManager.Load<Texture2D>("leekrun-sheet2");
-            var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle-sheet");
+            var idleTexture = entity.scene.contentManager.Load<Texture2D>("leekidle");
             var fallTexture = entity.scene.contentManager.Load<Texture2D>("leekfall");
             var jumpTexture = entity.scene.contentManager.Load<Texture2D>("leekjump");
             var attackTexture = entity.scene.contentManager.Load<Texture2D>("leekattack-sheet");
@@ -334,20 +334,41 @@ namespace ProjectTemplate
 
         private void DoAttack()
         {
+
+            var check = Physics.overlapRectangle(new RectangleF(transform.position.X, transform.position.Y, 20, 20));
+            //Collider[] colliders = { };
+            //var rect = new RectangleF(transform.position.X, transform.position.Y, 20, 20);
+            //var all = Physics.overlapRectangleAll(ref rect, colliders);
+            if (check != null)
+            {
+                Console.WriteLine(check.entity.tag);
+                if (check.entity.tag == 5)
+                {
+                    Console.WriteLine("COLLIDE ENEMY");
+                }
+                else
+                {
+                    Console.WriteLine("COLLIDE NO");
+                }
+            }
             var animation = Animations.Attack;
+            var moveDir = new Vector2(0, 0);
+
             _attackTimer = _attackTimer + 1;
 
             if (22 >= _attackTimer && _attackTimer > 10)
             {
+                moveDir.X = 0.3f;
+
                 if (_attackInput.isPressed)
                 {
                     _secondAttack = true;                  
                 }
             }
-
             //kill
             if (_attackTimer >= 18)
             {
+                moveDir.X = 0;
                 if (!_secondAttack && _attackTimer >= 22)
                 {
                     ExitAttack();
@@ -361,6 +382,7 @@ namespace ProjectTemplate
 
             if ((40 >= _attackTimer && _attackTimer > 26))
             {
+                moveDir.X = 0.1f;
                 if (_attackInput.isPressed)
                 {
                     _thirdAttack = true;
@@ -369,6 +391,7 @@ namespace ProjectTemplate
 
             if (_attackTimer >= 36)
             {
+                moveDir.X = 0.2f;
                 if (!_thirdAttack && _attackTimer >= 40)
                 {
                     ExitAttack();
@@ -385,7 +408,6 @@ namespace ProjectTemplate
                 ExitAttack();
             }
 
-            var moveDir = new Vector2(0, 0);
             DoMovement(moveDir, animation);
         }
 
