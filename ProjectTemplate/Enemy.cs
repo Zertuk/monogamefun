@@ -39,7 +39,8 @@ namespace ProjectTemplate
         private int _moveDirection;
         private int _attackRange;
         private int _dropAmount;
-        public Enemy()
+        private string _type;
+        public Enemy(string type)
         {
             _dropAmount = 5;
             _attackRange = 30;
@@ -47,14 +48,15 @@ namespace ProjectTemplate
             Health = 3;
             _stunCount = 0;
             ActiveState = State.Normal;
+            _type = type;
         }
 
         public override void onAddedToEntity()
         {
-            var texture = entity.scene.contentManager.Load<Texture2D>("beetle");
-            var runTexture = entity.scene.contentManager.Load<Texture2D>("beetlerun");
-            var hurtTexture = entity.scene.contentManager.Load<Texture2D>("beetlehurt");
-            var attackTexture = entity.scene.contentManager.Load<Texture2D>("beetleattack");
+            var texture = entity.scene.contentManager.Load<Texture2D>(_type);
+            var runTexture = entity.scene.contentManager.Load<Texture2D>(_type + "run");
+            var hurtTexture = entity.scene.contentManager.Load<Texture2D>(_type + "hurt");
+            var attackTexture = entity.scene.contentManager.Load<Texture2D>(_type + "attack");
             
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 16, 16);
             var hurtSubtextures = Subtexture.subtexturesFromAtlas(hurtTexture, 20, 20);

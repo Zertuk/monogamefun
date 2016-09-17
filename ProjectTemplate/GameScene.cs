@@ -153,7 +153,7 @@ namespace ProjectTemplate
             {
                 foreach (var enemy in _world.activeRoom.EnemyInfo)
                 {
-                    var newEnemy = createRigidEntity(enemy.SpawnPosition, 1f, 100f, 0f, new Vector2(0, 0), false, true);
+                    var newEnemy = createRigidEntity(enemy.SpawnPosition, 1f, 100f, 0f, new Vector2(0, 0), false, true, enemy.Type);
                 }
             }
         }
@@ -406,7 +406,7 @@ namespace ProjectTemplate
             return rigidbody;
         }
 
-        ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity, bool isPlayer, bool isEnemy)
+        ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity, bool isPlayer, bool isEnemy, string enemyType = "")
         {
             var rigidbody = new ArcadeRigidbody()
                 .setMass(50000f)
@@ -422,7 +422,7 @@ namespace ProjectTemplate
             }
             else if (isEnemy)
             {
-                entity.addComponent(new Enemy());
+                entity.addComponent(new Enemy(enemyType));
                 entity.tag = 5;
             }
 
