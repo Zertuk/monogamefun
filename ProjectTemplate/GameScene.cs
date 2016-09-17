@@ -30,7 +30,7 @@ namespace ProjectTemplate
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
             _world = new World();
 
-            playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true, false);
+            playerEntity = CreatePlayer(new Vector2(50, 50));
 
             UpdateTileMap(new Vector2(100, 100), false);
 
@@ -153,7 +153,7 @@ namespace ProjectTemplate
             {
                 foreach (var enemy in _world.activeRoom.EnemyInfo)
                 {
-                    var newEnemy = createRigidEntity(enemy.SpawnPosition, 1f, 100f, 0f, new Vector2(0, 0), false, true, enemy.Type);
+                    var newEnemy = CreateEnemy(enemy.SpawnPosition, enemy.Type);
                 }
             }
         }
@@ -406,43 +406,62 @@ namespace ProjectTemplate
             return rigidbody;
         }
 
-        ArcadeRigidbody createRigidEntity(Vector2 position, float mass, float friction, float elasticity, Vector2 velocity, bool isPlayer, bool isEnemy, string enemyType = "")
+        private ArcadeRigidbody CreatePlayer(Vector2 position)
         {
             var rigidbody = new ArcadeRigidbody()
-                .setMass(50000f)
-                .setFriction(1)
-                .setElasticity(0)
-                .setVelocity(velocity);
+                                .setMass(50000f)
+                                .setFriction(1)
+                                .setElasticity(0)
+                                .setVelocity(new Vector2(0, 0));
 
-            var entity = createEntity(Utils.randomString(3));
+
+            var entity = createEntity("player");
+            entity.tag = 1;
             entity.transform.position = position;
-            if (isPlayer)
-            {
-                entity.addComponent(new Player());
-            }
-            else if (isEnemy)
-            {
-                entity.addComponent(new Enemy(enemyType));
-                entity.tag = 5;
-            }
-
+            entity.addComponent(new Player());
             entity.addComponent(rigidbody);
- 
-            //entity.addCollider(new CircleCollider(8));
+
             var collider = new BoxCollider(-6, -6, 13, 16);
             collider.collidesWithLayers = 10;
             //collider.physicsLayer = 101;
             entity.addCollider(collider);
-            
+
             var hitboxCollider = new BoxCollider(7, -14, 20, 24);
             hitboxCollider.collidesWithLayers = 0;
             hitboxCollider.physicsLayer = 100;
             entity.addCollider(hitboxCollider);
 
+
             return rigidbody;
         }
 
+        private ArcadeRigidbody CreateEnemy(Vector2 position, string enemyType)
+        {
+            var rigidbody = new ArcadeRigidbody()
+                                .setMass(50000f)
+                                .setFriction(1)
+                                .setElasticity(0)
+                                .setVelocity(new Vector2(0, 0));
 
+            var entity = createEntity(enemyType + ": " + Utils.randomString(3));
+            entity.transform.position = position;
+            entity.addComponent(new Enemy(enemyType));
+            entity.tag = 5;
+            entity.addComponent(rigidbody);
+
+            var collider = new BoxCollider(-6, -6, 13, 16);
+            collider.collidesWithLayers = 10;
+            //collider.physicsLayer = 101;
+            entity.addCollider(collider);
+
+            var hitboxCollider = new BoxCollider(-7, -14, 20, 24);
+            hitboxCollider.collidesWithLayers = 0;
+            hitboxCollider.physicsLayer = 100;
+            entity.addCollider(hitboxCollider);
+
+
+            return rigidbody;
+        }
     }
 }
 
