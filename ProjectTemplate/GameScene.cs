@@ -16,21 +16,20 @@ namespace ProjectTemplate
     public class GameScene : DefaultScene
     {
         private ArcadeRigidbody playerEntity;
-        private ArcadeRigidbody enemyEntity;
         private int _width;
         private int _height;
         private Entity _tiledEntity;
         private UICanvas _canvas;
         private string _prevTileMapName;
         private TiledTileLayer _tileCollLayer;
+        private bool _isUpdating = false;
+        private bool _shouldUpdate = true;
         public GameScene()
         {
             Transform.shouldRoundPosition = false;
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
             _world = new World();
-            
-            enemyEntity = createRigidEntity(new Vector2(150, 50), 1f, 100f, 0f, new Vector2(0, 0), false, true);
-            enemyEntity.entity.tag = 5;
+
             playerEntity = createRigidEntity(new Vector2(50, 50), 1f, 100f, 0, new Vector2(0, 0), true, false);
 
             UpdateTileMap(new Vector2(100, 100), false);
@@ -48,7 +47,7 @@ namespace ProjectTemplate
 
         public override void initialize()
         {
-            //Core.debugRenderEnabled = true;
+            Core.debugRenderEnabled = true;
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
@@ -59,14 +58,40 @@ namespace ProjectTemplate
             DisplayHealthBar(9, 10, 0);
         }
 
+        private Scene resetstuff()
+        {
+            return scene;
+        }
+
+        private void ClearScene()
+        {
+            //entities.removeAllEntities();
+            _shouldUpdate = false;
+            while (_isUpdating)
+            {
+                //wait..
+            }
+            for (var i = 0; i < entities.Count; i++)
+            {
+                if (entities[i].tag == 5 || entities[i].tag == 4)
+                {
+                    entities[i].destroy();
+                }
+            }
+            _shouldUpdate = true;
+        }
+
         private void UpdateTileMap(Vector2 newPos, bool left)
         {
+
             //only load if actually new room and not just new part of old room
             if (_prevTileMapName != _world.activeRoom.tilemap)
             {
+               
                 if (_tiledEntity != null)
                 {
                     _tiledEntity.destroy();
+                    ClearScene();
                 }
                 _tiledEntity = createEntity("tiled");
 
@@ -112,7 +137,24 @@ namespace ProjectTemplate
                     newPos.X = _width - 16;
                 }
                 playerEntity.transform.position = newPos;
-                
+                SpawnEnemies();
+                // transitions within the current Scene with a SquaresTransition
+                //var transition = new SquaresTransition(resetstuff);
+
+                //Core.startSceneTransition(transition);
+
+
+            }
+        }
+
+        private void SpawnEnemies()
+        {
+            if (_world.activeRoom.EnemyInfo != null)
+            {
+                foreach (var enemy in _world.activeRoom.EnemyInfo)
+                {
+                    var newEnemy = createRigidEntity(enemy.SpawnPosition, 1f, 100f, 0f, new Vector2(0, 0), false, true);
+                }
             }
         }
 
@@ -169,9 +211,6 @@ namespace ProjectTemplate
             CheckDoors();
 
             var graph = new WeightedGridGraph(_tileCollLayer);
-
-            var path = graph.search(VectorToPoint(enemyEntity.transform.position), VectorToPoint(playerEntity.transform.position));
-            var enemy = enemyEntity.entity.getComponent<Enemy>();
         }
 
         public Point VectorToPoint(Vector2 input)
@@ -181,12 +220,42 @@ namespace ProjectTemplate
 
         private void CheckGrounded()
         {
-
+            if (!_shouldUpdate)
+            {
+                return;
+            }
+            _isUpdating = true;
             var phys = Physics.getAllColliders();
             var colliders = phys.AsEnumerable();
             var player = playerEntity.entity.getComponent<Player>();
+            var rect = new RectangleF(playerEntity.entity.transform.position.X + 10, playerEntity.entity.transform.position.Y - 20, 20, 20);
+            var neighborColliders = Physics.boxcastBroadphaseExcludingSelf(playerEntity.entity.colliders[0]);
+
+            // loop through and check each Collider for an overlap
+            foreach (var collider in neighborColliders)
+            {
+                if (playerEntity.entity.colliders[0].overlaps(collider))
+                {
+                    Console.WriteLine("We are overlapping a Collider: {0}", collider);
+                    //enemies
+                    if (collider.entity.tag == 5)
+                    {
+                        Console.WriteLine("ENEMY");
+                    }
+                    //drops
+                    if (collider.entity.tag == 4)
+                    {
+                        Console.WriteLine("DROPS");
+                    }
+                }
+            }
+
+
             foreach (var collider in colliders)
             {
+                Collider[] results = { collider };
+                Physics.overlapRectangleAll(ref rect, results);
+
                 if (collider.physicsLayer == 100)
                 {
                     //drops
@@ -270,6 +339,7 @@ namespace ProjectTemplate
                         player.Grounded = true;
                     }
                 }
+                _isUpdating = false;
             }
         }
 
@@ -353,6 +423,7 @@ namespace ProjectTemplate
             else if (isEnemy)
             {
                 entity.addComponent(new Enemy());
+                entity.tag = 5;
             }
 
             entity.addComponent(rigidbody);

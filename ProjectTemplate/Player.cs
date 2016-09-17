@@ -335,22 +335,6 @@ namespace ProjectTemplate
         private void DoAttack()
         {
 
-            var check = Physics.overlapRectangle(new RectangleF(transform.position.X, transform.position.Y, 20, 20));
-            //Collider[] colliders = { };
-            //var rect = new RectangleF(transform.position.X, transform.position.Y, 20, 20);
-            //var all = Physics.overlapRectangleAll(ref rect, colliders);
-            if (check != null)
-            {
-                Console.WriteLine(check.entity.tag);
-                if (check.entity.tag == 5)
-                {
-                    Console.WriteLine("COLLIDE ENEMY");
-                }
-                else
-                {
-                    Console.WriteLine("COLLIDE NO");
-                }
-            }
             var animation = Animations.Attack;
             var moveDir = new Vector2(0, 0);
 
@@ -486,7 +470,7 @@ namespace ProjectTemplate
             {
                 count = count + 1;
                 var x = 2.5f;
-                float y = 1f - (0.5f* x*x);
+                float y = 1f - (0.51f* x*x);
                 _jumpTime = _jumpTime - 1;
                 return y;
             }

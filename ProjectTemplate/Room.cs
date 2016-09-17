@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,15 @@ namespace ProjectTemplate
         public int[] roomIndex;
         public int width;
         public int height;
-        public Room(int x, int y, string tileMapName, int roomX, int roomY)
+        public EnemyInfo[] EnemyInfo;
+
+
+        public Room(int x, int y, string tileMapName, int roomX, int roomY, EnemyInfo[] enemyInfo = null)
         {
             tilemap = tileMapName;
             index = new int[] { x, y };
             roomIndex = new int[] { roomX, roomY };
+            EnemyInfo = enemyInfo;
         }
     }
 }
