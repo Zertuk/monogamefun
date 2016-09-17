@@ -13,7 +13,7 @@ namespace ProjectTemplate
         private Room[,] _rooms;
         public World()
         {
-            var enemyInfo = new EnemyInfo[] { new EnemyInfo(new Vector2(100, 50), "beetle"), new EnemyInfo(new Vector2(150, 50), "beetle") };
+            var enemyInfo = new EnemyInfo[] { new EnemyInfo(new Vector2(100, 50), "beetle"), new EnemyInfo(new Vector2(400, 50), "beetle") };
             _rooms = new Room[,] { 
                 { new Room(0, 0, "map", 1, 2, enemyInfo),  new Room(0, 1, "map", 1, 1, enemyInfo),  new Room(0, 2, "map3", 1, 1), },
                 { new Room(1, 0, "map2", 1, 1), new Room(1, 1, "map3", 1, 1), new Room(1, 2, "map2", 1, 1) },

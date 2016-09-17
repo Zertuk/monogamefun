@@ -56,7 +56,9 @@ namespace ProjectTemplate
         public bool Grounded;
         public bool IsRolling;
         public int DropCount;
-        
+        public bool ThirdAttack;
+
+
         private int _groundFrames;
         private bool _hasJumped;
         private int _rollCount;
@@ -370,6 +372,7 @@ namespace ProjectTemplate
                 if (_attackInput.isPressed)
                 {
                     _thirdAttack = true;
+                    ThirdAttack = true;
                 }
             }
 
@@ -399,6 +402,7 @@ namespace ProjectTemplate
         {
             _secondAttack = false;
             _thirdAttack = false;
+            ThirdAttack = false;
             activeState = State.Normal;
             _attackTimer = 0;
             _actionTimer = 0;

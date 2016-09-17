@@ -90,6 +90,10 @@ namespace ProjectTemplate
                
                 if (_tiledEntity != null)
                 {
+                    // transitions within the current Scene with a SquaresTransition
+                    var transition = new SquaresTransition(resetstuff);
+                    Core.startSceneTransition(transition);
+
                     _tiledEntity.destroy();
                     ClearScene();
                 }
@@ -138,12 +142,6 @@ namespace ProjectTemplate
                 }
                 playerEntity.transform.position = newPos;
                 SpawnEnemies();
-                // transitions within the current Scene with a SquaresTransition
-                //var transition = new SquaresTransition(resetstuff);
-
-                //Core.startSceneTransition(transition);
-
-
             }
         }
 
@@ -173,10 +171,12 @@ namespace ProjectTemplate
         private void DisplayHealthBar(int health, int maxHealth, int dropCount)
         {
             var test = _canvas.stage.findAllElementsOfType<Table>();
-            if (test.Count() > 0)
+
+            for (var i = 0; i < test.Count(); i++)
             {
-                test[0].remove();
+                test[i].remove();
             }
+            
             var table = _canvas.stage.addElement(new Table());
             table.setFillParent(true);
             var healthText = new Text(Graphics.instance.bitmapFont, health.ToString(), new Vector2(45, 7), Color.White);
@@ -285,8 +285,9 @@ namespace ProjectTemplate
                         var enemy = collider.entity.getComponent<Enemy>();
                         if (enemy.ActiveState == Enemy.State.Attack)
                         {
-                            if (enemy._attackCount > 30 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && player.activeState != Player.State.Roll)
+                            if (enemy._attackCount > 0 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && player.activeState != Player.State.Roll)
                             {
+                                player.DoHurt(1);
                                 player.activeState = Player.State.Knockback;
                                 Console.WriteLine("OVERLAP");
                             }
@@ -313,14 +314,28 @@ namespace ProjectTemplate
                         {
                             collider.entity.getComponent<Enemy>().CheckInRange(collider.entity.transform.position, playerEntity.transform.position);
                         }
-                        collider.entity.getComponent<Enemy>().SetMoveDirection(collider.entity.transform.position, playerEntity.transform.position);
+                        if (Vector2.Distance(collider.entity.transform.position, player.transform.position) < 100)
+                        {
+                            collider.entity.getComponent<Enemy>().SetMoveDirection(collider.entity.transform.position, playerEntity.transform.position);
+                        }
+                        else
+                        {
+                            collider.entity.getComponent<Enemy>().ActiveState = Enemy.State.Stun;
+                        }
                     }
                     if (player.activeState == Player.State.Attack)
                     {
                         if (collider.overlaps(playerEntity.entity.colliders[1]) && collider.entity.getComponent<Enemy>().ActiveState != Enemy.State.Stun)
                         {
                             collider.entity.getComponent<Enemy>().ActiveState = Enemy.State.Stun;
-                            collider.entity.getComponent<Enemy>().DoHurt(1);
+                            if (player.ThirdAttack == true)
+                            {
+                                collider.entity.getComponent<Enemy>().DoHurt(2);
+                            }
+                            else
+                            {
+                                collider.entity.getComponent<Enemy>().DoHurt(1);
+                            }
                             Console.WriteLine("HIT");
                         }
                     }
@@ -340,6 +355,8 @@ namespace ProjectTemplate
                     }
                 }
                 _isUpdating = false;
+                Console.WriteLine("PLAYER HEALTH: " + player.Health);
+
             }
         }
 
@@ -454,7 +471,7 @@ namespace ProjectTemplate
             //collider.physicsLayer = 101;
             entity.addCollider(collider);
 
-            var hitboxCollider = new BoxCollider(-7, -14, 20, 24);
+            var hitboxCollider = new BoxCollider(7, -14, 20, 24);
             hitboxCollider.collidesWithLayers = 0;
             hitboxCollider.physicsLayer = 100;
             entity.addCollider(hitboxCollider);
