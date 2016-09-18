@@ -27,6 +27,7 @@ namespace ProjectTemplate
         private Player _player;
         private ProgressBar _healthBar;
         private Entity _healthEntity;
+        private int _shakeCount;
         public GameScene()
         {
             Transform.shouldRoundPosition = false;
@@ -147,7 +148,7 @@ namespace ProjectTemplate
                     newPos.X = _width - 16;
                 }
                 playerEntity.transform.position = newPos;
-                if (false)
+                if (true)
                 {
                     SpawnEnemies();
                 }
@@ -175,6 +176,21 @@ namespace ProjectTemplate
             _canvas.isFullScreen = true;
             _canvas.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
 
+        }
+
+        private void ShakeCamera(int count)
+        {
+            if (_shakeCount > count)
+            {
+                _shakeCount = 0;
+                return;
+            }
+            _shakeCount = _shakeCount + 1;
+
+            var xAdjustment = Nez.Random.random.Next(-2, 2); // get random number between -15 and 15
+            var yAdjustment = Nez.Random.random.Next(-10, 10); // get random number between -15 and 15
+
+            camera.entity.transform.position += new Vector2(xAdjustment, yAdjustment);
         }
 
         private void DisplayHealthBar()
@@ -303,6 +319,8 @@ namespace ProjectTemplate
                         {
                             if (enemy._attackCount > 0 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && _player.activeState != Player.State.Roll)
                             {
+                                ShakeCamera(25);
+
                                 _player.DoHurt(1);
                                 _player.activeState = Player.State.Knockback;
                                 Console.WriteLine("OVERLAP");
@@ -348,10 +366,12 @@ namespace ProjectTemplate
                             if (_player.ThirdAttack == true)
                             {
                                 collider.entity.getComponent<Enemy>().DoHurt(2);
+                                ShakeCamera(50);
                             }
                             else
                             {
                                 collider.entity.getComponent<Enemy>().DoHurt(1);
+                                ShakeCamera(25);
                             }
                             Console.WriteLine("HIT");
                         }
@@ -360,6 +380,8 @@ namespace ProjectTemplate
                     {
                         _player.activeState = Player.State.Knockback;
                         _player.DoHurt(1);
+                        ShakeCamera(25);
+
                         //DisplayHealthBar();
                         Console.WriteLine("SHOULD COLLIDE");
                     }
