@@ -20,7 +20,6 @@ namespace ProjectTemplate
             Roll,
             Knockback,
             Float
-
         }
 
         enum Animations
@@ -78,6 +77,8 @@ namespace ProjectTemplate
         private int _actionTimer;
         private bool _floatUsed;
 
+        public bool Dead = false;
+
 
         private void DisplayPosition()
         {
@@ -88,7 +89,7 @@ namespace ProjectTemplate
         public override void onAddedToEntity()
         {
             DropCount = 0;
-            Health = 10;
+            Health = 1;
             MaxHealth = 10;
             IsRolling = false;
 
@@ -275,6 +276,17 @@ namespace ProjectTemplate
             }
 
             var moveDir = new Vector2(_xAxisInput.value, 0);
+
+            if (moveDir.X < 0)
+            {
+                _animation.flipX = false;
+            }
+            else if (moveDir.X > 0)
+            {
+                _animation.flipX = true;
+            }
+
+
             DoMovement(moveDir, Animations.Float);
         }
 
@@ -550,6 +562,11 @@ namespace ProjectTemplate
 
         void IUpdatable.update()
         {
+            if (Health <= 0)
+            {
+                Dead = true;
+            }
+
             if (IsInvuln)
             {
                 _invulnCount = _invulnCount + 1;

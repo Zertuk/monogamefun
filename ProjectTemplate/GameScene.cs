@@ -62,7 +62,7 @@ namespace ProjectTemplate
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
             Screen.setSize(256*3, 144*3);
-            //Screen.isFullscreen = true;
+            Screen.isFullscreen = false;
 
             CreateUI();
         }
@@ -234,14 +234,26 @@ namespace ProjectTemplate
             _healthEntity.addComponent(dropText);
         }
 
+        private Scene PlayerDeath()
+        {
+            var deathScene = new DeathScene();
+            return deathScene;
+        }
+
+
+
         public void UpdateScene()
         {
             ShakeCamera();
             UpdateUIText();
             _healthBar.setValue(_player.Health - 1);
-            if (_player.Health <= 0)
+            if (_player.Dead)
             {
                 _healthBar.setStyle(ProgressBarStyle.create(Color.Black, Color.Black));
+                var transition = new SquaresTransition(PlayerDeath);
+                Core.startSceneTransition(transition);
+                camera.entity.destroy();
+                Core.scene = PlayerDeath();
             }
             Physics.gravity.Y = 250f;
             CheckGrounded();

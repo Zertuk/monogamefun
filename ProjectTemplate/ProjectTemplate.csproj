@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CameraBounds.cs" />
+    <Compile Include="ContinueComponent.cs" />
+    <Compile Include="DeathScene.cs" />
     <Compile Include="DefaultScene.cs" />
     <Compile Include="Drop.cs" />
     <Compile Include="Enemy.cs" />
