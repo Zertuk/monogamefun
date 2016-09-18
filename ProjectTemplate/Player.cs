@@ -18,7 +18,9 @@ namespace ProjectTemplate
             Normal,
             Attack,
             Roll,
-            Knockback
+            Knockback,
+            Float
+
         }
 
         enum Animations
@@ -35,20 +37,21 @@ namespace ProjectTemplate
             Hurt,
             Jumping,
             Rolling,
-            Knockback
+            Knockback,
+            Float
         }
 
         private Sprite<Animations> _animation;
         private Mover _mover;
         private float _moveSpeed = 70f;
         public State activeState;
-        public bool Invuln;
 
-        private bool _isInvuln = false;
+        public bool IsInvuln = false;
         private int _invulnCount = 0;
 
         private VirtualButton _jumpInput;
         private VirtualButton _rollInput;
+        private VirtualButton _floatInput;
         private VirtualButton _attackInput;
         private VirtualIntegerAxis _xAxisInput;
 
@@ -60,6 +63,7 @@ namespace ProjectTemplate
         public bool IsRolling;
         public int DropCount;
         public bool ThirdAttack;
+        public bool IgnoreGravity;
 
 
         private int _groundFrames;
@@ -72,7 +76,9 @@ namespace ProjectTemplate
         private bool _secondAttack;
         private bool _thirdAttack;
         private int _actionTimer;
-        
+        private bool _floatUsed;
+
+
         private void DisplayPosition()
         {
             var myScene = entity.scene as GameScene;
@@ -102,7 +108,8 @@ namespace ProjectTemplate
             var jumpTexture = entity.scene.contentManager.Load<Texture2D>("leekjump");
             var attackTexture = entity.scene.contentManager.Load<Texture2D>("leekattack-sheet");
             var rollTexture = entity.scene.contentManager.Load<Texture2D>("leekroll");
-            
+            var floatTexture = entity.scene.contentManager.Load<Texture2D>("leekfloat");
+
 
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 50, 50);
             var subtexturesRev = Subtexture.subtexturesFromAtlas(textureRev, 50, 50);
@@ -111,6 +118,7 @@ namespace ProjectTemplate
             var jumpSubtexture = Subtexture.subtexturesFromAtlas(jumpTexture, 20, 21);
             var attackSubtexture = Subtexture.subtexturesFromAtlas(attackTexture, 50, 50);
             var rollSubtexture = Subtexture.subtexturesFromAtlas(rollTexture, 20, 21);
+            var floatSubtextureTexture = Subtexture.subtexturesFromAtlas(floatTexture, 50, 50);
 
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
             //extract the animations from the atlas. they are setup in rows with 8 columns
@@ -219,6 +227,11 @@ namespace ProjectTemplate
                 rollSubtexture[2]
             }));
 
+            _animation.addAnimation(Animations.Float, new SpriteAnimation(new List<Subtexture>()
+            {
+                floatSubtextureTexture[0]
+            }));
+
             setupInput();
         }
 
@@ -238,12 +251,31 @@ namespace ProjectTemplate
                 case State.Knockback:
                     DoKnockback();
                     break;
+                case State.Float:
+                    DoFloat();
+                    break;
             }
         }
 
         public void UpdateDropCount(int val)
         {
             DropCount = DropCount + val;
+        }
+
+        private void DoFloat()
+        {
+            if (!Grounded && _floatInput.isDown)
+            {
+                IgnoreGravity = true;
+            }
+            else
+            {
+                activeState = State.Normal;
+                IgnoreGravity = false;
+            }
+
+            var moveDir = new Vector2(_xAxisInput.value, 0);
+            DoMovement(moveDir, Animations.Float);
         }
 
         public void DoKnockback()
@@ -278,6 +310,12 @@ namespace ProjectTemplate
                 {
                     _hasJumped = true;
                 }
+            }
+
+            if (_floatInput.isDown && !Grounded && !_floatUsed)
+            {
+                activeState = State.Float;
+                _floatUsed = true;
             }
 
             if (_actionTimer > 5)
@@ -418,10 +456,10 @@ namespace ProjectTemplate
 
         public void DoHurt(int damage)
         {
-            if (!_isInvuln)
+            if (!IsInvuln)
             {
                 Health = Health - damage;
-                _isInvuln = true;
+                IsInvuln = true;
                 _invulnCount = 0;
             }
         }
@@ -478,6 +516,9 @@ namespace ProjectTemplate
             _rollInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.Q));
             _rollInput.nodes.Add(new Nez.VirtualButton.GamePadButton(0, Buttons.X));
 
+            _floatInput = new VirtualButton();
+            _floatInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.Space));
+
             _attackInput = new VirtualButton();
             _attackInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.F));
         }
@@ -509,12 +550,12 @@ namespace ProjectTemplate
 
         void IUpdatable.update()
         {
-            if (_isInvuln)
+            if (IsInvuln)
             {
                 _invulnCount = _invulnCount + 1;
                 if (_invulnCount > 50)
                 {
-                    _isInvuln = false;
+                    IsInvuln = false;
                 }
             }
 
@@ -538,6 +579,7 @@ namespace ProjectTemplate
                 if (!_jumpInput.isDown)
                 {
                     _hasJumped = false;
+                    _floatUsed = false;
                 }
             }
 

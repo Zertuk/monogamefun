@@ -28,6 +28,7 @@ namespace ProjectTemplate
         private ProgressBar _healthBar;
         private Entity _healthEntity;
         private int _shakeCount;
+        private bool _shaking = false;
         public GameScene()
         {
             Transform.shouldRoundPosition = false;
@@ -178,19 +179,23 @@ namespace ProjectTemplate
 
         }
 
-        private void ShakeCamera(int count)
+        private void ShakeCamera()
         {
-            if (_shakeCount > count)
+            if (_shaking)
             {
-                _shakeCount = 0;
-                return;
+                if (_shakeCount > 8)
+                {
+                    _shakeCount = 0;
+                    _shaking = false;
+                    return;
+                }
+                _shakeCount = _shakeCount + 1;
+
+                var xAdjustment = Nez.Random.random.Next(-2, 2); // get random number between -15 and 15
+                var yAdjustment = Nez.Random.random.Next(-10, 10); // get random number between -15 and 15
+
+                camera.entity.transform.position += new Vector2(xAdjustment, yAdjustment);
             }
-            _shakeCount = _shakeCount + 1;
-
-            var xAdjustment = Nez.Random.random.Next(-2, 2); // get random number between -15 and 15
-            var yAdjustment = Nez.Random.random.Next(-10, 10); // get random number between -15 and 15
-
-            camera.entity.transform.position += new Vector2(xAdjustment, yAdjustment);
         }
 
         private void DisplayHealthBar()
@@ -231,6 +236,7 @@ namespace ProjectTemplate
 
         public void UpdateScene()
         {
+            ShakeCamera();
             UpdateUIText();
             _healthBar.setValue(_player.Health - 1);
             if (_player.Health <= 0)
@@ -262,6 +268,16 @@ namespace ProjectTemplate
             var rect = new RectangleF(playerEntity.entity.transform.position.X + 10, playerEntity.entity.transform.position.Y - 20, 20, 20);
             var neighborColliders = Physics.boxcastBroadphaseExcludingSelf(playerEntity.entity.colliders[0]);
 
+            if (_player.IgnoreGravity)
+            {
+                //playerEntity.shouldUseGravity = false;
+                playerEntity.setVelocity(new Vector2(playerEntity.velocity.X, playerEntity.velocity.Y*0.75f));
+            }
+            else
+            {
+                playerEntity.shouldUseGravity = true;
+            }
+
             // loop through and check each Collider for an overlap
             foreach (var collider in neighborColliders)
             {
@@ -280,6 +296,8 @@ namespace ProjectTemplate
                     }
                 }
             }
+
+
 
 
             foreach (var collider in colliders)
@@ -319,12 +337,15 @@ namespace ProjectTemplate
                         {
                             if (enemy._attackCount > 0 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && _player.activeState != Player.State.Roll)
                             {
-                                ShakeCamera(25);
-
-                                _player.DoHurt(1);
                                 _player.activeState = Player.State.Knockback;
-                                Console.WriteLine("OVERLAP");
-                                //DisplayHealthBar();
+
+                                if (!_player.IsInvuln)
+                                {
+                                    _shaking = true;
+                                    _player.DoHurt(1);
+                                    Console.WriteLine("OVERLAP");
+
+                                }
                             }
                         }
                         if (enemy.Dead)
@@ -366,12 +387,12 @@ namespace ProjectTemplate
                             if (_player.ThirdAttack == true)
                             {
                                 collider.entity.getComponent<Enemy>().DoHurt(2);
-                                ShakeCamera(50);
+                                _shaking = true;
                             }
                             else
                             {
                                 collider.entity.getComponent<Enemy>().DoHurt(1);
-                                ShakeCamera(25);
+                                _shaking = true;
                             }
                             Console.WriteLine("HIT");
                         }
@@ -379,9 +400,12 @@ namespace ProjectTemplate
                     if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider && _player.activeState != Player.State.Roll && _player.activeState != Player.State.Knockback) 
                     {
                         _player.activeState = Player.State.Knockback;
-                        _player.DoHurt(1);
-                        ShakeCamera(25);
 
+                        if (!_player.IsInvuln)
+                        {
+                            _player.DoHurt(1);
+                            _shaking = true;
+                        }
                         //DisplayHealthBar();
                         Console.WriteLine("SHOULD COLLIDE");
                     }
