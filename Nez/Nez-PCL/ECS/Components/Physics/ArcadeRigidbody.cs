@@ -167,8 +167,11 @@ namespace Nez
 				return;
 			}
 
-			if( shouldUseGravity )
-				velocity += Physics.gravity * Time.deltaTime;
+            if (shouldUseGravity)
+                velocity += Physics.gravity * Time.deltaTime;
+
+
+
 
             entity.colliders.unregisterAllCollidersWithPhysicsSystem();
 			entity.transform.position += velocity * Time.deltaTime;

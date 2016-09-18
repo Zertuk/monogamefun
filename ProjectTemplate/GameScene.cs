@@ -24,6 +24,9 @@ namespace ProjectTemplate
         private TiledTileLayer _tileCollLayer;
         private bool _isUpdating = false;
         private bool _shouldUpdate = true;
+        private Player _player;
+        private ProgressBar _healthBar;
+        private Entity _healthEntity;
         public GameScene()
         {
             Transform.shouldRoundPosition = false;
@@ -31,6 +34,10 @@ namespace ProjectTemplate
             _world = new World();
 
             playerEntity = CreatePlayer(new Vector2(50, 50));
+            _player = playerEntity.entity.getComponent<Player>();
+            _player.Health = 9;
+            DisplayHealthBar();
+
 
             UpdateTileMap(new Vector2(100, 100), false);
 
@@ -42,12 +49,13 @@ namespace ProjectTemplate
             // add a component to have the Camera follow the player
             camera.entity.addComponent(new FollowCamera(playerEntity.entity));
 
+
         }
         private World _world;
 
         public override void initialize()
         {
-            Core.debugRenderEnabled = true;
+            //Core.debugRenderEnabled = true;
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
@@ -55,12 +63,11 @@ namespace ProjectTemplate
             //Screen.isFullscreen = true;
 
             CreateUI();
-            DisplayHealthBar(9, 10, 0);
         }
 
         private Scene resetstuff()
         {
-            return scene;
+            return this;
         }
 
         private void ClearScene()
@@ -83,7 +90,6 @@ namespace ProjectTemplate
 
         private void UpdateTileMap(Vector2 newPos, bool left)
         {
-
             //only load if actually new room and not just new part of old room
             if (_prevTileMapName != _world.activeRoom.tilemap)
             {
@@ -91,9 +97,9 @@ namespace ProjectTemplate
                 if (_tiledEntity != null)
                 {
                     // transitions within the current Scene with a SquaresTransition
-                    var transition = new SquaresTransition(resetstuff);
-                    Core.startSceneTransition(transition);
-
+                    //var transition = new SquaresTransition();
+                    //transition.onScreenObscured = ClearScene();
+                    //Core.startSceneTransition(transition);
                     _tiledEntity.destroy();
                     ClearScene();
                 }
@@ -141,7 +147,10 @@ namespace ProjectTemplate
                     newPos.X = _width - 16;
                 }
                 playerEntity.transform.position = newPos;
-                SpawnEnemies();
+                if (false)
+                {
+                    SpawnEnemies();
+                }
             }
         }
 
@@ -168,43 +177,50 @@ namespace ProjectTemplate
 
         }
 
-        private void DisplayHealthBar(int health, int maxHealth, int dropCount)
+        private void DisplayHealthBar()
         {
-            var test = _canvas.stage.findAllElementsOfType<Table>();
-
-            for (var i = 0; i < test.Count(); i++)
-            {
-                test[i].remove();
-            }
-            
             var table = _canvas.stage.addElement(new Table());
             table.setFillParent(true);
-            var healthText = new Text(Graphics.instance.bitmapFont, health.ToString(), new Vector2(45, 7), Color.White);
-            var healthEntity = createEntity("healthText");
-            healthText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
-            healthEntity.addComponent(healthText);
-            var healthBar = new ProgressBar(0, maxHealth, 1, false, ProgressBarStyle.create(Color.Red, Color.Black));
-            var healthBarBorder = new ProgressBar(1, maxHealth, 1, false, ProgressBarStyle.create(Color.White, Color.White));
-            var healthBarBorder2 = new ProgressBar(1, maxHealth, 1, false, ProgressBarStyle.create(Color.White, Color.White));
-
-            //var dropText = new Text(Graphics.instance.bitmapFont, dropCount.ToString(), new Vector2(60, 100), Color.White);
-            //dropText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
-            //healthEntity.addComponent(dropText);    
+            _healthBar = new ProgressBar(0, 9, 1, false, ProgressBarStyle.create(Color.Red, Color.Black));
+            var healthBarBorder = new ProgressBar(0, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
+            var healthBarBorder2 = new ProgressBar(0, 10, 1, false, ProgressBarStyle.create(Color.White, Color.White));
 
             healthBarBorder2.setSize(52, 12f);
             healthBarBorder2.setPosition(5f, 4f);
-            healthBar.setValue(maxHealth);
+            _healthBar.setValue(_player.Health);
             healthBarBorder.setSize(52, 12f);
             healthBarBorder.setPosition(5f, 6f);
-            healthBar.setSize(50f, 5f);
-            healthBar.setPosition(6f, 8f);
+            _healthBar.setSize(50f, 5f);
+            _healthBar.setPosition(6f, 8f);
             table.addElement(healthBarBorder);
             table.addElement(healthBarBorder2);
-            table.addElement(healthBar);
+            table.addElement(_healthBar);
+        }
+
+        private void UpdateUIText()
+        {
+            if (_healthEntity != null)
+            {
+                _healthEntity.destroy();
+            }
+            var healthText = new Text(Graphics.instance.bitmapFont, _player.Health.ToString(), new Vector2(45, 7), Color.White);
+            var dropText = new Text(Graphics.instance.bitmapFont, "Buttons: " + _player.DropCount.ToString(), new Vector2(6, 18), Color.White);
+
+            _healthEntity = createEntity("healthText");
+            healthText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
+            dropText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
+            _healthEntity.addComponent(healthText);
+            _healthEntity.addComponent(dropText);
         }
 
         public void UpdateScene()
         {
+            UpdateUIText();
+            _healthBar.setValue(_player.Health - 1);
+            if (_player.Health <= 0)
+            {
+                _healthBar.setStyle(ProgressBarStyle.create(Color.Black, Color.Black));
+            }
             Physics.gravity.Y = 250f;
             CheckGrounded();
             //Console.WriteLine(playerEntity.transform.position.X + ", " + playerEntity.transform.position.Y);
@@ -227,7 +243,6 @@ namespace ProjectTemplate
             _isUpdating = true;
             var phys = Physics.getAllColliders();
             var colliders = phys.AsEnumerable();
-            var player = playerEntity.entity.getComponent<Player>();
             var rect = new RectangleF(playerEntity.entity.transform.position.X + 10, playerEntity.entity.transform.position.Y - 20, 20, 20);
             var neighborColliders = Physics.boxcastBroadphaseExcludingSelf(playerEntity.entity.colliders[0]);
 
@@ -264,15 +279,16 @@ namespace ProjectTemplate
                         var drop = collider.entity.getComponent<Drop>();
                         if (drop.Collected)
                         {
+                            drop.entity.destroy();
                             continue;
                         }
-                        drop.SetMoveDirection(drop.transform.position, player.transform.position);
+                        drop.SetMoveDirection(drop.transform.position, _player.transform.position);
                         drop.ActiveState = Drop.State.Follow;
                         if (collider.entity.colliders[0].overlaps(playerEntity.entity.colliders[0]))
                         {
                             drop.Collected = true;
-                            player.UpdateDropCount(drop.Value);
-                            Console.WriteLine("DROPCOUNT: " + player.DropCount);
+                            _player.UpdateDropCount(drop.Value);
+                            Console.WriteLine("DROPCOUNT: " + _player.DropCount);
                             drop.entity.detachFromScene();
                         }
                     }
@@ -285,11 +301,12 @@ namespace ProjectTemplate
                         var enemy = collider.entity.getComponent<Enemy>();
                         if (enemy.ActiveState == Enemy.State.Attack)
                         {
-                            if (enemy._attackCount > 0 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && player.activeState != Player.State.Roll)
+                            if (enemy._attackCount > 0 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && _player.activeState != Player.State.Roll)
                             {
-                                player.DoHurt(1);
-                                player.activeState = Player.State.Knockback;
+                                _player.DoHurt(1);
+                                _player.activeState = Player.State.Knockback;
                                 Console.WriteLine("OVERLAP");
+                                //DisplayHealthBar();
                             }
                         }
                         if (enemy.Dead)
@@ -314,7 +331,7 @@ namespace ProjectTemplate
                         {
                             collider.entity.getComponent<Enemy>().CheckInRange(collider.entity.transform.position, playerEntity.transform.position);
                         }
-                        if (Vector2.Distance(collider.entity.transform.position, player.transform.position) < 100)
+                        if (Vector2.Distance(collider.entity.transform.position, _player.transform.position) < 100)
                         {
                             collider.entity.getComponent<Enemy>().SetMoveDirection(collider.entity.transform.position, playerEntity.transform.position);
                         }
@@ -323,12 +340,12 @@ namespace ProjectTemplate
                             collider.entity.getComponent<Enemy>().ActiveState = Enemy.State.Stun;
                         }
                     }
-                    if (player.activeState == Player.State.Attack)
+                    if (_player.activeState == Player.State.Attack)
                     {
                         if (collider.overlaps(playerEntity.entity.colliders[1]) && collider.entity.getComponent<Enemy>().ActiveState != Enemy.State.Stun)
                         {
                             collider.entity.getComponent<Enemy>().ActiveState = Enemy.State.Stun;
-                            if (player.ThirdAttack == true)
+                            if (_player.ThirdAttack == true)
                             {
                                 collider.entity.getComponent<Enemy>().DoHurt(2);
                             }
@@ -339,11 +356,11 @@ namespace ProjectTemplate
                             Console.WriteLine("HIT");
                         }
                     }
-                    if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider && player.activeState != Player.State.Roll && player.activeState != Player.State.Knockback) 
+                    if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider && _player.activeState != Player.State.Roll && _player.activeState != Player.State.Knockback) 
                     {
-                        player.activeState = Player.State.Knockback;
-                        player.DoHurt(1);
-                        DisplayHealthBar(player.Health, player.MaxHealth, player.DropCount);
+                        _player.activeState = Player.State.Knockback;
+                        _player.DoHurt(1);
+                        //DisplayHealthBar();
                         Console.WriteLine("SHOULD COLLIDE");
                     }
                 }
@@ -351,11 +368,11 @@ namespace ProjectTemplate
                 {
                     if (playerEntity.velocity.Y == 0)
                     {
-                        player.Grounded = true;
+                        _player.Grounded = true;
                     }
                 }
                 _isUpdating = false;
-                Console.WriteLine("PLAYER HEALTH: " + player.Health);
+                Console.WriteLine("PLAYER HEALTH: " + _player.Health);
 
             }
         }

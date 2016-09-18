@@ -44,6 +44,9 @@ namespace ProjectTemplate
         public State activeState;
         public bool Invuln;
 
+        private bool _isInvuln = false;
+        private int _invulnCount = 0;
+
         private VirtualButton _jumpInput;
         private VirtualButton _rollInput;
         private VirtualButton _attackInput;
@@ -339,12 +342,17 @@ namespace ProjectTemplate
 
             var animation = Animations.Attack;
             var moveDir = new Vector2(0, 0);
+            var flip = 1;
+            if (!_animation.flipX)
+            {
+                flip = -1;
+            }
 
             _attackTimer = _attackTimer + 1;
 
             if (22 >= _attackTimer && _attackTimer > 10)
             {
-                moveDir.X = 0.3f;
+                moveDir.X = 0.3f * flip;
 
                 if (_attackInput.isPressed)
                 {
@@ -354,7 +362,7 @@ namespace ProjectTemplate
             //kill
             if (_attackTimer >= 18)
             {
-                moveDir.X = 0;
+                moveDir.X = 0 * flip;
                 if (!_secondAttack && _attackTimer >= 22)
                 {
                     ExitAttack();
@@ -366,9 +374,9 @@ namespace ProjectTemplate
             }
 
 
-            if ((40 >= _attackTimer && _attackTimer > 26))
+            if ((40 >= _attackTimer && _attackTimer > 24))
             {
-                moveDir.X = 0.1f;
+                moveDir.X = 0.1f * flip;
                 if (_attackInput.isPressed)
                 {
                     _thirdAttack = true;
@@ -378,7 +386,7 @@ namespace ProjectTemplate
 
             if (_attackTimer >= 36)
             {
-                moveDir.X = 0.2f;
+                moveDir.X = 0.2f * flip;
                 if (!_thirdAttack && _attackTimer >= 40)
                 {
                     ExitAttack();
@@ -410,7 +418,12 @@ namespace ProjectTemplate
 
         public void DoHurt(int damage)
         {
-            Health = Health - damage;
+            if (!_isInvuln)
+            {
+                Health = Health - damage;
+                _isInvuln = true;
+                _invulnCount = 0;
+            }
         }
 
         private void DoRoll()
@@ -418,6 +431,7 @@ namespace ProjectTemplate
             var moveDir = new Vector2(0, 0);
             var animation = Animations.Rolling;
             _rollCount = _rollCount + 1;
+
             if (_rollCount > 15)
             {
                 activeState = State.Normal;
@@ -425,11 +439,11 @@ namespace ProjectTemplate
             }
             if (_animation.flipX)
             {
-                moveDir.X = 2;
+                moveDir.X = 1.5f;
             }
             else
             {
-                moveDir.X = -2;
+                moveDir.X = -1.5f;
             }
             _actionTimer = 0;
             DoMovement(moveDir, animation);
@@ -439,6 +453,7 @@ namespace ProjectTemplate
         {
             CollisionResult res;
             var movement = (moveDir * _moveSpeed * Time.deltaTime);
+            
             _mover.move(movement, out res);
             if (!_animation.isAnimationPlaying(animation))
             {
@@ -474,7 +489,7 @@ namespace ProjectTemplate
             {
                 count = count + 1;
                 var x = 2.5f;
-                float y = 1f - (0.51f* x*x);
+                float y = 1f - (0.5f* x*x);
                 _jumpTime = _jumpTime - 1;
                 return y;
             }
@@ -494,12 +509,28 @@ namespace ProjectTemplate
 
         void IUpdatable.update()
         {
+            if (_isInvuln)
+            {
+                _invulnCount = _invulnCount + 1;
+                if (_invulnCount > 50)
+                {
+                    _isInvuln = false;
+                }
+            }
+
             //dev
             DisplayPosition();
 
             //keep
             StateMachine();
 
+            if (!Grounded)
+            {
+                if (!_jumpInput.isDown)
+                {
+                    _hasJumped = true;
+                }
+            }
 
             if (Grounded)
             {
