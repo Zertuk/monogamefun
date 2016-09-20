@@ -290,6 +290,7 @@ namespace ProjectTemplate
             return new Point((int)input.X / 16, (int)input.Y / 16);
         }
 
+        //wow refactor me pls
         private void CheckGrounded()
         {
             if (!_shouldUpdate)
@@ -325,7 +326,8 @@ namespace ProjectTemplate
             // loop through and check each Collider for an overlap
             foreach (var collider in neighborColliders)
             {
-                if (playerEntity.entity.colliders[0].overlaps(collider))
+
+                if (collider.overlaps(playerEntity.entity.colliders[0]))
                 {
                     Console.WriteLine("We are overlapping a Collider: {0}", collider);
                     //enemies
@@ -338,17 +340,39 @@ namespace ProjectTemplate
                     {
                         Console.WriteLine("DROPS");
                     }
+
+                    //climbables
+                    if (collider.physicsLayer == 500)
+                    {
+                        _player.activeState = Player.State.Climb;
+                        _player.LadderInUse = collider;
+                    }
+
+
+                    //instadeath like spikes ;-;
+                    if (collider.physicsLayer == 501)
+                    {
+                        if (collider.overlaps(playerEntity.entity.colliders[0]))
+                        {
+                            _player.Health = 0;
+                        }
+                    }
+
+
                 }
+
             }
 
-
+            //not on ladder, stop climbing
+            if (_player.LadderInUse != null && !_player.LadderInUse.overlaps(playerEntity.entity.colliders[0]))
+            {
+                _player.activeState = Player.State.Normal;
+                _player.LadderInUse = null;
+            }
 
 
             foreach (var collider in colliders)
             {
-                Collider[] results = { collider };
-                Physics.overlapRectangleAll(ref rect, results);
-
                 if (collider.physicsLayer == 100)
                 {
                     //drops
@@ -369,33 +393,6 @@ namespace ProjectTemplate
                             Console.WriteLine("DROPCOUNT: " + _player.DropCount);
                             drop.entity.detachFromScene();
                         }
-                    }
-                }
-
-
-                //instadeath like spikes ;-;
-                if (collider.physicsLayer == 501)
-                {
-                    if (collider.overlaps(playerEntity.entity.colliders[0]))
-                    {
-                        _player.Health = 0;
-                    }
-                }
-
-                //climbables
-                if (collider.physicsLayer == 500)
-                {
-                    if (collider.overlaps(playerEntity.entity.colliders[0]))
-                    {
-                        _player.activeState = Player.State.Climb;
-                        _player.LadderInUse = collider;
-                    }
-                    if (_player.LadderInUse != null && !_player.LadderInUse.overlaps(playerEntity.entity.colliders[0]))
-                    {
-                        //not on ladder, stop climbing
-                        _player.activeState = Player.State.Normal;
-                        _player.LadderInUse = null;
-
                     }
                 }
 
