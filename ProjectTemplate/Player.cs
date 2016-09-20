@@ -19,7 +19,8 @@ namespace ProjectTemplate
             Attack,
             Roll,
             Knockback,
-            Float
+            Float,
+            Climb
         }
 
         enum Animations
@@ -53,9 +54,11 @@ namespace ProjectTemplate
         private VirtualButton _floatInput;
         private VirtualButton _attackInput;
         private VirtualIntegerAxis _xAxisInput;
+        private VirtualIntegerAxis _yAxisInput;
 
         private int _jumpTime;
 
+        public Collider LadderInUse;
         public int Health;
         public int MaxHealth;
         public bool Grounded;
@@ -89,7 +92,7 @@ namespace ProjectTemplate
         public override void onAddedToEntity()
         {
             DropCount = 0;
-            Health = 1;
+            Health = 10;
             MaxHealth = 10;
             IsRolling = false;
 
@@ -255,12 +258,22 @@ namespace ProjectTemplate
                 case State.Float:
                     DoFloat();
                     break;
+                case State.Climb:
+                    DoClimb();
+                    break;
             }
         }
 
         public void UpdateDropCount(int val)
         {
             DropCount = DropCount + val;
+        }
+
+        private void DoClimb()
+        {
+            var moveDir = new Vector2(_xAxisInput.value, _yAxisInput.value);
+            IgnoreGravity = true;
+            DoMovement(moveDir, Animations.Falling);
         }
 
         private void DoFloat()
@@ -311,6 +324,7 @@ namespace ProjectTemplate
 
         private void DoNormal()
         {
+            IgnoreGravity = false;
             var moveDir = new Vector2(_xAxisInput.value, 0);
             var animation = Animations.Idle;
             _actionTimer = _actionTimer + 1;
@@ -333,14 +347,20 @@ namespace ProjectTemplate
             if (_actionTimer > 5)
             {
                 //roll
-                if (_rollInput.isPressed)
+                if (_rollInput.isPressed && Grounded)
                 {
                     activeState = State.Roll;
                 }
 
-                if (_attackInput.isPressed)
+                if (_attackInput.isPressed && Grounded)
                 {
                     activeState = State.Attack;
+                }
+                else if (_attackInput.isPressed && !Grounded)
+                {
+                    //DO ARIAL ATTACK HERE
+                    activeState = State.Attack;
+                    
                 }
             }
 
@@ -518,6 +538,13 @@ namespace ProjectTemplate
             _xAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadDpadLeftRight());
             _xAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadLeftStickX());
             _xAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right));
+
+            _yAxisInput = new VirtualIntegerAxis();
+            _yAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadDpadUpDown());
+            _yAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadLeftStickY());
+            _yAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));
+
+
 
             // vertical input from dpad, left stick or keyboard up/down
             _jumpInput = new VirtualButton();

@@ -118,6 +118,29 @@ namespace ProjectTemplate
                 //fix me ;-;
                 try
                 {
+                    var spikeComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "spike"));
+                    spikeComponent.renderLayer = 1;
+                    spikeComponent.physicsLayer = 501;
+                    spikeComponent.setLayersToRender("spike");
+                }
+                catch
+                {
+                }
+
+                try
+                {
+                    var ladderComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "ladder"));
+                    ladderComponent.renderLayer = 1;
+                    ladderComponent.physicsLayer = 500;
+                    ladderComponent.setLayersToRender("ladder");
+                    //ladderComponent.collisionLayer = null;
+                }
+                catch {
+
+                }
+
+                try
+                {
                     var accentComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "accent"));
                     accentComponent.renderLayer = 0;
                     accentComponent.collisionLayer = null;
@@ -252,7 +275,6 @@ namespace ProjectTemplate
                 _healthBar.setStyle(ProgressBarStyle.create(Color.Black, Color.Black));
                 var transition = new SquaresTransition(PlayerDeath);
                 Core.startSceneTransition(transition);
-                camera.entity.destroy();
                 Core.scene = PlayerDeath();
             }
             Physics.gravity.Y = 250f;
@@ -280,6 +302,15 @@ namespace ProjectTemplate
             var rect = new RectangleF(playerEntity.entity.transform.position.X + 10, playerEntity.entity.transform.position.Y - 20, 20, 20);
             var neighborColliders = Physics.boxcastBroadphaseExcludingSelf(playerEntity.entity.colliders[0]);
 
+            if (_player.activeState == Player.State.Climb)
+            {
+                playerEntity.shouldUseGravity = false;
+            }
+            else
+            {
+                playerEntity.shouldUseGravity = true;
+            }
+
             if (_player.IgnoreGravity)
             {
                 //playerEntity.shouldUseGravity = false;
@@ -289,6 +320,7 @@ namespace ProjectTemplate
             {
                 playerEntity.shouldUseGravity = true;
             }
+
 
             // loop through and check each Collider for an overlap
             foreach (var collider in neighborColliders)
@@ -339,6 +371,34 @@ namespace ProjectTemplate
                         }
                     }
                 }
+
+
+                //instadeath like spikes ;-;
+                if (collider.physicsLayer == 501)
+                {
+                    if (collider.overlaps(playerEntity.entity.colliders[0]))
+                    {
+                        _player.Health = 0;
+                    }
+                }
+
+                //climbables
+                if (collider.physicsLayer == 500)
+                {
+                    if (collider.overlaps(playerEntity.entity.colliders[0]))
+                    {
+                        _player.activeState = Player.State.Climb;
+                        _player.LadderInUse = collider;
+                    }
+                    if (_player.LadderInUse != null && !_player.LadderInUse.overlaps(playerEntity.entity.colliders[0]))
+                    {
+                        //not on ladder, stop climbing
+                        _player.activeState = Player.State.Normal;
+                        _player.LadderInUse = null;
+
+                    }
+                }
+
                 if (collider.physicsLayer == 1)
                 {
                     //enemies
