@@ -54,7 +54,7 @@ namespace ProjectTemplate
         private VirtualButton _floatInput;
         private VirtualButton _attackInput;
         private VirtualIntegerAxis _xAxisInput;
-        private VirtualIntegerAxis _yAxisInput;
+        public VirtualIntegerAxis YAxisInput;
 
         private int _jumpTime;
 
@@ -271,7 +271,7 @@ namespace ProjectTemplate
 
         private void DoClimb()
         {
-            var moveDir = new Vector2(_xAxisInput.value, _yAxisInput.value);
+            var moveDir = new Vector2(_xAxisInput.value, YAxisInput.value);
             IgnoreGravity = true;
             DoMovement(moveDir, Animations.Falling);
         }
@@ -539,10 +539,10 @@ namespace ProjectTemplate
             _xAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadLeftStickX());
             _xAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right));
 
-            _yAxisInput = new VirtualIntegerAxis();
-            _yAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadDpadUpDown());
-            _yAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadLeftStickY());
-            _yAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));
+            YAxisInput = new VirtualIntegerAxis();
+            YAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadDpadUpDown());
+            YAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadLeftStickY());
+            YAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));
 
 
 

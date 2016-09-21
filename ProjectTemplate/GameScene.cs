@@ -342,7 +342,7 @@ namespace ProjectTemplate
                     }
 
                     //climbables
-                    if (collider.physicsLayer == 500)
+                    if (collider.physicsLayer == 500 && _player.YAxisInput != 0)
                     {
                         _player.activeState = Player.State.Climb;
                         _player.LadderInUse = collider;
