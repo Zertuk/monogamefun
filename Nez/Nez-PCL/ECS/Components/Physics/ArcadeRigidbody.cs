@@ -168,7 +168,7 @@ namespace Nez
 			}
 
             if (shouldUseGravity)
-                velocity += Physics.gravity * Time.deltaTime;
+                velocity += Physics.gravity * Time.deltaTime;   
 
 
 

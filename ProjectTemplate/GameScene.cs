@@ -37,7 +37,6 @@ namespace ProjectTemplate
 
             playerEntity = CreatePlayer(new Vector2(50, 50));
             _player = playerEntity.entity.getComponent<Player>();
-            _player.Health = 9;
             DisplayHealthBar();
 
 
@@ -116,6 +115,14 @@ namespace ProjectTemplate
                 tiledMapComponent.renderLayer = 10;
                 tiledMapComponent.physicsLayer = 10;
                 //fix me ;-;
+
+                try
+                {
+                }
+                catch
+                {
+                }
+
                 try
                 {
                     var spikeComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "spike"));
@@ -326,28 +333,27 @@ namespace ProjectTemplate
             // loop through and check each Collider for an overlap
             foreach (var collider in neighborColliders)
             {
-
-                if (collider.overlaps(playerEntity.entity.colliders[0]))
+                //climbables
+                if (collider.overlaps(playerEntity.entity.colliders[2]))
                 {
-                    Console.WriteLine("We are overlapping a Collider: {0}", collider);
-                    //enemies
-                    if (collider.entity.tag == 5)
-                    {
-                        Console.WriteLine("ENEMY");
-                    }
-                    //drops
-                    if (collider.entity.tag == 4)
-                    {
-                        Console.WriteLine("DROPS");
-                    }
-
-                    //climbables
                     if (collider.physicsLayer == 500 && _player.YAxisInput != 0)
                     {
                         _player.activeState = Player.State.Climb;
                         _player.LadderInUse = collider;
                     }
+                }
+                if (collider.overlaps(playerEntity.entity.colliders[0]))
+                {
+                    //enemies
+                    if (collider.entity.tag == 5)
+                    {
 
+                    }
+                    //drops
+                    if (collider.entity.tag == 4)
+                    {
+
+                    }
 
                     //instadeath like spikes ;-;
                     if (collider.physicsLayer == 501)
@@ -390,7 +396,6 @@ namespace ProjectTemplate
                         {
                             drop.Collected = true;
                             _player.UpdateDropCount(drop.Value);
-                            Console.WriteLine("DROPCOUNT: " + _player.DropCount);
                             drop.entity.detachFromScene();
                         }
                     }
@@ -412,8 +417,6 @@ namespace ProjectTemplate
                                 {
                                     _shaking = true;
                                     _player.DoHurt(1);
-                                    Console.WriteLine("OVERLAP");
-
                                 }
                             }
                         }
@@ -463,7 +466,6 @@ namespace ProjectTemplate
                                 collider.entity.getComponent<Enemy>().DoHurt(1);
                                 _shaking = true;
                             }
-                            Console.WriteLine("HIT");
                         }
                     }
                     if (collider.overlaps(playerEntity.entity.colliders[0]) && playerEntity.entity.colliders[0] != collider && playerEntity.entity.colliders[1] != collider && _player.activeState != Player.State.Roll && _player.activeState != Player.State.Knockback) 
@@ -476,7 +478,6 @@ namespace ProjectTemplate
                             _shaking = true;
                         }
                         //DisplayHealthBar();
-                        Console.WriteLine("SHOULD COLLIDE");
                     }
                 }
                 if (collider.physicsLayer == 10)
@@ -487,8 +488,6 @@ namespace ProjectTemplate
                     }
                 }
                 _isUpdating = false;
-                Console.WriteLine("PLAYER HEALTH: " + _player.Health);
-
             }
         }
 
@@ -580,6 +579,12 @@ namespace ProjectTemplate
             hitboxCollider.physicsLayer = 100;
             entity.addCollider(hitboxCollider);
 
+            var climbCollider = new BoxCollider(0, -5, 3, 16);
+            climbCollider.collidesWithLayers = 0;
+            climbCollider.physicsLayer = 100;
+            entity.addCollider(climbCollider);
+
+
 
             return rigidbody;
         }
@@ -607,7 +612,6 @@ namespace ProjectTemplate
             hitboxCollider.collidesWithLayers = 0;
             hitboxCollider.physicsLayer = 100;
             entity.addCollider(hitboxCollider);
-
 
             return rigidbody;
         }

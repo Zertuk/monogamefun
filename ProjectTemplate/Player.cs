@@ -38,7 +38,8 @@ namespace ProjectTemplate
             Jumping,
             Rolling,
             Knockback,
-            Float
+            Float,
+            Climb
         }
 
         private Sprite<Animations> _animation;
@@ -113,7 +114,7 @@ namespace ProjectTemplate
             var attackTexture = entity.scene.contentManager.Load<Texture2D>("leekattack-sheet");
             var rollTexture = entity.scene.contentManager.Load<Texture2D>("leekroll");
             var floatTexture = entity.scene.contentManager.Load<Texture2D>("leekfloat");
-
+            var climbAnimation = entity.scene.contentManager.Load <Texture2D>("leekclimb");
 
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 50, 50);
             var subtexturesRev = Subtexture.subtexturesFromAtlas(textureRev, 50, 50);
@@ -123,8 +124,12 @@ namespace ProjectTemplate
             var attackSubtexture = Subtexture.subtexturesFromAtlas(attackTexture, 50, 50);
             var rollSubtexture = Subtexture.subtexturesFromAtlas(rollTexture, 20, 21);
             var floatSubtextureTexture = Subtexture.subtexturesFromAtlas(floatTexture, 50, 50);
+            var climbSubtexture = Subtexture.subtexturesFromAtlas(climbAnimation, 22, 22);
 
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
+
+
+
             //extract the animations from the atlas. they are setup in rows with 8 columns
             _animation.addAnimation(Animations.Walk, new SpriteAnimation(new List<Subtexture>()
             {
@@ -236,6 +241,18 @@ namespace ProjectTemplate
                 floatSubtextureTexture[0]
             }));
 
+            _animation.addAnimation(Animations.Climb, new SpriteAnimation(new List<Subtexture>()
+            {
+                climbSubtexture[0],
+                climbSubtexture[0],
+                climbSubtexture[1],
+                climbSubtexture[1],
+                climbSubtexture[2],
+                climbSubtexture[2],
+                climbSubtexture[3],
+                climbSubtexture[3]
+            }));
+
             setupInput();
         }
 
@@ -271,9 +288,33 @@ namespace ProjectTemplate
 
         private void DoClimb()
         {
-            var moveDir = new Vector2(_xAxisInput.value, YAxisInput.value);
+            var moveDir = new Vector2(0, YAxisInput.value);
+            var xMoveDir = _xAxisInput.value;
             IgnoreGravity = true;
-            DoMovement(moveDir, Animations.Falling);
+            Grounded = true;
+
+            if (xMoveDir < 0)
+            {
+                _animation.flipX = false;
+            }
+            else if (xMoveDir > 0)
+            {
+                _animation.flipX = true;
+            }
+
+            //jump
+            if (CheckJumpInput())
+            {
+                moveDir = new Vector2(xMoveDir, Jump());
+                activeState = State.Normal;
+            }
+            var playAnimation = true;
+            Console.WriteLine(moveDir.Y);
+            if (moveDir.Y == 0)
+            {
+                playAnimation = false;
+            }
+            DoMovement(moveDir, Animations.Climb, playAnimation);
         }
 
         private void DoFloat()
@@ -312,7 +353,6 @@ namespace ProjectTemplate
             }
 
             _knockbackTimer = _knockbackTimer + 1;
-            Console.WriteLine(_knockbackTimer);
             if (_knockbackTimer > 6)
             {
                 _knockbackTimer = 0;
@@ -519,15 +559,19 @@ namespace ProjectTemplate
             DoMovement(moveDir, animation);
         }
 
-        private void DoMovement(Vector2 moveDir, Animations animation)
+        private void DoMovement(Vector2 moveDir, Animations animation, bool playAnimation = true)
         {
             CollisionResult res;
             var movement = (moveDir * _moveSpeed * Time.deltaTime);
             
             _mover.move(movement, out res);
-            if (!_animation.isAnimationPlaying(animation))
+            if (!_animation.isAnimationPlaying(animation)&&playAnimation)
             {
                 _animation.play(animation);
+            }
+            else if (!playAnimation)
+            {
+                _animation.stop();
             }
         }
 
