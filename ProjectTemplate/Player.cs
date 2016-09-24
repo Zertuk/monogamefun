@@ -288,6 +288,7 @@ namespace ProjectTemplate
 
         private void DoClimb()
         {
+            entity.transform.position = new Vector2(LadderInUse.absolutePosition.X + 8, entity.transform.position.Y);
             var moveDir = new Vector2(0, YAxisInput.value);
             var xMoveDir = _xAxisInput.value;
             IgnoreGravity = true;
