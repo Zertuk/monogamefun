@@ -29,8 +29,10 @@ namespace ProjectTemplate
         private Entity _healthEntity;
         private int _shakeCount;
         private bool _shaking = false;
+        private List<Entity> _shroomList;
         public GameScene()
         {
+            _shroomList = new List<Entity>();
             Transform.shouldRoundPosition = false;
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
             _world = new World();
@@ -56,7 +58,7 @@ namespace ProjectTemplate
 
         public override void initialize()
         {
-            //Core.debugRenderEnabled = true;
+            Core.debugRenderEnabled = true;
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
@@ -89,6 +91,7 @@ namespace ProjectTemplate
             _shouldUpdate = true;
         }
 
+
         private void UpdateTileMap(Vector2 newPos, bool left)
         {
             //only load if actually new room and not just new part of old room
@@ -109,7 +112,12 @@ namespace ProjectTemplate
 
 
                 var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
-
+                var shrooms = tiledmap.objectGroups[0].objectsWithName("shroom");
+                for (var i = 0; i < shrooms.Count; i++)
+                {
+                    CreateShroom(new Vector2(shrooms[i].x, shrooms[i].y - 8));
+                }
+                Console.WriteLine(tiledmap.objectGroups[0].objectWithName("shroom").y);
                 var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
                 tiledMapComponent.setLayersToRender(new string[] { "collision" });
                 tiledMapComponent.renderLayer = 10;
@@ -311,6 +319,7 @@ namespace ProjectTemplate
             var rect = new RectangleF(playerEntity.entity.transform.position.X + 10, playerEntity.entity.transform.position.Y - 20, 20, 4);
             var neighborColliders = Physics.boxcastBroadphaseExcludingSelf(playerEntity.entity.colliders[0]);
 
+
             if (_player.activeState == Player.State.Climb)
             {
                 playerEntity.shouldUseGravity = false;
@@ -334,6 +343,17 @@ namespace ProjectTemplate
             // loop through and check each Collider for an overlap
             foreach (var collider in neighborColliders)
             {
+
+                if (collider.entity.tag == 30)
+                {
+                    if (collider.overlaps(_player.entity.colliders[0]))
+                    {
+                        Console.WriteLine("SHOULD BOUNCE HERE");
+                        //_player.ShouldBounce = true;
+                    }
+
+                }
+
                 //climbables
                 if (collider.overlaps(playerEntity.entity.colliders[2]))
                 {
@@ -527,6 +547,24 @@ namespace ProjectTemplate
                 var newPos = new Vector2(playerEntity.transform.position.X, 16);
                 UpdateTileMap(newPos, false);
             }
+        }
+
+        ArcadeRigidbody CreateShroom(Vector2 position)
+        {
+            var rigidBody = new ArcadeRigidbody();
+            rigidBody.setMass(0);
+            var entity = createEntity("SHROOM: " + Utils.randomString(3));
+            entity.transform.position = position;
+            entity.addComponent(rigidBody);
+            entity.addComponent(new Shroom());
+            entity.tag = 30;
+
+            var collider = new BoxCollider(-8, -8, 16, 16);
+            collider.collidesWithLayers = 10;
+            collider.physicsLayer = 50;
+            entity.addCollider(collider);
+
+            return rigidBody;
         }
 
         ArcadeRigidbody CreateDrop(Vector2 position)

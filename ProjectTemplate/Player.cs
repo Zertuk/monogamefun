@@ -20,7 +20,8 @@ namespace ProjectTemplate
             Roll,
             Knockback,
             Float,
-            Climb
+            Climb,
+            Bounce
         }
 
         enum Animations
@@ -49,6 +50,8 @@ namespace ProjectTemplate
 
         public bool IsFlipped = false;
         public bool IsInvuln = false;
+        public bool ShouldBounce = false;
+        private bool _isBouncing = false;
         private int _invulnCount = 0;
 
         private VirtualButton _jumpInput;
@@ -237,6 +240,7 @@ namespace ProjectTemplate
             {
                 rollSubtexture[0],
                 rollSubtexture[1],
+                rollSubtexture[1],
                 rollSubtexture[2],
                 rollSubtexture[2]
             }));
@@ -290,6 +294,7 @@ namespace ProjectTemplate
         {
             DropCount = DropCount + val;
         }
+
 
         private void DoClimb()
         {
@@ -450,6 +455,20 @@ namespace ProjectTemplate
                 animation = Animations.Idle;
             }
 
+            if (ShouldBounce)
+            {
+                if (!_isBouncing)
+                {
+                    _jumpTime = _maxJumpTime;
+                    _isBouncing = true;
+                }
+                Grounded = false;
+                moveDir.Y = Jump();
+            }
+            else
+            {
+                _isBouncing = false;
+            }
             DoMovement(moveDir, animation);
         }
 
@@ -548,7 +567,7 @@ namespace ProjectTemplate
             var animation = Animations.Rolling;
             _rollCount = _rollCount + 1;
 
-            if (_rollCount > 15)
+            if (_rollCount > 20)
             {
                 activeState = State.Normal;
                 _rollCount = 0;
@@ -612,6 +631,26 @@ namespace ProjectTemplate
 
         private float Jump()
         {
+            if (_isBouncing)
+            {
+                Console.WriteLine("BOUNCE");
+                if (_jumpTime + 10 > 0)
+                {
+                    var x = 2.75f;
+                    float y = 1f - (0.5f * x * x);
+                    _jumpTime = _jumpTime - 1;
+                    return y;
+                }
+                else
+                {
+                    Console.WriteLine("TURN OFF JUMP");
+                    _isBouncing = false;
+                    _jumpTime = _maxJumpTime;
+                    ShouldBounce = false;
+                    return 0;
+                }
+            }
+            
             var count = 0;
             if (_jumpTime > 0)
             {
@@ -667,6 +706,7 @@ namespace ProjectTemplate
 
             if (Grounded)
             {
+                //ShouldBounce = false;
                 _jumpTime = _maxJumpTime;
                 if (!_jumpInput.isDown)
                 {

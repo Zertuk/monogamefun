@@ -218,6 +218,7 @@ namespace ProjectTemplate
 
         private void DoStun()
         {
+            _attackCount = 0;
             _stunCount = _stunCount + 1;
             var animation = Animations.Stun;
             var moveDir = new Vector2(0f, -0f);
