@@ -18,7 +18,6 @@ namespace ProjectTemplate
         protected override void Initialize()
 		{
 			base.Initialize();
-            
             var myScene = new GameScene();
             scene = myScene;
         }

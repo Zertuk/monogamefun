@@ -118,6 +118,7 @@ namespace ProjectTemplate
 
                 try
                 {
+                    var test = new TiledObject();
                 }
                 catch
                 {
@@ -307,7 +308,7 @@ namespace ProjectTemplate
             _isUpdating = true;
             var phys = Physics.getAllColliders();
             var colliders = phys.AsEnumerable();
-            var rect = new RectangleF(playerEntity.entity.transform.position.X + 10, playerEntity.entity.transform.position.Y - 20, 20, 20);
+            var rect = new RectangleF(playerEntity.entity.transform.position.X + 10, playerEntity.entity.transform.position.Y - 20, 20, 4);
             var neighborColliders = Physics.boxcastBroadphaseExcludingSelf(playerEntity.entity.colliders[0]);
 
             if (_player.activeState == Player.State.Climb)
@@ -409,7 +410,7 @@ namespace ProjectTemplate
                         var enemy = collider.entity.getComponent<Enemy>();
                         if (enemy.ActiveState == Enemy.State.Attack)
                         {
-                            if (enemy._attackCount > 0 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[1]) && _player.activeState != Player.State.Roll)
+                            if (enemy._attackCount > 0 && collider.entity.colliders[1].overlaps(playerEntity.entity.colliders[0]) && _player.activeState != Player.State.Roll && enemy.AttackCanDamage)
                             {
                                 _player.activeState = Player.State.Knockback;
 
@@ -607,7 +608,6 @@ namespace ProjectTemplate
             collider.collidesWithLayers = 10;
             //collider.physicsLayer = 101;
             entity.addCollider(collider);
-
             var hitboxCollider = new BoxCollider(7, -14, 20, 24);
             hitboxCollider.collidesWithLayers = 0;
             hitboxCollider.physicsLayer = 100;

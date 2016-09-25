@@ -47,6 +47,7 @@ namespace ProjectTemplate
         private float _moveSpeed = 70f;
         public State activeState;
 
+        public bool IsFlipped = false;
         public bool IsInvuln = false;
         private int _invulnCount = 0;
 
@@ -59,6 +60,8 @@ namespace ProjectTemplate
 
         private int _jumpTime;
 
+        public Vector2 HitboxOffset;
+        public Vector2 HitboxOffsetFlip;
         public Collider LadderInUse;
         public int Health;
         public int MaxHealth;
@@ -92,6 +95,8 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
+            HitboxOffset = new Vector2(7, -14);
+            HitboxOffsetFlip = new Vector2(-26, -14);
             DropCount = 0;
             Health = 10;
             MaxHealth = 10;
@@ -589,8 +594,6 @@ namespace ProjectTemplate
             YAxisInput.nodes.Add(new Nez.VirtualAxis.GamePadLeftStickY());
             YAxisInput.nodes.Add(new Nez.VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));
 
-
-
             // vertical input from dpad, left stick or keyboard up/down
             _jumpInput = new VirtualButton();
             _jumpInput.nodes.Add(new Nez.VirtualButton.KeyboardKey(Keys.A));
@@ -671,7 +674,16 @@ namespace ProjectTemplate
                     _floatUsed = false;
                 }
             }
-
+            if (_animation.flipX)
+            {
+                entity.colliders[1].setLocalOffset(HitboxOffset);
+                IsFlipped = true;
+            }
+            else
+            {
+                IsFlipped = false;
+                entity.colliders[1].setLocalOffset(HitboxOffsetFlip);
+            }
 
         }
 

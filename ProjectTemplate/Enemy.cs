@@ -29,6 +29,12 @@ namespace ProjectTemplate
         }
 
         Sprite<Animations> _animation;
+        public bool AttackCanDamage = false;
+        public int CurrentFrame;
+        public int[] FramesToAttack;
+        public bool IsFlipped;
+        public Vector2 HitboxOffset;
+        public Vector2 HitboxOffsetFlip;
         public int Health;
         public bool Dead;
         private int _stunCount;
@@ -53,6 +59,10 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
+            FramesToAttack = new int[] { 7 };
+            CurrentFrame = 0;
+            HitboxOffset = new Vector2(7, -14);
+            HitboxOffsetFlip = new Vector2(-26, -14);
             var texture = entity.scene.contentManager.Load<Texture2D>(_type);
             var runTexture = entity.scene.contentManager.Load<Texture2D>(_type + "run");
             var hurtTexture = entity.scene.contentManager.Load<Texture2D>(_type + "hurt");
@@ -126,7 +136,7 @@ namespace ProjectTemplate
         {
             var moveDir = new Vector2(0, 0);
             var animation = Animations.Attack;
-
+            Console.WriteLine(_animation.currentFrame);
             _attackCount = _attackCount + 1;
             if (_attackCount > 35)
             {
@@ -145,6 +155,15 @@ namespace ProjectTemplate
             }
 
             DoMovement(moveDir, animation);
+
+            if (FramesToAttack.contains(_animation.currentFrame))
+            {
+                AttackCanDamage = true;
+            }
+            else
+            {
+                AttackCanDamage = false;
+            }
         }
 
         public void DoDeath()
@@ -226,6 +245,8 @@ namespace ProjectTemplate
 
         }
 
+
+
         void IUpdatable.update()
         {
             if (Health <= 0)
@@ -233,8 +254,21 @@ namespace ProjectTemplate
                 Dead = true;
             }
             StateMachine();
+
+            if (_animation.flipX)
+            {
+                entity.colliders[1].setLocalOffset(HitboxOffset);
+                IsFlipped = true;
+            }
+            else
+            {
+                IsFlipped = false;
+                entity.colliders[1].setLocalOffset(HitboxOffsetFlip);
+            }
+
+
         }
-        
+
 
         //#region ITriggerListener implementation
 
