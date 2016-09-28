@@ -62,7 +62,7 @@ namespace ProjectTemplate
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(256*5, 144*5);
+            Screen.setSize(256*3, 144*3);
             Screen.isFullscreen = false;
 
             CreateUI();

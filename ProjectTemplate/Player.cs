@@ -88,7 +88,7 @@ namespace ProjectTemplate
         private bool _floatUsed;
 
         public bool Dead = false;
-
+        private bool _airAttack = false;
 
         private void DisplayPosition()
         {
@@ -430,6 +430,7 @@ namespace ProjectTemplate
             //grounded
             if (Grounded)
             {
+                _airAttack = false;
                 _groundFrames = _groundFrames + 1;
             }
             else
@@ -472,74 +473,95 @@ namespace ProjectTemplate
             DoMovement(moveDir, animation);
         }
 
-        private void DoAttack()
+        private void DoAirAttack()
         {
-
-            var animation = Animations.Attack;
-            var moveDir = new Vector2(0, 0);
-            var flip = 1;
-
-            if (!_animation.flipX)
-            {
-                flip = -1;
-            }
-
+            Console.WriteLine("FUCKING AIR ATTACK");
+            var moveDir = new Vector2(_xAxisInput.value, 0);
             _attackTimer = _attackTimer + 1;
-
-            if (22 >= _attackTimer && _attackTimer > 10)
+            _airAttack = true;
+            var animation = Animations.Attack;
+            if (_attackTimer > 16)
             {
-                moveDir.X = 0.3f * flip;
-
-                if (_attackInput.isPressed)
-                {
-                    _secondAttack = true;                  
-                }
-            }
-            //kill
-            if (_attackTimer >= 18)
-            {
-                moveDir.X = 0 * flip;
-                if (!_secondAttack && _attackTimer >= 22)
-                {
-                    ExitAttack();
-                }
-                else if (_secondAttack)
-                {
-                    animation = Animations.Attack2;
-                }
-            }
-
-
-            if ((40 >= _attackTimer && _attackTimer > 24))
-            {
-                moveDir.X = 0.1f * flip;
-                if (_attackInput.isPressed)
-                {
-                    _thirdAttack = true;
-                    ThirdAttack = true;
-                }
-            }
-
-            if (_attackTimer >= 36)
-            {
-                moveDir.X = 0.2f * flip;
-                if (!_thirdAttack && _attackTimer >= 40)
-                {
-                    ExitAttack();
-                }
-                else if (_thirdAttack)
-                {
-                    animation = Animations.Attack3;
-                }
-            }
-
-            if (_attackTimer > 54)
-            {
-                animation = Animations.Attack3;
+                _attackTimer = 0;
                 ExitAttack();
             }
-
             DoMovement(moveDir, animation);
+        }
+
+        private void DoAttack()
+        {
+            if (!Grounded && (!_airAttack || _attackTimer != 0))
+            {
+                DoAirAttack();
+            }
+            else if (Grounded)
+            {
+                var animation = Animations.Attack;
+                var moveDir = new Vector2(0, 0);
+                var flip = 1;
+
+                if (!_animation.flipX)
+                {
+                    flip = -1;
+                }
+
+                _attackTimer = _attackTimer + 1;
+
+                if (22 >= _attackTimer && _attackTimer > 10)
+                {
+                    moveDir.X = 0.3f * flip;
+
+                    if (_attackInput.isPressed)
+                    {
+                        _secondAttack = true;
+                    }
+                }
+                //kill
+                if (_attackTimer >= 18)
+                {
+                    moveDir.X = 0 * flip;
+                    if (!_secondAttack && _attackTimer >= 22)
+                    {
+                        ExitAttack();
+                    }
+                    else if (_secondAttack)
+                    {
+                        animation = Animations.Attack2;
+                    }
+                }
+
+
+                if ((40 >= _attackTimer && _attackTimer > 24))
+                {
+                    moveDir.X = 0.1f * flip;
+                    if (_attackInput.isPressed)
+                    {
+                        _thirdAttack = true;
+                        ThirdAttack = true;
+                    }
+                }
+
+                if (_attackTimer >= 36)
+                {
+                    moveDir.X = 0.2f * flip;
+                    if (!_thirdAttack && _attackTimer >= 40)
+                    {
+                        ExitAttack();
+                    }
+                    else if (_thirdAttack)
+                    {
+                        animation = Animations.Attack3;
+                    }
+                }
+
+                if (_attackTimer > 54)
+                {
+                    animation = Animations.Attack3;
+                    ExitAttack();
+                }
+
+                DoMovement(moveDir, animation);
+            }
         }
 
         private void ExitAttack()
