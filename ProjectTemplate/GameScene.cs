@@ -393,7 +393,7 @@ namespace ProjectTemplate
             }
 
             //not on ladder, stop climbing
-            if (_player.LadderInUse != null && !_player.LadderInUse.overlaps(playerEntity.entity.colliders[0]))
+            if (_player.LadderInUse != null && !_player.LadderInUse.overlaps(playerEntity.entity.colliders[0])&& _player.activeState != Player.State.Float)
             {
                 _player.activeState = Player.State.Normal;
                 _player.LadderInUse = null;
