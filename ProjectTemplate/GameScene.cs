@@ -58,11 +58,11 @@ namespace ProjectTemplate
 
         public override void initialize()
         {
-            Core.debugRenderEnabled = true;
+            //Core.debugRenderEnabled = true;
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(256*3, 144*3);
+            Screen.setSize(256*5, 144*5);
             Screen.isFullscreen = false;
 
             CreateUI();
@@ -109,28 +109,26 @@ namespace ProjectTemplate
                 }
                 _tiledEntity = createEntity("tiled");
 
-
-
                 var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
-                var shrooms = tiledmap.objectGroups[0].objectsWithName("shroom");
-                for (var i = 0; i < shrooms.Count; i++)
+
+                try
                 {
-                    CreateShroom(new Vector2(shrooms[i].x, shrooms[i].y - 8));
+                    var shrooms = tiledmap.objectGroups[0].objectsWithName("shroom");
+                    for (var i = 0; i < shrooms.Count; i++)
+                    {
+                        CreateShroom(new Vector2(shrooms[i].x, shrooms[i].y - 8));
+                    }
+
                 }
-                Console.WriteLine(tiledmap.objectGroups[0].objectWithName("shroom").y);
+                catch
+                {
+
+                }
                 var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
                 tiledMapComponent.setLayersToRender(new string[] { "collision" });
                 tiledMapComponent.renderLayer = 10;
                 tiledMapComponent.physicsLayer = 10;
                 //fix me ;-;
-
-                try
-                {
-                    var test = new TiledObject();
-                }
-                catch
-                {
-                }
 
                 try
                 {
@@ -348,8 +346,12 @@ namespace ProjectTemplate
                 {
                     if (collider.overlaps(_player.entity.colliders[0]))
                     {
-                        Console.WriteLine("SHOULD BOUNCE HERE");
-                        //_player.ShouldBounce = true;
+
+                        if (!_player.ShouldBounce)
+                        {
+                            Console.WriteLine("SHOULD BOUNCE HERE");
+                            _player.ShouldBounce = true;
+                        }
                     }
 
                 }
@@ -561,7 +563,7 @@ namespace ProjectTemplate
 
             var collider = new BoxCollider(-8, -8, 16, 16);
             collider.collidesWithLayers = 10;
-            collider.physicsLayer = 50;
+            collider.physicsLayer = 100;
             entity.addCollider(collider);
 
             return rigidBody;

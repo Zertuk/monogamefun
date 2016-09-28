@@ -314,7 +314,7 @@ namespace ProjectTemplate
             }
 
             //jump
-            if (CheckJumpInput())
+            if (CheckJumpInput()&& xMoveDir != 0)
             {
                 moveDir = new Vector2(xMoveDir, Jump());
                 activeState = State.Normal;
@@ -478,6 +478,7 @@ namespace ProjectTemplate
             var animation = Animations.Attack;
             var moveDir = new Vector2(0, 0);
             var flip = 1;
+
             if (!_animation.flipX)
             {
                 flip = -1;
@@ -636,7 +637,7 @@ namespace ProjectTemplate
                 Console.WriteLine("BOUNCE");
                 if (_jumpTime + 10 > 0)
                 {
-                    var x = 2.75f;
+                    var x = 3f;
                     float y = 1f - (0.5f * x * x);
                     _jumpTime = _jumpTime - 1;
                     return y;

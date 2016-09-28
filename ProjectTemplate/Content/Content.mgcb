@@ -370,11 +370,6 @@
 /processorParam:TextureFormat=Color
 /build:leekrun5.png
 
-#begin testxml.xml
-/importer:XmlImporter
-/processor:PassThroughProcessor
-/build:testxml.xml
-
 #begin leekfloat.png
 /importer:TextureImporter
 /processor:TextureProcessor
