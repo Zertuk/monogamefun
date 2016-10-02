@@ -10,11 +10,21 @@ using static Nez.Tiled.TiledMapMover;
 using System.Linq;
 using Nez.AI.Pathfinding;
 using System.Collections.Generic;
+using Nez.DeferredLighting;
+using Nez.Samples;
+using Nez.Textures;
 
 namespace ProjectTemplate
 {
-    public class GameScene : DefaultScene
+    public class GameScene : Scene
     {
+
+        public static Texture2D lightMask;
+        public static Effect effect1;
+        RenderTarget2D lightsTarget;
+        RenderTarget2D mainTarget;
+
+
         private ArcadeRigidbody playerEntity;
         private int _width;
         private int _height;
@@ -30,11 +40,48 @@ namespace ProjectTemplate
         private int _shakeCount;
         private bool _shaking = false;
         private List<Entity> _shroomList;
+        public int LIGHT_LAYER;
+
         public GameScene()
         {
+
+        }
+        private World _world;
+
+        public override void initialize()
+        {
+
+            //Core.debugRenderEnabled = true;
+
+            // setup a pixel perfect screen that fits our map
+            setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
+            Screen.setSize(256*3, 144*3);
+            Screen.isFullscreen = false;
+            int[] RENDERABLES_LAYER = { -1, 100, 10, 1, 0, 20, 11 };
+            LIGHT_LAYER = 200;
+
+
+            //var deferredRenderer = addRenderer(new DeferredLightingRenderer(0, LIGHT_LAYER, RENDERABLES_LAYER)).setClearColor(Color.Transparent);
+            //deferredRenderer.enableDebugBufferRender = false;
+
+            addRenderer(new RenderLayerRenderer(0, RENDERABLES_LAYER));
+
+            addRenderer(new RenderLayerExcludeRenderer(0, LIGHT_LAYER));
+
+            var lightRenderer = addRenderer(new RenderLayerRenderer(-1, LIGHT_LAYER));
+            lightRenderer.renderTexture = new RenderTexture();
+            var valueInt = 0;
+            lightRenderer.renderTargetClearColor = new Color(50, 50, 50, 255);
+
+            var spriteLightPostProcessor = addPostProcessor(new SpriteLightPostProcessor(0, lightRenderer.renderTexture));
+
+
+            CreateUI();
+
+
             _shroomList = new List<Entity>();
             Transform.shouldRoundPosition = false;
-            addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
+
             _world = new World();
 
             playerEntity = CreatePlayer(new Vector2(50, 50));
@@ -51,22 +98,8 @@ namespace ProjectTemplate
 
             // add a component to have the Camera follow the player
             camera.entity.addComponent(new FollowCamera(playerEntity.entity));
-
-
         }
-        private World _world;
 
-        public override void initialize()
-        {
-            //Core.debugRenderEnabled = true;
-
-            // setup a pixel perfect screen that fits our map
-            setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(256*3, 144*3);
-            Screen.isFullscreen = false;
-
-            CreateUI();
-        }
 
         private Scene resetstuff()
         {
@@ -75,6 +108,7 @@ namespace ProjectTemplate
 
         private void ClearScene()
         {
+
             //entities.removeAllEntities();
             _shouldUpdate = false;
             while (_isUpdating)
@@ -108,9 +142,9 @@ namespace ProjectTemplate
                     ClearScene();
                 }
                 _tiledEntity = createEntity("tiled");
-
                 var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
-
+            
+                _tiledEntity.transform.setScale(3f);
                 try
                 {
                     var shrooms = tiledmap.objectGroups[0].objectsWithName("shroom");
@@ -128,6 +162,8 @@ namespace ProjectTemplate
                 tiledMapComponent.setLayersToRender(new string[] { "collision" });
                 tiledMapComponent.renderLayer = 10;
                 tiledMapComponent.physicsLayer = 10;
+                tiledMapComponent.transform.setScale(3f);
+
                 //fix me ;-;
 
                 try
@@ -168,7 +204,7 @@ namespace ProjectTemplate
                 {
                     var bgComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "bg"));
                     bgComponent.setLayersToRender("bg");
-                    bgComponent.renderLayer = 11;
+                    bgComponent.renderLayer = 100;
                     bgComponent.collisionLayer = null;
                 }
                 catch
@@ -212,7 +248,7 @@ namespace ProjectTemplate
         {
             _canvas = createEntity("ui").addComponent(new UICanvas());
             _canvas.isFullScreen = true;
-            _canvas.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
+            _canvas.setRenderLayer(-1);
 
         }
 
@@ -265,8 +301,8 @@ namespace ProjectTemplate
             var dropText = new Text(Graphics.instance.bitmapFont, "Buttons: " + _player.DropCount.ToString(), new Vector2(6, 18), Color.White);
 
             _healthEntity = createEntity("healthText");
-            healthText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
-            dropText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
+            healthText.setRenderLayer(-1);
+            dropText.setRenderLayer(-1);
             _healthEntity.addComponent(healthText);
             _healthEntity.addComponent(dropText);
         }
@@ -603,12 +639,24 @@ namespace ProjectTemplate
                                 .setElasticity(0)
                                 .setVelocity(new Vector2(0, 0));
 
+            //var light = new AreaLight(100, 400).setRenderLayer(SCREEN_SPACE_RENDER_LAYER).setEnabled(true);
 
             var entity = createEntity("player");
             entity.tag = 1;
             entity.transform.position = position;
             entity.addComponent(new Player());
             entity.addComponent(rigidbody);
+            entity.addComponent(new SpotLight()).setRenderLayer(200);
+
+            var lightTex = contentManager.Load<Texture2D>("sprite-light");
+            //addSpriteLight(lightTex, new Vector2(50, 50), 2);
+            //void addSpriteLight(Texture2D texture, Vector2 position, float scale)
+
+            var sprite = new Sprite(lightTex);
+            sprite.renderLayer = LIGHT_LAYER;
+
+            entity.addComponent(sprite);
+
 
             var collider = new BoxCollider(-6, -6, 13, 16);
             collider.collidesWithLayers = 10;
@@ -643,6 +691,7 @@ namespace ProjectTemplate
             entity.addComponent(new Enemy(enemyType));
             entity.tag = 5;
             entity.addComponent(rigidbody);
+            entity.addComponent(new SpotLight());
 
             var collider = new BoxCollider(-6, -6, 13, 16);
             collider.collidesWithLayers = 10;

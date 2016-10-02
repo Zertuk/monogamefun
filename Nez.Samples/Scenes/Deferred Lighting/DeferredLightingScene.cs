@@ -10,8 +10,8 @@ namespace Nez.Samples
 	[SampleScene( "Deferred Lighting", "Press the number keys to change the light that is currently being controlled\nPressing f toggles the rendering of the individual buffers used by the deferred lighting system" )]
 	public class DeferredLightingScene : SampleScene
 	{
-        const int RENDERABLES_LAYER = 5;
-		const int LIGHT_LAYER = 10;
+        const int RENDERABLES_LAYER =10;
+		const int LIGHT_LAYER = 5;
 
 
 		public DeferredLightingScene() : base( false, false )
@@ -23,17 +23,16 @@ namespace Nez.Samples
 			base.initialize();
 
 			// setup screen that fits our map based on the bg size
-			setDesignResolution( 137 * 9, 89 * 9, Scene.SceneResolutionPolicy.ShowAllPixelPerfect );
-			Screen.setSize( 137 * 9, 89 * 9 );
-			clearColor = Color.DarkGray;
+			setDesignResolution( 137, 89, Scene.SceneResolutionPolicy.ShowAllPixelPerfect );
+			Screen.setSize( 137 * 6, 89 *6  );
+            //clearColor = Color.DarkGray;
 
-			// add our renderer setting the renderLayers we will use for lights and for renderables
-			var deferredRenderer = addRenderer( new DeferredLightingRenderer( 0, LIGHT_LAYER, RENDERABLES_LAYER) )
-				.setClearColor( Color.DarkGray );
-			deferredRenderer.enableDebugBufferRender = false;
+            // add our renderer setting the renderLayers we will use for lights and for renderables
+            var deferredRenderer = addRenderer(new DeferredLightingRenderer(100, LIGHT_LAYER, RENDERABLES_LAYER));
+            deferredRenderer.enableDebugBufferRender = false;
 
-			// prep our textures. we have diffuse and normal maps to interact with the lights.
-			var moonTex = contentManager.Load<Texture2D>( "DeferredLighting/moon" );
+            // prep our textures. we have diffuse and normal maps to interact with the lights.
+            var moonTex = contentManager.Load<Texture2D>( "DeferredLighting/moon" );
 			var moonNorm = contentManager.Load<Texture2D>( "DeferredLighting/moonNorm" );
 			var orangeTexture = contentManager.Load<Texture2D>( "DeferredLighting/orange" );
 			var orangeNormalMap = contentManager.Load<Texture2D>( "DeferredLighting/orangeNorm" );
@@ -45,15 +44,16 @@ namespace Nez.Samples
 			var moonMaterial = new DeferredSpriteMaterial( moonNorm );
 			var orangeMaterial = new DeferredSpriteMaterial( orangeNormalMap );
 			var bgMaterial = new DeferredSpriteMaterial( bgNormalMap );
+            orangeMaterial = null;
+            moonMaterial = null;
+            // create some Entities. When we add the Renderable (Sprite in this case) we need to be sure to set the renderLayer and Material
+            var bgEntity = createEntity("bg");
+            bgEntity.transform.setPosition(new Vector2(0, 0)).setScale(1);
+            bgEntity.addComponent(new Sprite(bgTexture)).setRenderLayer(RENDERABLES_LAYER);
+            bgEntity.addComponent(new DeferredLightingController());
 
-			// create some Entities. When we add the Renderable (Sprite in this case) we need to be sure to set the renderLayer and Material
-			var bgEntity = createEntity( "bg" );
-			bgEntity.transform.setPosition( Screen.center ).setScale( 9 );
-			bgEntity.addComponent( new Sprite( bgTexture ) ).setRenderLayer( RENDERABLES_LAYER ).setMaterial( bgMaterial ).setLayerDepth( 1 );
-			bgEntity.addComponent( new DeferredLightingController() );
-
-			var orangeEntity = createEntity( "orange" );
-			orangeEntity.transform.setPosition( Screen.center ).setScale( 0.5f );
+            var orangeEntity = createEntity( "orange" );
+			orangeEntity.transform.setPosition(new Vector2(0, 0)).setScale( 1f );
 			orangeEntity.addComponent( new Sprite( orangeTexture ) ).setRenderLayer( RENDERABLES_LAYER ).setMaterial( orangeMaterial );
 			orangeEntity.addComponent( new SpotLight() ).setRenderLayer( LIGHT_LAYER );
 
@@ -65,11 +65,11 @@ namespace Nez.Samples
 			var clone = orangeEntity.clone( new Vector2( 200, 200 ) );
 			addEntity( clone );
 
-			var mouseFollowEntity = createEntity( "mouse-follow" );
-			mouseFollowEntity.addComponent( new MouseFollow() );
-			mouseFollowEntity.addComponent( new PointLight( new Color( 0.8f, 0.8f, 0.9f ) ) ).setRadius( 200 ).setIntensity( 2 )
-				.setRenderLayer( LIGHT_LAYER );
-		}
+            var mouseFollowEntity = createEntity("mouse-follow");
+            mouseFollowEntity.addComponent(new MouseFollow());
+            mouseFollowEntity.addComponent(new PointLight(new Color(0.8f, 0.8f, 0.9f))).setRadius(200).setIntensity(2)
+                .setRenderLayer(LIGHT_LAYER);
+        }
 	}
 }
 

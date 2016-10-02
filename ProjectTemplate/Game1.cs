@@ -10,9 +10,10 @@ namespace ProjectTemplate
 {
 	public class Game1 : Core
 	{
+
+
         public Game1()
         {
-
         }
 
         protected override void Initialize()

@@ -67,6 +67,8 @@
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\nez\effects\DeferredLighting.mgfxo" />
+    <None Include="Content\nez\effects\DeferredSprite.mgfxo" />
     <None Include="Icon.png" />
     <None Include="..\Nez\DefaultContent\NezDefaultBMFont.xnb">
       <Link>Content\nez\NezDefaultBMFont.xnb</Link>
@@ -170,6 +172,10 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\Nez.Samples\Nez.Samples.csproj">
+      <Project>{38A7BEED-51B0-4A6D-9522-2D9DF501B6D3}</Project>
+      <Name>Nez.Samples</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nez\Nez-PCL\Nez.csproj">
       <Project>{60B7197D-D0D5-405C-90A2-A56903E9B039}</Project>
       <Name>Nez</Name>

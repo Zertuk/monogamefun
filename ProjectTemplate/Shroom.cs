@@ -38,6 +38,8 @@ namespace ProjectTemplate
             var subtextures = Subtexture.subtexturesFromAtlas(texture, 16, 16);
 
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
+            _animation.setRenderLayer(10);
+
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
             {
                 subtextures[0]

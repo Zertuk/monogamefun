@@ -136,8 +136,6 @@ namespace ProjectTemplate
 
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
 
-
-
             //extract the animations from the atlas. they are setup in rows with 8 columns
             _animation.addAnimation(Animations.Walk, new SpriteAnimation(new List<Subtexture>()
             {

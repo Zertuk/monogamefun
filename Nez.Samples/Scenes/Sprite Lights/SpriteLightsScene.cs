@@ -34,11 +34,11 @@ namespace Nez.Samples
 			_lightRenderer.renderTexture = new RenderTexture();
 			_lightRenderer.renderTargetClearColor = new Color( 10, 10, 10, 255 );
 
-			_spriteLightPostProcessor = addPostProcessor( new SpriteLightPostProcessor( 0, _lightRenderer.renderTexture ) );
-			addPostProcessor( new ScanlinesPostProcessor( 0 ) );
+            _spriteLightPostProcessor = addPostProcessor(new SpriteLightPostProcessor(0, _lightRenderer.renderTexture));
+            addPostProcessor(new ScanlinesPostProcessor(0));
 
 
-			var bg = contentManager.Load<Texture2D>( "SpriteLights/bg" );
+            var bg = contentManager.Load<Texture2D>( "SpriteLights/bg" );
 			var bgEntity = createEntity( "bg" );
 			bgEntity.transform.position = Screen.center;
 			bgEntity.addComponent( new Sprite( bg ) );
