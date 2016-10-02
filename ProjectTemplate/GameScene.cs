@@ -42,6 +42,7 @@ namespace ProjectTemplate
         private List<Entity> _shroomList;
         public int LIGHT_LAYER;
         public int SCREEN_SPACE_RENDER_LAYER;
+        private SpriteLightPostProcessor _spriteLightPostProcessor;
 
         public GameScene()
         {
@@ -62,8 +63,6 @@ namespace ProjectTemplate
             LIGHT_LAYER = 200;
             SCREEN_SPACE_RENDER_LAYER = 999;
 
-
-
             //var deferredRenderer = addRenderer(new DeferredLightingRenderer(0, LIGHT_LAYER, RENDERABLES_LAYER)).setClearColor(Color.Transparent);
             //deferredRenderer.enableDebugBufferRender = false;
 
@@ -79,9 +78,6 @@ namespace ProjectTemplate
             var valueInt = 0;
             lightRenderer.renderTargetClearColor = new Color(50, 50, 50, 255);
 
-            var spriteLightPostProcessor = addPostProcessor(new SpriteLightPostProcessor(0, lightRenderer.renderTexture));
-
-
             CreateUI();
 
 
@@ -94,6 +90,7 @@ namespace ProjectTemplate
             _player = playerEntity.entity.getComponent<Player>();
             DisplayHealthBar();
 
+            _spriteLightPostProcessor = addPostProcessor(new SpriteLightPostProcessor(0, lightRenderer.renderTexture));
 
             UpdateTileMap(new Vector2(100, 100), false);
 
@@ -137,7 +134,15 @@ namespace ProjectTemplate
             //only load if actually new room and not just new part of old room
             if (_prevTileMapName != _world.activeRoom.tilemap)
             {
-               
+                if (_world.activeRoom.IsDark)
+                {
+                    _spriteLightPostProcessor.enabled = true;
+                }
+                else
+                {
+                    _spriteLightPostProcessor.enabled = false;
+                }
+
                 if (_tiledEntity != null)
                 {
                     // transitions within the current Scene with a SquaresTransition
