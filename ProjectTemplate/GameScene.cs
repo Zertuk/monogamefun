@@ -41,6 +41,7 @@ namespace ProjectTemplate
         private bool _shaking = false;
         private List<Entity> _shroomList;
         public int LIGHT_LAYER;
+        public int SCREEN_SPACE_RENDER_LAYER;
 
         public GameScene()
         {
@@ -55,10 +56,12 @@ namespace ProjectTemplate
 
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(256*3, 144*3);
+            Screen.setSize(256*5, 144*5);
             Screen.isFullscreen = false;
-            int[] RENDERABLES_LAYER = { -1, 100, 10, 1, 0, 20, 11 };
+            int[] RENDERABLES_LAYER = { 100, 10, 1, 0, 20, 11 };
             LIGHT_LAYER = 200;
+            SCREEN_SPACE_RENDER_LAYER = 999;
+
 
 
             //var deferredRenderer = addRenderer(new DeferredLightingRenderer(0, LIGHT_LAYER, RENDERABLES_LAYER)).setClearColor(Color.Transparent);
@@ -66,7 +69,10 @@ namespace ProjectTemplate
 
             addRenderer(new RenderLayerRenderer(0, RENDERABLES_LAYER));
 
-            addRenderer(new RenderLayerExcludeRenderer(0, LIGHT_LAYER));
+            addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
+
+
+            addRenderer(new RenderLayerExcludeRenderer(0, SCREEN_SPACE_RENDER_LAYER, LIGHT_LAYER));
 
             var lightRenderer = addRenderer(new RenderLayerRenderer(-1, LIGHT_LAYER));
             lightRenderer.renderTexture = new RenderTexture();
@@ -247,9 +253,8 @@ namespace ProjectTemplate
         private void CreateUI()
         {
             _canvas = createEntity("ui").addComponent(new UICanvas());
-            _canvas.isFullScreen = true;
-            _canvas.setRenderLayer(-1);
-
+            _canvas.isFullScreen = false;
+            _canvas.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
         }
 
         private void ShakeCamera()
@@ -301,8 +306,8 @@ namespace ProjectTemplate
             var dropText = new Text(Graphics.instance.bitmapFont, "Buttons: " + _player.DropCount.ToString(), new Vector2(6, 18), Color.White);
 
             _healthEntity = createEntity("healthText");
-            healthText.setRenderLayer(-1);
-            dropText.setRenderLayer(-1);
+            healthText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
+            dropText.setRenderLayer(SCREEN_SPACE_RENDER_LAYER);
             _healthEntity.addComponent(healthText);
             _healthEntity.addComponent(dropText);
         }
