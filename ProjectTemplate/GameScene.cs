@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Nez.DeferredLighting;
 using Nez.Samples;
 using Nez.Textures;
+using Nez.Particles;
 
 namespace ProjectTemplate
 {
@@ -43,6 +44,7 @@ namespace ProjectTemplate
         public int LIGHT_LAYER;
         public int SCREEN_SPACE_RENDER_LAYER;
         private SpriteLightPostProcessor _spriteLightPostProcessor;
+        private ParticleEmitter _snowParticleEmitter;
 
         public GameScene()
         {
@@ -53,11 +55,21 @@ namespace ProjectTemplate
         public override void initialize()
         {
 
-            //Core.debugRenderEnabled = true;
 
+            //Core.debugRenderEnabled = true;
+            var particlesEntity = createEntity("particles");
+            particlesEntity.transform.setPosition(new Vector2(128, 72));
+            particlesEntity.addComponent(new Snow());
+
+            //var particleSystemConfig = contentManager.Load<Sprite>("ParticleDesigner/Snow");
+            //_snowParticleEmitter = particlesEntity.addComponent(new ParticleEmitter(particleSystemConfig));
+
+
+            Core.defaultSamplerState = SamplerState.PointClamp;
+            
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(256*5, 144*5);
+            Screen.setSize(256*4, 144*4);
             Screen.isFullscreen = false;
             int[] RENDERABLES_LAYER = { 100, 10, 1, 0, 20, 11 };
             LIGHT_LAYER = 200;
@@ -66,12 +78,15 @@ namespace ProjectTemplate
             //var deferredRenderer = addRenderer(new DeferredLightingRenderer(0, LIGHT_LAYER, RENDERABLES_LAYER)).setClearColor(Color.Transparent);
             //deferredRenderer.enableDebugBufferRender = false;
 
+
             addRenderer(new RenderLayerRenderer(0, RENDERABLES_LAYER));
+
+            addRenderer(new ScreenSpaceRenderer(99, 998));
 
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
 
 
-            addRenderer(new RenderLayerExcludeRenderer(0, SCREEN_SPACE_RENDER_LAYER, LIGHT_LAYER));
+            addRenderer(new RenderLayerExcludeRenderer(0, 998 ,SCREEN_SPACE_RENDER_LAYER, LIGHT_LAYER));
 
             var lightRenderer = addRenderer(new RenderLayerRenderer(-1, LIGHT_LAYER));
             lightRenderer.renderTexture = new RenderTexture();
@@ -86,7 +101,7 @@ namespace ProjectTemplate
 
             _world = new World();
 
-            playerEntity = CreatePlayer(new Vector2(50, 50));
+            playerEntity = CreatePlayer(new Vector2(0, 0));
             _player = playerEntity.entity.getComponent<Player>();
             DisplayHealthBar();
 
@@ -101,6 +116,7 @@ namespace ProjectTemplate
 
             // add a component to have the Camera follow the player
             camera.entity.addComponent(new FollowCamera(playerEntity.entity));
+
         }
 
 
