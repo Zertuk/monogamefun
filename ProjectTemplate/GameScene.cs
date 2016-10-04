@@ -45,6 +45,7 @@ namespace ProjectTemplate
         public int SCREEN_SPACE_RENDER_LAYER;
         private SpriteLightPostProcessor _spriteLightPostProcessor;
         private ParticleEmitter _snowParticleEmitter;
+        private Renderer _snowRenderer;
 
         public GameScene()
         {
@@ -81,10 +82,7 @@ namespace ProjectTemplate
 
             addRenderer(new RenderLayerRenderer(0, RENDERABLES_LAYER));
 
-            addRenderer(new ScreenSpaceRenderer(99, 998));
-
             addRenderer(new ScreenSpaceRenderer(100, SCREEN_SPACE_RENDER_LAYER));
-
 
             addRenderer(new RenderLayerExcludeRenderer(0, 998 ,SCREEN_SPACE_RENDER_LAYER, LIGHT_LAYER));
 
@@ -150,6 +148,16 @@ namespace ProjectTemplate
             //only load if actually new room and not just new part of old room
             if (_prevTileMapName != _world.activeRoom.tilemap)
             {
+                if (_snowRenderer != null)
+                {
+                    removeRenderer(_snowRenderer);
+                }
+
+                if (_world.activeRoom.IsSnowing)
+                {
+                    _snowRenderer = addRenderer(new ScreenSpaceRenderer(99, 998));
+                }
+
                 if (_world.activeRoom.IsDark)
                 {
                     _spriteLightPostProcessor.enabled = true;

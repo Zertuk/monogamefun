@@ -16,15 +16,16 @@ namespace ProjectTemplate
         public int height;
         public EnemyInfo[] EnemyInfo;
         public bool IsDark;
+        public bool IsSnowing;
 
-
-        public Room(int x, int y, string tileMapName, int roomX, int roomY, EnemyInfo[] enemyInfo = null, bool dark = false)
+        public Room(int x, int y, string tileMapName, int roomX, int roomY, EnemyInfo[] enemyInfo = null, bool dark = false, bool snow = false)
         {
             tilemap = tileMapName;
             index = new int[] { x, y };
             roomIndex = new int[] { roomX, roomY };
             EnemyInfo = enemyInfo;
             IsDark = dark;
+            IsSnowing = snow;
         }
     }
 }
