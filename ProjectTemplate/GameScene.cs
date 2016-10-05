@@ -70,7 +70,7 @@ namespace ProjectTemplate
             
             // setup a pixel perfect screen that fits our map
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
-            Screen.setSize(256*4, 144*4);
+            Screen.setSize(256*5, 144*5);
             Screen.isFullscreen = false;
             int[] RENDERABLES_LAYER = { 100, 10, 1, 0, 20, 11 };
             LIGHT_LAYER = 200;
