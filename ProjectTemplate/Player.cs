@@ -312,7 +312,7 @@ namespace ProjectTemplate
             }
 
             //jump
-            if (CheckJumpInput()&& xMoveDir != 0)
+            if (CheckJumpInput()&& xMoveDir != 0 && moveDir.Y == 0)
             {
                 moveDir = new Vector2(xMoveDir, Jump());
                 activeState = State.Normal;
@@ -437,10 +437,9 @@ namespace ProjectTemplate
             }
 
             //fall/jumping
-            if (moveDir.Y > 0)
+            if (moveDir.Y == 0 && !Grounded)
             {
                 animation = Animations.Falling;
-                Grounded = false;
             }
             else if (moveDir.Y < 0)
             {
