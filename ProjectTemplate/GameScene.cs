@@ -134,7 +134,7 @@ namespace ProjectTemplate
             }
             for (var i = 0; i < entities.Count; i++)
             {
-                if (entities[i].tag == 5 || entities[i].tag == 4)
+                if (entities[i].tag == 5 || entities[i].tag == 4 || entities[i].tag == 40)
                 {
                     entities[i].destroy();
                 }
@@ -180,19 +180,31 @@ namespace ProjectTemplate
                 var tiledmap = contentManager.Load<TiledMap>(_world.activeRoom.tilemap);
             
                 _tiledEntity.transform.setScale(3f);
+
                 try
                 {
                     var shrooms = tiledmap.objectGroups[0].objectsWithName("shroom");
-                    for (var i = 0; i < shrooms.Count; i++)
-                    {
-                        CreateShroom(new Vector2(shrooms[i].x, shrooms[i].y - 8));
+                        for (var i = 0; i < shrooms.Count; i++)
+                        {
+                            CreateShroom(new Vector2(shrooms[i].x, shrooms[i].y - 8));
+                        }
                     }
+                catch
+                {
+                }
 
+                try
+                {
+                    var fire = tiledmap.objectGroups[0].objectsWithName("fire");
+                    for (var i = 0; i < fire.Count; i++)
+                    {
+                        CreateFire(new Vector2(fire[i].x, fire[i].y - 8));
+                    }
                 }
                 catch
                 {
-
                 }
+
                 var tiledMapComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "collision"));
                 tiledMapComponent.setLayersToRender(new string[] { "collision" });
                 tiledMapComponent.renderLayer = 10;
@@ -638,6 +650,22 @@ namespace ProjectTemplate
 
             return rigidBody;
         }
+
+        Entity CreateFire(Vector2 position)
+        {
+            var entity = createEntity("FIRE: " + Utils.randomString(3));
+            entity.transform.position = position;
+            entity.addComponent(new Fire());
+            entity.tag = 40;
+
+            var lightTex = contentManager.Load<Texture2D>("sprite-light");
+            var sprite = new Sprite(lightTex);
+            sprite.renderLayer = LIGHT_LAYER;
+            entity.addComponent(sprite);
+
+            return entity;
+        }
+
 
         ArcadeRigidbody CreateDrop(Vector2 position)
         {
