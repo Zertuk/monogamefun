@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="16" tileheight="16" nextobjectid="3">
+ <tileset firstgid="1" name="sewer" tilewidth="48" tileheight="16" tilecount="3" columns="0">
+  <tile id="0">
+   <image width="16" height="16" source="brick.png"/>
+  </tile>
+  <tile id="1">
+   <image width="16" height="16" source="brick-base.png"/>
+  </tile>
+  <tile id="2">
+   <image width="48" height="16" source="candle-sheet.png"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="4" name="sewerbg" tilewidth="256" tileheight="112" tilecount="1" columns="1">
+  <image source="sewerbg.png" trans="ff00ff" width="256" height="112"/>
+ </tileset>
+ <layer name="bg" width="16" height="9">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="collision" width="16" height="9">
+  <data encoding="csv">
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="1" name="fire" gid="3" x="144.159" y="112.03" width="48" height="16"/>
+ </objectgroup>
+</map>
