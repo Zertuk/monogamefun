@@ -75,7 +75,7 @@ namespace ProjectTemplate
 
             _mover = entity.addComponent(new Mover());
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
-            _animation.setRenderLayer(20);
+            _animation.setRenderLayer(0);
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
             {
                 subtextures[0],

@@ -72,7 +72,7 @@ namespace ProjectTemplate
             setDesignResolution(256, 144, Scene.SceneResolutionPolicy.ShowAllPixelPerfect);
             Screen.setSize(256*5, 144*5);
             Screen.isFullscreen = false;
-            int[] RENDERABLES_LAYER = { 100, 10, 1, 0, 20, 11 };
+            int[] RENDERABLES_LAYER = { 1, 0, 10, 20, 11 };
             LIGHT_LAYER = 200;
             SCREEN_SPACE_RENDER_LAYER = 999;
 
@@ -90,6 +90,7 @@ namespace ProjectTemplate
             lightRenderer.renderTexture = new RenderTexture();
             var valueInt = 0;
             lightRenderer.renderTargetClearColor = new Color(50, 50, 50, 255);
+            //lightRenderer.renderTargetClearColor = new Color(116, 135, 97, 255);
 
             CreateUI();
 
@@ -99,7 +100,7 @@ namespace ProjectTemplate
 
             _world = new World();
 
-            playerEntity = CreatePlayer(new Vector2(0, 0));
+            playerEntity = CreatePlayer(new Vector2(50, 200));
             _player = playerEntity.entity.getComponent<Player>();
             DisplayHealthBar();
 
@@ -209,7 +210,6 @@ namespace ProjectTemplate
                 tiledMapComponent.setLayersToRender(new string[] { "collision" });
                 tiledMapComponent.renderLayer = 10;
                 tiledMapComponent.physicsLayer = 10;
-                tiledMapComponent.transform.setScale(3f);
 
                 //fix me ;-;
 
@@ -251,8 +251,19 @@ namespace ProjectTemplate
                 {
                     var bgComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "bg"));
                     bgComponent.setLayersToRender("bg");
-                    bgComponent.renderLayer = 100;
+                    bgComponent.renderLayer = 1000;
                     bgComponent.collisionLayer = null;
+                }
+                catch
+                {
+                }
+
+                try
+                {
+                    var waterComponent = _tiledEntity.addComponent(new TiledMapComponent(tiledmap, "water"));
+                    waterComponent.setLayersToRender("water");
+                    waterComponent.renderLayer = 1000;
+                    waterComponent.collisionLayer = null;
                 }
                 catch
                 {

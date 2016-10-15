@@ -23,19 +23,24 @@ namespace ProjectTemplate
 
         public override void onAddedToEntity()
         {
-            var texture = entity.scene.contentManager.Load<Texture2D>("fire");
+            var texture = entity.scene.contentManager.Load<Texture2D>("candle-sheet");
 
-            var subtextures = Subtexture.subtexturesFromAtlas(texture, 16, 32);
+            var subtextures = Subtexture.subtexturesFromAtlas(texture, 16, 16);
 
             _animation = entity.addComponent(new Sprite<Animations>(subtextures[0]));
-            _animation.setRenderLayer(10);
+            _animation.setRenderLayer(0);
 
             _animation.addAnimation(Animations.Idle, new SpriteAnimation(new List<Subtexture>()
             {
                 subtextures[0],
+                                subtextures[0],
+
                 subtextures[1],
+                                subtextures[1],
+
                 subtextures[2],
-                subtextures[3]
+                                subtextures[2]
+
             }));
         }
 
